@@ -1,0 +1,23 @@
+name: Trigger Deploy
+
+on:
+  push:
+    branches: [main, staging]
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.SCHOOL_SERVER_TOKEN }}
+          script: |
+            const branch = context.ref.replace('refs/heads/', '')
+            const event  = branch === 'staging'
+              ? 'deploy-staging'
+              : 'deploy-de-groene-weide'
+            await github.rest.repos.createDispatchEvent({
+              owner: 'ldideric',
+              repo:  'groene-weide-infra',
+              event_type: event,
+            })
