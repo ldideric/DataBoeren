@@ -1,24 +1,22 @@
 # Repository Rules
 
-This document describes the branching and merge rules enforced by the GitHub Actions workflows in this repository.
-
 ## Branch Flow
 
-All changes must flow through the following pipeline:
-
 ```
-feature/... (or fix/, hotfix/, chore/, release/)
-       ↓  PR
-    staging
-       ↓  PR
-      main
+feature/  fix/  hotfix/  chore/  release/  claude/
+                      ↓  PR
+                   staging
+                      ↓  PR
+                     main
 ```
 
-**Direct pushes to `main` or `staging` are not allowed.** Every change must arrive via a pull request.
+Never push directly to `main` or `staging` — all changes go through a pull request.
+
+The only branch allowed to merge into `main` is `staging`.
 
 ## Branch Naming
 
-Every branch opened in a PR against `main` or `staging` must follow one of these prefixes:
+Branches must use one of these prefixes:
 
 | Prefix | Purpose |
 |---|---|
@@ -29,35 +27,16 @@ Every branch opened in a PR against `main` or `staging` must follow one of these
 | `release/` | Release preparation |
 | `claude/` | AI-assisted changes |
 
-A branch named exactly `staging` is also allowed (it is the only branch permitted to merge into `main`).
+## Pull Request Requirements
 
-Examples of valid branch names:
-- `feature/reservation-form`
-- `fix/payment-calculation`
-- `hotfix/login-crash`
-- `chore/update-dependencies`
-- `release/1.2.0`
+Every PR into `staging` or `main` must meet all of the following before it can be merged:
 
-## Merging to `main`
+- **1 approval** — at least one review is required; approvals are dismissed when new commits are pushed
+- **Status checks pass** — branch name check, source branch check (for `main`), and `composer audit` must all be green
+- **Branch up to date** — your branch must be current with the target before merging
 
-Pull requests targeting `main` **must come from `staging`**. PRs from any other branch are rejected automatically. This ensures that every change has passed through the staging environment before reaching production.
+`main` and `staging` cannot be force-pushed to or deleted.
 
 ## Deployments
 
-Merges to `staging` and `main` automatically trigger a deployment:
-
-- `staging` → triggers the `deploy-staging` event
-- `main` → triggers the `deploy-de-groene-weide` event
-
-No manual deployment steps are needed after a merge.
-
-## Security Audit
-
-Every PR targeting `main` or `staging` runs `composer audit` to check for known vulnerabilities in PHP dependencies. A PR cannot be merged if the audit reports any issues.
-
-## Summary
-
-1. Create a branch with the correct prefix (`feature/`, `fix/`, `hotfix/`, `chore/`, or `release/`).
-2. Open a PR from your branch into `staging`.
-3. After review and merge, open a PR from `staging` into `main`.
-4. Deployment happens automatically on merge.
+Merging into `staging` or `main` automatically triggers a deployment — no manual steps needed.
