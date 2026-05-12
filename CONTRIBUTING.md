@@ -27,6 +27,7 @@ Every branch opened in a PR against `main` or `staging` must follow one of these
 | `hotfix/` | Urgent production fixes |
 | `chore/` | Maintenance, dependencies, tooling |
 | `release/` | Release preparation |
+| `claude/` | AI-assisted changes |
 
 A branch named exactly `staging` is also allowed (it is the only branch permitted to merge into `main`).
 
