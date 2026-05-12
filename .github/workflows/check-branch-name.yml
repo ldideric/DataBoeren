@@ -1,0 +1,19 @@
+name: Check branch name
+
+on:
+  pull_request:
+    branches:
+      - main
+      - staging
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch naming convention
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          if [[ ! "$BRANCH" =~ ^(feature|fix|hotfix|chore|release)/.+ ]]; then
+            echo "Branch name '$BRANCH' must start with feature/, fix/, hotfix/, chore/, or release/"
+            exit 1
+          fi
