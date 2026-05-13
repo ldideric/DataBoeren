@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('reservation_id')->unique()->constrained()->cascadeOnDelete();
+            $table->foreignUuid('reservation_id')->constrained()->cascadeOnDelete();
             $table->decimal('amount', 10, 2);
             $table->string('status');
             $table->string('method');

@@ -4,29 +4,39 @@ namespace App\Models;
 
 use App\Enums\UserRole;
 use Database\Factories\UserFactory;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
+use Filament\Panel;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
- * @property string $name
+ * @property string $first_name
+ * @property string $last_name
  * @property string $email
+ * @property string|null $phone
  * @property string $password
  * @property UserRole $role
- * @property Carbon|null $email_verified_at
  * @property string|null $remember_token
+ * @property Carbon|null $email_verified_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
- * @property-read Carbon $created_at
- * @property-read Carbon $updated_at
+ * @property-read Collection<Reservation> $reservations
+ * @property-read Collection<Reservation> $bookedReservations
  */
-#[Fillable(['name', 'email', 'password', 'role'])]
+#[Fillable(['first_name', 'last_name', 'email', 'phone', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, HasUuids;
@@ -38,5 +48,25 @@ class User extends Authenticatable
             'password' => 'hashed',
             'role' => UserRole::class,
         ];
+    }
+
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class, 'customer_id');
+    }
+
+    public function bookedReservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class, 'booked_by_user_id');
+    }
+
+    public function getFilamentName(): string
+    {
+        return "$this->first_name $this->last_name";
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->role === UserRole::Admin || $this->role === UserRole::Employee;
     }
 }
