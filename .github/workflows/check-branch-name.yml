@@ -13,7 +13,7 @@ jobs:
       - name: Check branch naming convention
         run: |
           BRANCH="${{ github.head_ref }}"
-          if [[ ! "$BRANCH" =~ ^(feature|fix|hotfix|chore|release)/.+$ ]] && [[ "$BRANCH" != "staging" ]]; then
-            echo "Branch name '$BRANCH' must start with feature/, fix/, hotfix/, chore/, or release/ (or be 'staging')"
+          if [[ ! "$BRANCH" =~ ^(feature|fix|hotfix|chore|release|claude)/.+$ ]] && [[ "$BRANCH" != "staging" ]]; then
+            echo "Branch name '$BRANCH' must start with feature/, fix/, hotfix/, chore/, release/, or claude/ (or be 'staging')"
             exit 1
           fi
