@@ -10,6 +10,7 @@ use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,6 +34,8 @@ use Illuminate\Support\Carbon;
  *
  * @property-read Collection<Reservation> $reservations
  * @property-read Collection<Reservation> $bookedReservations
+ *
+ * @property-read string $name
  */
 #[Fillable(['first_name', 'last_name', 'email', 'phone', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
@@ -60,13 +63,23 @@ class User extends Authenticatable implements FilamentUser, HasName, MustVerifyE
         return $this->hasMany(Reservation::class, 'booked_by_user_id');
     }
 
+    public function name(): Attribute
+    {
+        return Attribute::get(
+            fn () => "$this->first_name $this->last_name",
+        );
+    }
+
     public function getFilamentName(): string
     {
-        return "$this->first_name $this->last_name";
+        return $this->name;
     }
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->role === UserRole::Admin || $this->role === UserRole::Employee;
+        return match ($this->role) {
+            UserRole::Admin, UserRole::Employee => true,
+            default => false,
+        };
     }
 }
