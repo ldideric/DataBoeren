@@ -12,6 +12,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
+ * @property string $title
  * @property string $code
  * @property DiscountType $discount_type
  * @property float $discount_value
@@ -23,7 +24,7 @@ use Illuminate\Support\Carbon;
  *
  * @property-read Collection<Reservation> $reservations
  */
-#[Fillable(['code', 'discount_type', 'discount_value', 'expires_at', 'max_uses', 'uses_count'])]
+#[Fillable(['title', 'code', 'discount_type', 'discount_value', 'expires_at', 'max_uses', 'uses_count'])]
 class Coupon extends Model
 {
     use HasUuids;
@@ -32,6 +33,7 @@ class Coupon extends Model
     {
         return [
             'discount_type' => DiscountType::class,
+            'expires_at' => 'date',
         ];
     }
 

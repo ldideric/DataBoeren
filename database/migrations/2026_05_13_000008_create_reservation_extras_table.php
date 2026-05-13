@@ -12,8 +12,8 @@ return new class extends Migration {
             $table->foreignUuid('reservation_id')->constrained()->cascadeOnDelete();
             $table->foreignUuid('extra_id')->constrained()->restrictOnDelete();
             $table->unsignedSmallInteger('quantity')->default(1);
-            $table->decimal('unit_price', 8, 2);
-            $table->decimal('subtotal', 8, 2);
+            $table->decimal('unit_price');
+            $table->decimal('subtotal');
             $table->timestamps();
         });
     }

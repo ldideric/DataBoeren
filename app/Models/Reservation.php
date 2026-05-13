@@ -46,6 +46,8 @@ class Reservation extends Model
         return [
             'source' => ReservationSource::class,
             'status' => ReservationStatus::class,
+            'check_in' => 'date',
+            'check_out' => 'date',
         ];
     }
 

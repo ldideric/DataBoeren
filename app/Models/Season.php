@@ -24,6 +24,14 @@ class Season extends Model
 {
     use HasUuids;
 
+    protected function casts(): array
+    {
+        return [
+            'starts_at' => 'date',
+            'ends_at' => 'date',
+        ];
+    }
+
     public function campsitePrices(): HasMany
     {
         return $this->hasMany(CampsitePrice::class);

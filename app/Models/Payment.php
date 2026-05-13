@@ -30,6 +30,7 @@ class Payment extends Model
     {
         return [
             'status' => PaymentStatus::class,
+            'paid_at' => 'datetime',
         ];
     }
 

@@ -12,13 +12,13 @@ return new class extends Migration {
             $table->foreignUuid('reservation_id')->unique()->constrained()->cascadeOnDelete();
             $table->string('season_name');
             $table->unsignedSmallInteger('num_nights');
-            $table->decimal('nightly_rate', 8, 2);
-            $table->decimal('per_person_rate', 8, 2);
+            $table->decimal('nightly_rate');
+            $table->decimal('per_person_rate');
             $table->boolean('last_minute_applied')->default(false);
-            $table->decimal('last_minute_discount', 8, 2)->nullable();
-            $table->decimal('coupon_discount', 8, 2)->nullable();
-            $table->decimal('extras_total', 8, 2)->nullable();
-            $table->decimal('total', 10, 2);
+            $table->decimal('last_minute_discount')->nullable();
+            $table->decimal('coupon_discount')->nullable();
+            $table->decimal('extras_total')->nullable();
+            $table->decimal('total', 10);
             $table->timestamps();
         });
     }
