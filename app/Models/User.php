@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\UserRole;
+use App\Queries\UserQuery;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
@@ -36,6 +37,8 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<Reservation> $bookedReservations
  *
  * @property-read string $name
+ *
+ * @method UserQuery|static query()
  */
 #[Fillable(['first_name', 'last_name', 'email', 'phone', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
@@ -70,6 +73,16 @@ class User extends Authenticatable implements FilamentUser, HasName, MustVerifyE
         );
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->role === UserRole::Admin;
+    }
+
+    public function isEmployee(): bool
+    {
+        return $this->role === UserRole::Employee;
+    }
+
     public function getFilamentName(): string
     {
         return $this->name;
@@ -81,5 +94,10 @@ class User extends Authenticatable implements FilamentUser, HasName, MustVerifyE
             UserRole::Admin, UserRole::Employee => true,
             default => false,
         };
+    }
+
+    public function newEloquentBuilder($query): UserQuery
+    {
+        return new UserQuery($query);
     }
 }
