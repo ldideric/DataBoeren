@@ -29,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->passwordReset()
             // ->emailVerification() // TODO: Check later
-            // ->emailChangeVerification()
+            ->emailChangeVerification()
             ->profile(EditProfile::class)
             ->colors([
                 'primary' => Color::Amber,
