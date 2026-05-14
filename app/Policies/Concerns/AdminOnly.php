@@ -31,4 +31,14 @@ trait AdminOnly
     {
         return $user->isAdmin();
     }
+
+    public function restore(User $user, Model $model): bool
+    {
+        return $user->isAdmin();
+    }
+
+    public function forceDelete(User $user, Model $model): bool
+    {
+        return $user->isAdmin();
+    }
 }

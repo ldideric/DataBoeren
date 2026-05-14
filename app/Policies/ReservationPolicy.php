@@ -31,4 +31,14 @@ class ReservationPolicy
     {
         return $user->isAdmin();
     }
+
+    public function restore(User $user, Reservation $model): bool
+    {
+        return $user->isAdmin();
+    }
+
+    public function forceDelete(User $user, Reservation $model): bool
+    {
+        return $user->isAdmin();
+    }
 }

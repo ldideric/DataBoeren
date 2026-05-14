@@ -31,4 +31,14 @@ class CampsitePolicy
     {
         return $user->isAdmin();
     }
+
+    public function restore(User $user, Campsite $model): bool
+    {
+        return $user->isAdmin();
+    }
+
+    public function forceDelete(User $user, Campsite $model): bool
+    {
+        return $user->isAdmin();
+    }
 }

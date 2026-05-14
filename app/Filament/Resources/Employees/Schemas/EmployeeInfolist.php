@@ -32,6 +32,9 @@ class EmployeeInfolist
                         TextEntry::make('updated_at')
                             ->dateTime()
                             ->placeholder('-'),
+                        TextEntry::make('deleted_at')
+                            ->dateTime()
+                            ->placeholder('-'),
                     ]),
             ]);
     }

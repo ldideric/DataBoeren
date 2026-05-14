@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
@@ -19,13 +20,14 @@ use Illuminate\Support\Carbon;
  * @property bool $available
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Carbon|null $deleted_at
  *
  * @property-read Collection<ReservationExtra> $reservationExtras
  */
 #[Fillable(['name', 'description', 'billing_type', 'price', 'available'])]
 class Extra extends Model
 {
-    use HasUuids;
+    use HasUuids, SoftDeletes;
 
     protected function casts(): array
     {

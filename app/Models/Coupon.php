@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
@@ -21,13 +22,14 @@ use Illuminate\Support\Carbon;
  * @property int $uses_count
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Carbon|null $deleted_at
  *
  * @property-read Collection<Reservation> $reservations
  */
 #[Fillable(['title', 'code', 'discount_type', 'discount_value', 'expires_at', 'max_uses', 'uses_count'])]
 class Coupon extends Model
 {
-    use HasUuids;
+    use HasUuids, SoftDeletes;
 
     protected function casts(): array
     {
