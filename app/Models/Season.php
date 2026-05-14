@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Database\Factories\SeasonFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
@@ -22,7 +24,8 @@ use Illuminate\Support\Carbon;
 #[Fillable(['name', 'starts_at', 'ends_at'])]
 class Season extends Model
 {
-    use HasUuids;
+    /** @use HasFactory<SeasonFactory> */
+    use HasFactory, HasUuids;
 
     protected function casts(): array
     {

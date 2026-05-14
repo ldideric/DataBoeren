@@ -2,23 +2,20 @@
 
 namespace Database\Seeders;
 
-use App\Enums\UserRole;
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\App;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     public function run(): void
     {
-        User::factory()
-            ->withRole(UserRole::Admin)
-            ->create([
-                'first_name' => 'Boer',
-                'last_name' => 'Bertina',
-                'email' => 'admin@admin.com',
-            ]);
+        $this->call([
+            AdminUserSeeder::class,
+            SeasonSeeder::class,
+        ]);
+
+        if (App::isLocal()) {
+            $this->call(DevSeeder::class);
+        }
     }
 }

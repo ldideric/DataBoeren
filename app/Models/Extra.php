@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use App\Enums\BillingType;
+use Database\Factories\ExtraFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,7 +29,8 @@ use Illuminate\Support\Carbon;
 #[Fillable(['name', 'description', 'billing_type', 'price', 'available'])]
 class Extra extends Model
 {
-    use HasUuids, SoftDeletes;
+    /** @use HasFactory<ExtraFactory> */
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected function casts(): array
     {

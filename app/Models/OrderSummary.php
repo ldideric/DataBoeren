@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Database\Factories\OrderSummaryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -28,7 +30,8 @@ use Illuminate\Support\Carbon;
 #[Fillable(['reservation_id', 'season_name', 'num_nights', 'nightly_rate', 'per_person_rate', 'last_minute_applied', 'last_minute_discount', 'coupon_discount', 'extras_total', 'total'])]
 class OrderSummary extends Model
 {
-    use HasUuids;
+    /** @use HasFactory<OrderSummaryFactory> */
+    use HasFactory, HasUuids;
 
     public function reservation(): BelongsTo
     {

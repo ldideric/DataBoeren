@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use App\Enums\DiscountType;
+use Database\Factories\CouponFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -29,7 +31,8 @@ use Illuminate\Support\Carbon;
 #[Fillable(['title', 'code', 'discount_type', 'discount_value', 'expires_at', 'max_uses', 'uses_count'])]
 class Coupon extends Model
 {
-    use HasUuids, SoftDeletes;
+    /** @use HasFactory<CouponFactory> */
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected function casts(): array
     {

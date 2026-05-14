@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Enums\PaymentStatus;
+use Database\Factories\PaymentFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -24,7 +26,8 @@ use Illuminate\Support\Carbon;
 #[Fillable(['reservation_id', 'amount', 'status', 'method', 'paid_at'])]
 class Payment extends Model
 {
-    use HasUuids;
+    /** @use HasFactory<PaymentFactory> */
+    use HasFactory, HasUuids;
 
     protected function casts(): array
     {
