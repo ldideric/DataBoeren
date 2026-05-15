@@ -2,9 +2,10 @@
 
 namespace App\Enums;
 
-enum CampsiteType:string
+enum CampsiteType: string
 {
-case Tent = 'tent';
-case Caravan = 'caravan';
-case Camper = 'camper';
+    case Tent = 'tent';
+    case Trekkerveld = 'trekkerveld';
+    case CamperVan = 'camper_van';
+    case Caravan = 'caravan';
 }
