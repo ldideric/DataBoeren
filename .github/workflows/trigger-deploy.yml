@@ -2,7 +2,7 @@ name: Trigger Deploy
 
 on:
   push:
-    branches: [main, staging]
+    branches: [production, staging]
 
 jobs:
   trigger:
