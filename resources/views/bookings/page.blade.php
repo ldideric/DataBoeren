@@ -1,3 +1,7 @@
+{{-- om server te starten gebruik 2 verschillende git bash instances
+1. npm run dev
+2. php artisan serve --}}
+
 {{--
     bookings/page.blade.php
     This is a child view. It uses @extends to wrap itself in the layout,
@@ -12,6 +16,9 @@
 
 {{-- This fills the <main> block in the layout --}}
 @section('content')
+    <a href="{{ route('annuleren') }}" class="text-blue-500 hover:text-blue-700">Annuleren</a>
+
+
     <div class="max-w-4xl mx-auto py-8 px-6">
 
         <p class="text-sm text-gray-500 mb-6">
