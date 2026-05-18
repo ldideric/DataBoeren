@@ -11,36 +11,33 @@
 
 {{-- This fills the optional header bar in the layout --}}
 @section('header')
-    Bookings
+    Boekingen
 @endsection
 
 {{-- This fills the <main> block in the layout --}}
 @section('content')
-    <a href="{{ route('annuleren') }}" class="text-blue-500 hover:text-blue-700">Annuleren</a>
-
-
     <div class="max-w-4xl mx-auto py-8 px-6">
 
         <p class="text-sm text-gray-500 mb-6">
-            Welcome back, <span class="font-medium text-gray-700">{{ Auth::user()?->name ?? 'guest' }}</span>.
-            Here is an overview of all current bookings.
+            Welkom terug, <span class="font-medium text-gray-700">{{ Auth::user()?->name ?? 'gast' }}</span>.
+            Hier is een overzicht van alle huidige boekingen.
         </p>
 
         {{-- Placeholder booking cards --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            @foreach (['Campsite A', 'Campsite B', 'Campsite C'] as $campsite)
+            @foreach (['Kampeerplaats A', 'Kampeerplaats B', 'Kampeerplaats C'] as $campsite)
                 <div class="bg-white border border-gray-200 rounded-lg p-5 flex flex-col gap-3">
 
                     <div class="flex items-start justify-between gap-2">
                         <h2 class="font-medium text-gray-900">{{ $campsite }}</h2>
                         <span class="shrink-0 text-xs font-medium text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">
-                            Confirmed
+                            Bevestigd
                         </span>
                     </div>
 
                     <div class="text-sm text-gray-500 space-y-0.5">
-                        <p>Check-in: <span class="text-gray-700">12 Jun 2026</span></p>
-                        <p>Check-out: <span class="text-gray-700">15 Jun 2026</span></p>
+                        <p>Aankomst: <span class="text-gray-700">12 jun 2026</span></p>
+                        <p>Vertrek: <span class="text-gray-700">15 jun 2026</span></p>
                     </div>
 
                     <p class="text-sm text-gray-400 border-t border-gray-100 pt-3">
@@ -50,10 +47,10 @@
 
                     <div class="flex gap-2 mt-auto pt-1">
                         <a href="#" class="flex-1 text-center text-sm px-3 py-1.5 bg-green-700 text-white rounded-md hover:bg-green-800 transition-colors">
-                            View
+                            Bekijken
                         </a>
                         <a href="#" class="flex-1 text-center text-sm px-3 py-1.5 border border-gray-200 text-gray-600 rounded-md hover:bg-gray-50 transition-colors">
-                            Cancel
+                            Annuleren
                         </a>
                     </div>
 

@@ -14,9 +14,11 @@
                 </a>
 
                 <div class="hidden sm:flex items-center gap-1 text-sm">
-                    <a href="{{ route('home') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Bookings</a>
-                    <a href="#" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Campsites</a>
-                    <a href="#" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Extras</a>
+                    <a href="{{ route('home') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Home</a>
+                    <a href="{{ route('bookings') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Boekingen</a>
+                    <a href="{{ route('boeken') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Voorkeuren</a>
+                    <a href="#" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Kampeerplaatsen</a>
+                    <a href="#" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Extra's</a>
                     <a href="{{ route('invulformulier') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Invulformulier</a>
                 </div>
 
@@ -25,11 +27,11 @@
                 @auth
                     <span class="text-gray-400">{{ auth()->user()->name }}</span>
                     <a href="#" class="px-3 py-1.5 border border-gray-200 rounded-md text-gray-600 hover:bg-gray-50 transition-colors">
-                        Log out
+                        Uitloggen
                     </a>
                 @else
                     <a href="#" class="px-3 py-1.5 border border-gray-200 rounded-md text-gray-600 hover:bg-gray-50 transition-colors">
-                        Log in
+                        Inloggen
                     </a>
                 @endauth
             </div>

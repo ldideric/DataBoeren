@@ -1,1 +1,2 @@
-//
+import './cancelscript';
+import './bookingscript';
