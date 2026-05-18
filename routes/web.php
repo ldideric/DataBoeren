@@ -6,6 +6,10 @@ Route::get('/', function () {
     return view('bookings.page');
 })->name('home');
 
+Route::get('/formulier.blade.php', function () {
+    return view('bookings.formulier');
+})->name('invulformulier');
+
 Route::get('/annuleren.blade.php', function () {
     return view('bookings.Annuleren');
 })->name('annuleren');
