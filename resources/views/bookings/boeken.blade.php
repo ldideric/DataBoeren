@@ -170,7 +170,7 @@
 
   </div>
 
-  <script src="boekscript.js"></script>
+  <script src="boekenscript.js"></script>
 
 </body>
 </html>
