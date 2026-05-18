@@ -1,3 +1,7 @@
+@extends('layouts.app')
+
+@section('header')
+    Invulformulier
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,11 +9,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
+@endsection
+
+@section('content')
 <body class="bg-white max-w-xl mx-auto px-4 py-8 text-sm text-gray-800">
 
-    <h1 class="text-xl font-bold mb-6">Invulformulier</h1>
+    <h1 class="text-xl font-bold mb-6 m-4 md:m-6 lg:m-12">Invulformulier</h1>
 
-    <form id="registratie" class="space-y-6" action="">
+    <form id="registratie" class="space-y-6 m-4 md:m-6 lg:m-12" action="">
 
         <fieldset>
             <legend class="font-semibold border-b border-gray-300 w-full pb-1 mb-4">Persoonsgegevens</legend>
@@ -137,4 +144,6 @@
     </form>
 
 </body>
+@endsection
+
 </html>
