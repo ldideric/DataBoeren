@@ -10,7 +10,27 @@
             <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
                 <h1 class="text-xl font-bold text-gray-900">Invulformulier</h1>
 
-                <form id="registratie" class="mt-6 space-y-6" action="">
+                @if ($errors->any())
+                    <div class="mt-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                        <ul class="list-disc pl-5">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form id="registratie" class="mt-6 space-y-6" method="POST" action="{{ route('bookings.store') }}">
+                    @csrf
+
+                    @if ($campsite)
+                        <input type="hidden" name="campsite_id" value="{{ $campsite->id }}">
+
+                        <div class="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-900">
+                            Gekozen plek: <strong>{{ $campsite->name }}</strong>
+                            ({{ \Illuminate\Support\Str::headline($campsite->type->value) }})
+                        </div>
+                    @endif
                     <fieldset>
                         <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Persoonsgegevens</legend>
 
@@ -57,16 +77,17 @@
                         </div>
 
                         <div class="mt-4 grid gap-4 sm:grid-cols-2">
-                            <div>
-                                <label for="accommodatietype" class="block text-sm text-gray-700">Type accommodatie*</label>
-                                <select id="accommodatietype" name="accommodatietype" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
-                                    <option value="">Selecteer</option>
-                                    <option value="tent">Tent</option>
-                                    <option value="caravan">Caravan</option>
-                                    <option value="stacaravan">Stacaravan</option>
-                                    <option value="trekker">Trekkerstentje</option>
-                                </select>
-                            </div>
+                            @unless ($campsite)
+                                <div>
+                                    <label for="accommodatietype" class="block text-sm text-gray-700">Type accommodatie*</label>
+                                    <select id="accommodatietype" name="accommodatietype" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
+                                        <option value="">Selecteer</option>
+                                        @foreach ($campsiteTypes as $type)
+                                            <option value="{{ $type->value }}" @selected(old('accommodatietype', request('type')) === $type->value)>{{ \Illuminate\Support\Str::headline($type->value) }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endunless
                             <div>
                                 <label for="num_people" class="block text-sm text-gray-700">Aantal personen*</label>
                                 <input type="number" id="num_people" name="num_people" min="1" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
@@ -118,12 +139,12 @@
 
                         <div class="mt-4 space-y-2 text-sm text-gray-700">
                             <label class="flex items-center gap-2">
-                                <input type="checkbox" id="18+" name="18+" required class="h-4 w-4 rounded border-gray-300 text-gray-900">
+                                <input type="checkbox" id="adult_confirmation" name="adult_confirmation" value="1" required class="h-4 w-4 rounded border-gray-300 text-gray-900">
                                 Ik ben 18 jaar of ouder*
                             </label>
 
                             <label class="flex items-center gap-2">
-                                <input type="checkbox" id="huisregels" name="huisregels" required class="h-4 w-4 rounded border-gray-300 text-gray-900">
+                                <input type="checkbox" id="huisregels" name="huisregels" value="1" required class="h-4 w-4 rounded border-gray-300 text-gray-900">
                                 Ik ga akkoord met de huisregels*
                             </label>
                         </div>

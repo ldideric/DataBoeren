@@ -1,2 +1,1 @@
-import './cancelscript';
-import './bookingscript';
+import './campsite-filter';

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\CampsiteType;
+use App\Queries\CampsiteQuery;
 use Database\Factories\CampsiteFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Collection;
@@ -27,6 +28,8 @@ use Illuminate\Support\Carbon;
  *
  * @property-read Collection<CampsitePrice> $prices
  * @property-read Collection<Reservation> $reservations
+ *
+ * @method CampsiteQuery|static query()
  */
 #[Fillable(['name', 'type', 'has_electricity', 'max_people', 'max_vehicles', 'notes'])]
 class Campsite extends Model
@@ -49,5 +52,10 @@ class Campsite extends Model
     public function reservations(): HasMany
     {
         return $this->hasMany(Reservation::class);
+    }
+
+    public function newEloquentBuilder($query): CampsiteQuery
+    {
+        return new CampsiteQuery($query);
     }
 }

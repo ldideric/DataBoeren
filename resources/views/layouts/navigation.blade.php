@@ -1,13 +1,7 @@
-{{--
-    layouts/navigation.blade.php
-    This partial is @include'd into the layout. It contains the navbar.
-    Anything here shows up at the top of every page that uses layouts.app.
---}}
 <nav class="bg-white border-b border-gray-200">
     <div class="max-w-4xl mx-auto px-6">
         <div class="flex justify-between items-center h-14">
 
-            {{-- Left side: logo + nav links --}}
             <div class="flex items-center gap-6">
                 <a href="{{ route('home') }}" class="text-base font-bold text-green-700 tracking-tight">
                     De Groene Weide
@@ -15,14 +9,12 @@
 
                 <div class="hidden sm:flex items-center gap-1 text-sm">
                     <a href="{{ route('home') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Home</a>
-                    <a href="{{ route('bookings') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Boekingen</a>
-                    <a href="{{ route('boeken') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Voorkeuren</a>
-                    <a href="#" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Kampeerplaatsen</a>
-                    <a href="#" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Extra's</a>
-                    <a href="{{ route('invulformulier') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Invulformulier</a>
+                    <a href="{{ route('bookings.index') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Boekingen</a>
+                    <a href="{{ route('campsites.index') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Kampeerplaatsen</a>
+                    <a href="{{ route('bookings.create') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Reserveren</a>
+                    <a href="{{ route('bookings.cancel.form') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Annuleren</a>
                 </div>
 
-            {{-- Right side: user info --}}
             <div class="flex items-center gap-3 text-sm">
                 @auth
                     <span class="text-gray-400">{{ auth()->user()->name }}</span>

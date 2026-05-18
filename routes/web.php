@@ -1,23 +1,21 @@
 <?php
 
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\CampsiteController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('bookings.homepage');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/bookings', function () {
-    return view('bookings.page');
-})->name('bookings');
+Route::get('/campsites', [CampsiteController::class, 'index'])->name('campsites.index');
 
-Route::get('/boeken', function () {
-    return view('bookings.book');
-})->name('boeken');
-
-Route::get('/formulier', function () {
-    return view('bookings.form');
-})->name('invulformulier');
-
-Route::get('/annuleren', function () {
-    return view('bookings.cancel');
-})->name('annuleren');
+Route::controller(BookingController::class)
+    ->prefix('bookings')
+    ->name('bookings.')
+    ->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/cancel', 'cancelForm')->name('cancel.form');
+        Route::post('/cancel', 'cancel')->name('cancel');
+    });
