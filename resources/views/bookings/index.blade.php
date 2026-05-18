@@ -40,11 +40,23 @@
                             <p>Vertrek: <span class="text-gray-700">{{ $reservation->check_out->format('d M Y') }}</span></p>
                         </div>
 
-                        <div class="flex gap-2 mt-auto pt-1">
-                            <a href="{{ route('bookings.cancel.form') }}" class="flex-1 text-center text-sm px-3 py-1.5 border border-gray-200 text-gray-600 rounded-md hover:bg-gray-50 transition-colors">
-                                Annuleren
-                            </a>
-                        </div>
+                        @if ($reservation->status !== \App\Enums\ReservationStatus::Cancelled)
+                            <form
+                                method="POST"
+                                action="{{ route('bookings.destroy', $reservation) }}"
+                                data-confirm="Weet u zeker dat u deze reservering wilt annuleren?"
+                                class="mt-auto pt-1"
+                            >
+                                @csrf
+                                @method('DELETE')
+                                <button
+                                    type="submit"
+                                    class="w-full text-center text-sm px-3 py-1.5 border border-gray-200 text-gray-600 rounded-md hover:bg-gray-50 transition-colors"
+                                >
+                                    Annuleren
+                                </button>
+                            </form>
+                        @endif
 
                     </div>
                 @endforeach

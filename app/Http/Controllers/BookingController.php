@@ -5,26 +5,26 @@ namespace App\Http\Controllers;
 use App\Enums\CampsiteType;
 use App\Enums\ReservationSource;
 use App\Enums\ReservationStatus;
-use App\Enums\UserRole;
 use App\Http\Requests\BookingRequest;
 use App\Models\Campsite;
 use App\Models\Reservation;
-use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class BookingController extends Controller
 {
     public function index(): View
     {
-        $reservations = Auth::check()
-            ? Auth::user()->reservations()->with('campsite')->latest('check_in')->get()
-            : collect();
+        $reservations = Auth::user()
+            ->reservations()
+            ->with('campsite')
+            ->latest('check_in')
+            ->get();
 
         return view('bookings.index', [
             'reservations' => $reservations,
@@ -49,85 +49,76 @@ class BookingController extends Controller
         $checkIn = Carbon::parse($data['check_in']);
         $checkOut = Carbon::parse($data['check_out']);
 
-        $campsite = $this->resolveCampsite($request, $checkIn, $checkOut);
+        /**
+         * @todo Postgres prod: replace this app-level lock with a database-level
+         *       exclusion constraint:
+         *         CREATE EXTENSION btree_gist;
+         *         ALTER TABLE reservations ADD CONSTRAINT reservations_no_overlap
+         *           EXCLUDE USING gist (
+         *             campsite_id WITH =,
+         *             daterange(check_in, check_out, '[)') WITH &&
+         *           ) WHERE (status IN ('pending', 'confirmed') AND deleted_at IS NULL);
+         *       The lockForUpdate() approach below works on both MySQL and Postgres
+         *       but only protects writes that go through this code path — Filament
+         *       admin saves, Tinker, etc. can still double-book.
+         */
+        DB::transaction(function () use ($request, $checkIn, $checkOut) {
+            $campsite = $this->lockAvailableCampsite($request, $checkIn, $checkOut);
 
-        if (! $campsite) {
-            throw ValidationException::withMessages([
-                'campsite_id' => 'De gekozen plek is niet (meer) beschikbaar voor deze data.',
+            if (! $campsite) {
+                throw ValidationException::withMessages([
+                    'campsite_id' => 'De gekozen plek is niet (meer) beschikbaar voor deze data.',
+                ]);
+            }
+
+            Reservation::create([
+                'customer_id' => Auth::id(),
+                'campsite_id' => $campsite->id,
+                'source' => ReservationSource::Online,
+                'check_in' => $checkIn,
+                'check_out' => $checkOut,
+                'num_people' => $request->partySize(),
+                'num_vehicles' => 1,
+                'status' => ReservationStatus::Pending,
             ]);
-        }
-
-        $customer = User::firstOrCreate(
-            ['email' => $data['email']],
-            [
-                'first_name' => $data['first_name'],
-                'last_name' => $data['last_name'],
-                'phone' => $data['phone'],
-                'role' => UserRole::Customer,
-                'password' => bcrypt(Str::random(32)),
-            ],
-        );
-
-        Reservation::create([
-            'customer_id' => $customer->id,
-            'campsite_id' => $campsite->id,
-            'source' => ReservationSource::Online,
-            'check_in' => $checkIn,
-            'check_out' => $checkOut,
-            'num_people' => $request->partySize(),
-            'num_vehicles' => 1,
-            'status' => ReservationStatus::Pending,
-        ]);
+        });
 
         return redirect()
             ->route('bookings.index')
             ->with('status', 'Uw reservering is ingediend.');
     }
 
-    public function cancelForm(): View
+    public function destroy(Reservation $reservation): RedirectResponse
     {
-        return view('bookings.cancel');
-    }
+        abort_if($reservation->customer_id !== Auth::id(), 403);
 
-    public function cancel(Request $request): RedirectResponse
-    {
-        $data = $request->validate([
-            'email' => ['required', 'email'],
+        if ($reservation->status === ReservationStatus::Cancelled) {
+            return redirect()->route('bookings.index');
+        }
+
+        $reservation->update([
+            'status' => ReservationStatus::Cancelled,
+            'cancelled_at' => now(),
+            'cancellation_reason' => 'Geannuleerd door klant',
+            'cancelled_by_user_id' => Auth::id(),
         ]);
 
-        $customer = User::firstWhere('email', $data['email']);
-
-        if ($customer) {
-            $customer->reservations()
-                ->whereIn('status', [ReservationStatus::Pending, ReservationStatus::Confirmed])
-                ->update([
-                    'status' => ReservationStatus::Cancelled,
-                    'cancelled_at' => now(),
-                    'cancellation_reason' => 'Geannuleerd door klant',
-                ]);
-        }
-
         return redirect()
-            ->route('home')
-            ->with('status', 'Als er actieve reserveringen bij dit e-mailadres horen zijn deze geannuleerd.');
+            ->route('bookings.index')
+            ->with('status', 'Reservering geannuleerd.');
     }
 
-    private function resolveCampsite(BookingRequest $request, Carbon $checkIn, Carbon $checkOut): ?Campsite
+    private function lockAvailableCampsite(BookingRequest $request, Carbon $checkIn, Carbon $checkOut): ?Campsite
     {
-        $campsiteId = $request->validated('campsite_id');
-
-        if ($campsiteId) {
-            return Campsite::query()
-                ->whereKey($campsiteId)
-                ->whereFitsParty($request->partySize())
-                ->whereAvailableBetween($checkIn, $checkOut)
-                ->first();
-        }
-
-        return Campsite::query()
-            ->whereType($request->accommodatieType())
+        $query = Campsite::query()
             ->whereFitsParty($request->partySize())
             ->whereAvailableBetween($checkIn, $checkOut)
-            ->first();
+            ->lockForUpdate();
+
+        if ($id = $request->validated('campsite_id')) {
+            return $query->whereKey($id)->first();
+        }
+
+        return $query->whereType($request->accommodatieType())->first();
     }
 }

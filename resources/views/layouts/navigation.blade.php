@@ -9,20 +9,25 @@
 
                 <div class="hidden sm:flex items-center gap-1 text-sm">
                     <a href="{{ route('home') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Home</a>
-                    <a href="{{ route('bookings.index') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Boekingen</a>
                     <a href="{{ route('campsites.index') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Kampeerplaatsen</a>
-                    <a href="{{ route('bookings.create') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Reserveren</a>
-                    <a href="{{ route('bookings.cancel.form') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Annuleren</a>
+                    @auth
+                        <a href="{{ route('bookings.index') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Mijn boekingen</a>
+                        <a href="{{ route('bookings.create') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Reserveren</a>
+                    @endauth
                 </div>
+            </div>
 
             <div class="flex items-center gap-3 text-sm">
                 @auth
                     <span class="text-gray-400">{{ auth()->user()->name }}</span>
-                    <a href="#" class="px-3 py-1.5 border border-gray-200 rounded-md text-gray-600 hover:bg-gray-50 transition-colors">
-                        Uitloggen
-                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="px-3 py-1.5 border border-gray-200 rounded-md text-gray-600 hover:bg-gray-50 transition-colors">
+                            Uitloggen
+                        </button>
+                    </form>
                 @else
-                    <a href="#" class="px-3 py-1.5 border border-gray-200 rounded-md text-gray-600 hover:bg-gray-50 transition-colors">
+                    <a href="{{ route('login') }}" class="px-3 py-1.5 border border-gray-200 rounded-md text-gray-600 hover:bg-gray-50 transition-colors">
                         Inloggen
                     </a>
                 @endauth

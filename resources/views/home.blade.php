@@ -14,23 +14,23 @@
                 <p class="mt-3 text-lg text-gray-600">Welkom bij onze gezellige camping midden in de natuur.</p>
 
                 <a
-                    id="boekBtn"
                     href="{{ route('campsites.index') }}"
                     class="mt-8 block w-full rounded-2xl bg-black px-6 py-4 text-lg font-medium text-white transition hover:bg-gray-900"
                 >
                     Boek nu
                 </a>
 
-                <div class="mt-8 border-t border-gray-200 pt-5">
-                    <p class="text-base text-gray-600">Wilt u uw boeking annuleren?</p>
-                    <a
-                        id="annuleerBtn"
-                        href="{{ route('bookings.cancel.form') }}"
-                        class="mt-2 inline-block font-semibold text-gray-900 hover:underline"
-                    >
-                        Klik hier
-                    </a>
-                </div>
+                @auth
+                    <div class="mt-8 border-t border-gray-200 pt-5">
+                        <p class="text-base text-gray-600">Bekijk of annuleer uw boekingen:</p>
+                        <a
+                            href="{{ route('bookings.index') }}"
+                            class="mt-2 inline-block font-semibold text-gray-900 hover:underline"
+                        >
+                            Naar mijn boekingen
+                        </a>
+                    </div>
+                @endauth
             </div>
         </div>
     </div>
