@@ -4,8 +4,10 @@ namespace App\Models;
 
 use App\Enums\ReservationSource;
 use App\Enums\ReservationStatus;
+use App\Observers\ReservationObserver;
 use Database\Factories\ReservationFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -53,6 +55,7 @@ use Illuminate\Support\Carbon;
  *       todo.md.
  */
 #[Fillable(['customer_id', 'campsite_id', 'booked_by_user_id', 'coupon_id', 'source', 'check_in', 'check_out', 'num_people', 'num_vehicles', 'status', 'cancelled_at', 'cancellation_reason', 'cancelled_by_user_id'])]
+#[ObservedBy(ReservationObserver::class)]
 class Reservation extends Model
 {
     /** @use HasFactory<ReservationFactory> */
