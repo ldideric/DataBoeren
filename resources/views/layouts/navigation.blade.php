@@ -9,18 +9,16 @@
 
             {{-- Left side: logo + nav links --}}
             <div class="flex items-center gap-6">
-                <a href="{{ route('home') }}" class="text-base font-bold text-green-700 tracking-tight">
+                <a href="{{ route('homepage') }}" class="text-base font-bold text-green-700 tracking-tight">
                     De Groene Weide
                 </a>
 
                 <div class="hidden sm:flex items-center gap-1 text-sm">
-                    <a href="{{ route('home') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Bookings</a>
-                    <a href="#" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Campsites</a>
-                    <a href="#" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Extras</a>
+                    <a href="{{ route('boeken') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Bookings</a>
                     <a href="{{ route('invulformulier') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Invulformulier</a>
                 </div>
 
-            {{-- Right side: user info --}}
+            {{-- Right side: user info
             <div class="flex items-center gap-3 text-sm">
                 @auth
                     <span class="text-gray-400">{{ auth()->user()->name }}</span>
@@ -32,7 +30,7 @@
                         Log in
                     </a>
                 @endauth
-            </div>
+            </div> --}}
 
         </div>
     </div>

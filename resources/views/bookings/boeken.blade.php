@@ -1,5 +1,7 @@
+@extends('layouts.app')
 <!DOCTYPE html>
 <html lang="nl">
+@section('header')
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -7,6 +9,8 @@
 
   <link rel="stylesheet" href="boekstyle.css">
 </head>
+@endsection
+@section('content')
 <body>
 
   <div class="container">
@@ -83,9 +87,9 @@
 
       </div>
 
-      <button id="toonVoorkeuren">
+      {{-- <button id="toonVoorkeuren">
         Bekijk voorkeuren
-      </button>
+      </button> --}}
 
     </aside>
 
@@ -93,9 +97,9 @@
 
   <h2>Camping Boekingspagina</h2>
 
-  <p class="subtitle">
+  {{-- <p class="subtitle">
     Bekijk alle beschikbare accommodaties
-  </p>
+  </p> --}}
 
   <div id="resultaatTekst" class="resultaat-tekst">
     20 beschikbaarheden gevonden
@@ -173,4 +177,5 @@
   <script src="boekenscript.js"></script>
 
 </body>
+@endsection
 </html>
