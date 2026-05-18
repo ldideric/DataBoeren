@@ -3,7 +3,7 @@ name: Check branch name
 on:
   pull_request:
     branches:
-      - main
+      - production
       - staging
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
       - name: Check branch naming convention
         run: |
           BRANCH="${{ github.head_ref }}"
-          if [[ ! "$BRANCH" =~ ^(feature|fix|hotfix|chore|release|claude)/.+$ ]] && [[ "$BRANCH" != "staging" ]]; then
-            echo "Branch name '$BRANCH' must start with feature/, fix/, hotfix/, chore/, release/, or claude/ (or be 'staging')"
+          if [[ ! "$BRANCH" =~ ^(feature|fix|hotfix|chore|release|claude)/.+$ ]] && [[ "$BRANCH" != "staging" ]] && [[ "$BRANCH" != "production" ]]; then
+            echo "Branch name '$BRANCH' must start with feature/, fix/, hotfix/, chore/, release/, or claude/ (or be 'staging' or 'production')"
             exit 1
           fi

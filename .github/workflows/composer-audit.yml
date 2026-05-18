@@ -3,7 +3,7 @@ name: Composer audit
 on:
   pull_request:
     branches:
-      - main
+      - production
       - staging
 
 jobs:
