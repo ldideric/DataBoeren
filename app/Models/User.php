@@ -41,6 +41,10 @@ use Illuminate\Support\Carbon;
  * @property-read string $name
  *
  * @method UserQuery|static query()
+ *
+ * @todo The booking form collects `city` but the users table has no address
+ *       column. Add `city` (and likely `street` / `postal_code` / `country`)
+ *       or split into a related `addresses` table. See [todo.md](../../todo.md).
  */
 #[Fillable(['first_name', 'last_name', 'email', 'phone', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
