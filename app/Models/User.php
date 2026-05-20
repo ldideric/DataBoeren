@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Laravel\Cashier\Billable;
 
 /**
  * @property string $id
@@ -51,7 +52,11 @@ use Illuminate\Support\Carbon;
 class User extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasUuids, SoftDeletes;
+    use HasFactory;
+    use Notifiable;
+    use HasUuids;
+    use SoftDeletes;
+    use Billable;
 
     protected function casts(): array
     {
