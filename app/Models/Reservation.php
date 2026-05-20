@@ -27,7 +27,8 @@ use Illuminate\Support\Carbon;
  * @property ReservationSource $source
  * @property Carbon $check_in
  * @property Carbon $check_out
- * @property int $num_people
+ * @property int $num_adults
+ * @property int $num_children
  * @property int $num_vehicles
  * @property ReservationStatus $status
  * @property Carbon|null $cancelled_at
@@ -50,7 +51,7 @@ use Illuminate\Support\Carbon;
  *       row is created. Wire the fake payment flow before persisting. See
  *       todo.md.
  */
-#[Fillable(['customer_id', 'campsite_id', 'booked_by_user_id', 'coupon_id', 'source', 'check_in', 'check_out', 'num_people', 'num_vehicles', 'status', 'cancelled_at', 'cancellation_reason', 'cancelled_by_user_id'])]
+#[Fillable(['customer_id', 'campsite_id', 'booked_by_user_id', 'coupon_id', 'source', 'check_in', 'check_out', 'num_adults', 'num_children', 'num_vehicles', 'status', 'cancelled_at', 'cancellation_reason', 'cancelled_by_user_id'])]
 #[ObservedBy(ReservationObserver::class)]
 class Reservation extends Model
 {

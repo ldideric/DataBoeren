@@ -47,8 +47,48 @@ class BookingController extends Controller
                 ->with('status', 'Kies eerst een kampeerplaats.');
         }
 
+        $checkIn = $request->date('check_in');
+        $checkOut = $request->date('check_out');
+        $adults = $request->filled('adults') ? max(1, (int) $request->integer('adults')) : null;
+        $children = $request->filled('children') ? max(0, (int) $request->integer('children')) : null;
+        $vehicles = $request->filled('vehicles') ? max(0, (int) $request->integer('vehicles')) : null;
+
+        $datesOk = $checkIn
+            && $checkOut
+            && $checkOut->greaterThan($checkIn)
+            && $checkIn->greaterThanOrEqualTo(Carbon::today());
+
+        if (! $datesOk || $adults === null || $children === null || $vehicles === null) {
+            return redirect()
+                ->route('campsites.index')
+                ->with('status', 'Vul eerst je verblijfsgegevens in.');
+        }
+
+        $fits = Campsite::query()
+            ->whereKey($campsite->id)
+            ->whereFitsParty($adults + $children, $vehicles)
+            ->whereAvailableBetween($checkIn, $checkOut)
+            ->exists();
+
+        if (! $fits) {
+            return redirect()
+                ->route('campsites.index', [
+                    'datestart' => $checkIn->format('Y-m-d'),
+                    'dateend' => $checkOut->format('Y-m-d'),
+                    'adults' => $adults,
+                    'children' => $children,
+                    'vehicles' => $vehicles,
+                ])
+                ->with('status', 'Deze plek is niet (meer) beschikbaar voor je verblijfsgegevens.');
+        }
+
         return view('bookings.create', [
             'campsite' => $campsite,
+            'checkIn' => $checkIn,
+            'checkOut' => $checkOut,
+            'adults' => $adults,
+            'children' => $children,
+            'vehicles' => $vehicles,
         ]);
     }
 
@@ -103,8 +143,9 @@ class BookingController extends Controller
                 'source' => ReservationSource::Online,
                 'check_in' => $checkIn,
                 'check_out' => $checkOut,
-                'num_people' => $request->partySize(),
-                'num_vehicles' => 1,
+                'num_adults' => (int) $data['num_adults'],
+                'num_children' => (int) $data['num_children'],
+                'num_vehicles' => $request->vehicleCount(),
                 'status' => ReservationStatus::Pending,
             ]);
 
@@ -121,7 +162,7 @@ class BookingController extends Controller
             Mail::to($user->email)->send(new MagicLink($user, $url));
 
             return redirect()
-                ->route('login')
+                ->route('login.sent')
                 ->with('status', 'Uw reservering is ingediend. We hebben u een inloglink gemaild om uw boekingen te beheren.');
         }
 
@@ -154,7 +195,7 @@ class BookingController extends Controller
     {
         return Campsite::query()
             ->whereKey($request->validated('campsite_id'))
-            ->whereFitsParty($request->partySize())
+            ->whereFitsParty($request->partySize(), $request->vehicleCount())
             ->whereAvailableBetween($checkIn, $checkOut)
             ->lockForUpdate()
             ->first();

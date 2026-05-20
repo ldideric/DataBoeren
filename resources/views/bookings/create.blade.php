@@ -24,10 +24,37 @@
                     @csrf
 
                     <input type="hidden" name="campsite_id" value="{{ $campsite->id }}">
+                    <input type="hidden" name="check_in" value="{{ $checkIn->format('Y-m-d') }}">
+                    <input type="hidden" name="check_out" value="{{ $checkOut->format('Y-m-d') }}">
+                    <input type="hidden" name="num_adults" value="{{ $adults }}">
+                    <input type="hidden" name="num_children" value="{{ $children }}">
+                    <input type="hidden" name="num_vehicles" value="{{ $vehicles }}">
 
-                    <div class="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-900">
-                        Gekozen plek: <strong>{{ $campsite->name }}</strong>
-                        ({{ \Illuminate\Support\Str::headline($campsite->type->value) }})
+                    <div class="space-y-2 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-900">
+                        <div>
+                            Gekozen plek: <strong>{{ $campsite->name }}</strong>
+                            ({{ \Illuminate\Support\Str::headline($campsite->type->value) }})
+                        </div>
+                        <div>
+                            Verblijf:
+                            <strong>{{ $checkIn->format('d M Y') }}</strong> t/m
+                            <strong>{{ $checkOut->format('d M Y') }}</strong>
+                        </div>
+                        <div>
+                            Groep:
+                            <strong>{{ $adults }}</strong> {{ $adults === 1 ? 'volwassene' : 'volwassenen' }},
+                            <strong>{{ $children }}</strong> {{ $children === 1 ? 'kind' : 'kinderen' }},
+                            <strong>{{ $vehicles }}</strong> {{ $vehicles === 1 ? 'voertuig' : 'voertuigen' }}.
+                        </div>
+                        <div class="pt-1">
+                            <a href="{{ route('campsites.index', [
+                                'datestart' => $checkIn->format('Y-m-d'),
+                                'dateend' => $checkOut->format('Y-m-d'),
+                                'adults' => $adults,
+                                'children' => $children,
+                                'vehicles' => $vehicles,
+                            ]) }}" class="underline">Wijzig verblijfsgegevens</a>
+                        </div>
                     </div>
 
                     <fieldset>
@@ -67,33 +94,7 @@
                     </fieldset>
 
                     <fieldset>
-                        <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Reservering &amp; Verblijf</legend>
-
-                        <div class="mt-4 grid gap-4 sm:grid-cols-2">
-                            <div>
-                                <label for="check_in" class="block text-sm text-gray-700">Aankomstdatum*</label>
-                                <input type="date" id="check_in" name="check_in" value="{{ old('check_in') }}" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
-                            </div>
-                            <div>
-                                <label for="check_out" class="block text-sm text-gray-700">Vertrekdatum*</label>
-                                <input type="date" id="check_out" name="check_out" value="{{ old('check_out') }}" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
-                            </div>
-                        </div>
-
-                        <div class="mt-4 grid gap-4 sm:grid-cols-2">
-                            <div>
-                                <label for="num_people" class="block text-sm text-gray-700">Aantal personen*</label>
-                                <input type="number" id="num_people" name="num_people" min="1" value="{{ old('num_people') }}" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
-                            </div>
-                            <div>
-                                <label for="aantalkinderen" class="block text-sm text-gray-700">Aantal kinderen*</label>
-                                <input type="number" id="aantalkinderen" name="aantalkinderen" min="0" value="{{ old('aantalkinderen', 0) }}" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Overig</legend>
+                        <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Betaalmethode</legend>
 
                         <div class="mt-4">
                             <label for="pay_method" class="block text-sm text-gray-700">Betaalmethode*</label>
@@ -107,7 +108,7 @@
                     </fieldset>
 
                     <fieldset>
-                        <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Checkboxes</legend>
+                        <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Akkoord</legend>
 
                         <div class="mt-4 space-y-2 text-sm text-gray-700">
                             <label class="flex items-center gap-2">

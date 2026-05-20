@@ -12,6 +12,7 @@ Route::get('/campsites', [CampsiteController::class, 'index'])->name('campsites.
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'requestForm'])->name('login');
     Route::post('/login', [AuthController::class, 'sendLink'])->name('login.send');
+    Route::get('/login/sent', [AuthController::class, 'linkSent'])->name('login.sent');
 });
 
 Route::get('/auth/link/{user}', [AuthController::class, 'verify'])

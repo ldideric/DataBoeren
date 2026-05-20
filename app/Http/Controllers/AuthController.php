@@ -19,6 +19,11 @@ class AuthController extends Controller
         return view('auth.request');
     }
 
+    public function linkSent(): View
+    {
+        return view('auth.link-sent');
+    }
+
     public function sendLink(Request $request): View
     {
         $data = $request->validate([
