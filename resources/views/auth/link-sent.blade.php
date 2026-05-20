@@ -14,12 +14,15 @@
                     <div class="mt-4 rounded-md border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-800">
                         {{ session('status') }}
                     </div>
+                    <p class="mt-4 text-sm text-gray-600">
+                        Open de link in uw e-mail om uw boekingen te bekijken of te annuleren. De link is 15 minuten geldig.
+                    </p>
+                @else
+                    <p class="mt-4 text-sm text-gray-600">
+                        Als er een inloglink kon worden verstuurd, ontvangt u deze binnen enkele momenten.
+                        De link is 15 minuten geldig.
+                    </p>
                 @endif
-
-                <p class="mt-4 text-sm text-gray-600">
-                    Als er een account bestaat met dit e-mailadres, hebben we u een inloglink gestuurd.
-                    De link is 15 minuten geldig.
-                </p>
             </div>
         </div>
     </div>

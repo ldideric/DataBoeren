@@ -45,7 +45,7 @@
                                         type="number"
                                         id="adults"
                                         name="adults"
-                                        value="{{ $adults }}"
+                                        value="{{ $adults ?? 1}}"
                                         min="1"
                                         required
                                         class="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
@@ -118,7 +118,7 @@
                         </div>
                     @elseif ($campsites->isEmpty())
                         <p class="mt-2 text-base text-gray-600">
-                            Geen resultaten van {{ $checkIn->format('d M Y') }} t/m {{ $checkOut->format('d M Y') }}
+                            Geen resultaten van {{ $checkIn->format('d-m-Y') }} t/m {{ $checkOut->format('d-m-Y') }}
                             voor {{ $adults + $children }} {{ $adults + $children === 1 ? 'persoon' : 'personen' }}.
                         </p>
 
@@ -128,7 +128,7 @@
                         </div>
                     @else
                         <p class="mt-2 text-base text-gray-600">
-                            Beschikbaar van {{ $checkIn->format('d M Y') }} t/m {{ $checkOut->format('d M Y') }}
+                            Beschikbaar van {{ $checkIn->format('d-m-Y') }} t/m {{ $checkOut->format('d-m-Y') }}
                             voor {{ $adults + $children }} {{ $adults + $children === 1 ? 'persoon' : 'personen' }}
                             ({{ $vehicles }} {{ $vehicles === 1 ? 'voertuig' : 'voertuigen' }}).
                         </p>
