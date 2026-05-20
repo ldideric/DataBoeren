@@ -46,10 +46,6 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<ReservationExtra> $extras
  * @property-read Collection<Payment> $payments
  *
- * @todo The booking form collects `num_plate` and `voertuigtype` but neither is
- *       persisted. Add a `reservation_vehicles` table (reservation_id, plate,
- *       type) or store them on this row if we keep the one-vehicle-per-booking
- *       rule. See [todo.md](../../todo.md).
  * @todo Payment method (`pay_method`) is collected on the form but no Payment
  *       row is created. Wire the fake payment flow before persisting. See
  *       todo.md.

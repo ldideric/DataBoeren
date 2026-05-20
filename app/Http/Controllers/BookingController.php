@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CampsiteType;
 use App\Enums\ReservationSource;
 use App\Enums\ReservationStatus;
 use App\Enums\UserRole;
@@ -36,14 +35,19 @@ class BookingController extends Controller
         ]);
     }
 
-    public function create(Request $request): View
+    public function create(Request $request): View|RedirectResponse
     {
         $campsite = $request->filled('campsite')
             ? Campsite::find($request->query('campsite'))
             : null;
 
+        if (! $campsite) {
+            return redirect()
+                ->route('campsites.index')
+                ->with('status', 'Kies eerst een kampeerplaats.');
+        }
+
         return view('bookings.create', [
-            'campsiteTypes' => CampsiteType::cases(),
             'campsite' => $campsite,
         ]);
     }
@@ -83,9 +87,15 @@ class BookingController extends Controller
                     'first_name' => $data['first_name'],
                     'last_name' => $data['last_name'],
                     'phone' => $data['phone'],
+                    'province' => $request->province(),
                     'role' => UserRole::Customer,
                 ],
             );
+
+            if ($user->province !== $request->province()) {
+                $user->province = $request->province();
+                $user->save();
+            }
 
             Reservation::create([
                 'customer_id' => $user->id,
@@ -142,15 +152,11 @@ class BookingController extends Controller
 
     private function lockAvailableCampsite(BookingRequest $request, Carbon $checkIn, Carbon $checkOut): ?Campsite
     {
-        $query = Campsite::query()
+        return Campsite::query()
+            ->whereKey($request->validated('campsite_id'))
             ->whereFitsParty($request->partySize())
             ->whereAvailableBetween($checkIn, $checkOut)
-            ->lockForUpdate();
-
-        if ($id = $request->validated('campsite_id')) {
-            return $query->whereKey($id)->first();
-        }
-
-        return $query->whereType($request->accommodatieType())->first();
+            ->lockForUpdate()
+            ->first();
     }
 }
