@@ -15,12 +15,12 @@
                         {{ session('status') }}
                     </div>
                     <p class="mt-4 text-sm text-gray-600">
-                        Open de link in uw e-mail om uw boekingen te bekijken of te annuleren. De link is 15 minuten geldig.
+                        Open de link in uw e-mail om uw boekingen te bekijken of te annuleren. De link is 60 minuten geldig.
                     </p>
                 @else
                     <p class="mt-4 text-sm text-gray-600">
-                        Als er een inloglink kon worden verstuurd, ontvangt u deze binnen enkele momenten.
-                        De link is 15 minuten geldig.
+                        Als er een link kon worden verstuurd, ontvangt u deze binnen enkele momenten.
+                        De link is 60 minuten geldig.
                     </p>
                 @endif
             </div>

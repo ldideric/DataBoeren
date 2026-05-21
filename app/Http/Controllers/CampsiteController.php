@@ -14,9 +14,9 @@ class CampsiteController extends Controller
     {
         $checkIn = $request->date('datestart');
         $checkOut = $request->date('dateend');
-        $adults = $request->filled('adults') ? max(1, (int) $request->integer('adults')) : null;
-        $children = $request->filled('children') ? max(0, (int) $request->integer('children')) : null;
-        $vehicles = $request->filled('vehicles') ? max(0, (int) $request->integer('vehicles')) : null;
+        $adults = $request->filled('adults') ? max(1, $request->integer('adults')) : null;
+        $children = $request->filled('children') ? max(0, $request->integer('children')) : null;
+        $vehicles = $request->filled('vehicles') ? max(0, $request->integer('vehicles')) : null;
 
         $hasValidDates = $checkIn
             && $checkOut

@@ -10,28 +10,32 @@ use App\Mail\MagicLink;
 use App\Models\Campsite;
 use App\Models\Reservation;
 use App\Models\User;
+use App\Support\SignedLink;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\ValidationException;
 
 class BookingController extends Controller
 {
-    public function index(): View
+    public function index(User $user): View
     {
-        $reservations = Auth::user()
-            ->reservations()
+        $reservations = $user->reservations()
             ->with('campsite')
             ->latest('check_in')
             ->get();
 
+        $cancelUrls = $reservations->mapWithKeys(fn (Reservation $reservation) => [
+            $reservation->id => SignedLink::cancelReservation($user, $reservation),
+        ]);
+
         return view('bookings.index', [
+            'user' => $user,
             'reservations' => $reservations,
+            'cancelUrls' => $cancelUrls,
         ]);
     }
 
@@ -49,9 +53,9 @@ class BookingController extends Controller
 
         $checkIn = $request->date('check_in');
         $checkOut = $request->date('check_out');
-        $adults = $request->filled('adults') ? max(1, (int) $request->integer('adults')) : null;
-        $children = $request->filled('children') ? max(0, (int) $request->integer('children')) : null;
-        $vehicles = $request->filled('vehicles') ? max(0, (int) $request->integer('vehicles')) : null;
+        $adults = $request->filled('adults') ? max(1, $request->integer('adults')) : null;
+        $children = $request->filled('children') ? max(0, $request->integer('children')) : null;
+        $vehicles = $request->filled('vehicles') ? max(0, $request->integer('vehicles')) : null;
 
         $datesOk = $checkIn
             && $checkOut
@@ -97,7 +101,6 @@ class BookingController extends Controller
         $data = $request->validated();
         $checkIn = Carbon::parse($data['check_in']);
         $checkOut = Carbon::parse($data['check_out']);
-        $wasGuest = ! Auth::check();
 
         /**
          * @todo Postgres prod: replace this app-level lock with a database-level
@@ -121,21 +124,15 @@ class BookingController extends Controller
                 ]);
             }
 
-            $user = Auth::user() ?? User::firstOrCreate(
+            $user = User::firstOrCreate(
                 ['email' => $data['email']],
                 [
                     'first_name' => $data['first_name'],
                     'last_name' => $data['last_name'],
                     'phone' => $data['phone'],
-                    'province' => $request->province(),
                     'role' => UserRole::Customer,
                 ],
             );
-
-            if ($user->province !== $request->province()) {
-                $user->province = $request->province();
-                $user->save();
-            }
 
             $reservation = Reservation::create([
                 'customer_id' => $user->id,
@@ -143,8 +140,8 @@ class BookingController extends Controller
                 'source' => ReservationSource::Online,
                 'check_in' => $checkIn,
                 'check_out' => $checkOut,
-                'num_adults' => (int) $data['num_adults'],
-                'num_children' => (int) $data['num_children'],
+                'num_adults' => (int)$data['num_adults'],
+                'num_children' => (int)$data['num_children'],
                 'num_vehicles' => $request->vehicleCount(),
                 'status' => ReservationStatus::Pending,
             ]);
@@ -152,49 +149,37 @@ class BookingController extends Controller
             return [$user, $reservation];
         });
 
+        // Online: send the customer straight to the (signed) Stripe payment page.
         // @todo pay_method is still not persisted (see Reservation model docblock / todo.md).
-        // Guests can't reach the auth-guarded payment page yet, so they get the
-        // magic link first; an online payment for them is picked up after login.
-        if (! $wasGuest && $data['pay_method'] === 'online') {
-            return redirect()->route('payments.show', $reservation);
+        if ($data['pay_method'] === 'online') {
+            return redirect()->to(SignedLink::payment($reservation));
         }
 
-        if ($wasGuest && $user->role === UserRole::Customer) {
-            $url = URL::temporarySignedRoute(
-                'login.verify',
-                now()->addMinutes(15),
-                ['user' => $user->id],
-            );
-
-            Mail::to($user->email)->send(new MagicLink($user, $url));
-
-            return redirect()
-                ->route('login.sent')
-                ->with('status', 'Uw reservering is ingediend. We hebben u een inloglink gemaild om uw boekingen te beheren.');
-        }
+        // Pay on location: mail a signed link so the customer can manage the booking later.
+        Mail::to($user->email)->send(new MagicLink($user, SignedLink::bookings($user)));
 
         return redirect()
-            ->route('bookings.index')
-            ->with('status', 'Uw reservering is ingediend.');
+            ->route('login.sent')
+            ->with('status', 'Uw reservering is ingediend. We hebben u een e-mail gestuurd met een link om uw boeking te bekijken of te annuleren.');
     }
 
-    public function destroy(Reservation $reservation): RedirectResponse
+    public function destroy(User $user, Reservation $reservation): RedirectResponse
     {
-        abort_if($reservation->customer_id !== Auth::id(), 403);
+        abort_if($reservation->customer_id !== $user->id, 403);
 
         if ($reservation->status === ReservationStatus::Cancelled) {
-            return redirect()->route('bookings.index');
+            return redirect()->to(SignedLink::bookings($user));
         }
 
         $reservation->update([
             'status' => ReservationStatus::Cancelled,
             'cancelled_at' => now(),
             'cancellation_reason' => 'Geannuleerd door klant',
-            'cancelled_by_user_id' => Auth::id(),
+            'cancelled_by_user_id' => $user->id,
         ]);
 
         return redirect()
-            ->route('bookings.index')
+            ->to(SignedLink::bookings($user))
             ->with('status', 'Reservering geannuleerd.');
     }
 

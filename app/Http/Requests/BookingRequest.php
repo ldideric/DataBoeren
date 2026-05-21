@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\Province;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class BookingRequest extends FormRequest
 {
@@ -18,7 +16,6 @@ class BookingRequest extends FormRequest
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'province' => ['required', Rule::enum(Province::class)],
             'phone' => ['required', 'string', 'max:32'],
             'email' => ['required', 'email', 'max:255'],
             'check_in' => ['required', 'date', 'after_or_equal:today'],
@@ -27,15 +24,10 @@ class BookingRequest extends FormRequest
             'num_adults' => ['required', 'integer', 'min:1'],
             'num_children' => ['required', 'integer', 'min:0'],
             'num_vehicles' => ['required', 'integer', 'min:0'],
-            'pay_method' => ['required', 'string', 'in:online,creditcard,pin,contant'],
+            'pay_method' => ['required', 'string', 'in:online,in_person'],
             'adult_confirmation' => ['accepted'],
-            'huisregels' => ['accepted'],
+            'house_rules' => ['accepted'],
         ];
-    }
-
-    public function province(): Province
-    {
-        return Province::from($this->validated('province'));
     }
 
     public function partySize(): int

@@ -71,16 +71,6 @@
                             </div>
                         </div>
 
-                        <div class="mt-4">
-                            <label for="province" class="block text-sm text-gray-700">Provincie*</label>
-                            <select id="province" name="province" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
-                                <option value="">Selecteer</option>
-                                @foreach (\App\Enums\Province::cases() as $province)
-                                    <option value="{{ $province->value }}" @selected(old('province') === $province->value)>{{ $province->label() }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
                         <div class="mt-4 grid gap-4 sm:grid-cols-2">
                             <div>
                                 <label for="phone" class="block text-sm text-gray-700">Telefoonnummer*</label>
@@ -101,9 +91,7 @@
                             <select id="pay_method" name="pay_method" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
                                 <option value="">Selecteer</option>
                                 <option value="online" @selected(old('pay_method') === 'online')>Online betalen (Stripe)</option>
-                                <option value="creditcard" @selected(old('pay_method') === 'creditcard')>Creditcard</option>
-                                <option value="pin" @selected(old('pay_method') === 'pin')>Pinnen</option>
-                                <option value="contant" @selected(old('pay_method') === 'contant')>Contant</option>
+                                <option value="in_person" @selected(old('pay_method') === 'in_person')>Betalen op locatie</option>
                             </select>
                         </div>
                     </fieldset>
@@ -118,7 +106,7 @@
                             </label>
 
                             <label class="flex items-center gap-2">
-                                <input type="checkbox" id="huisregels" name="huisregels" value="1" @checked(old('huisregels')) required class="h-4 w-4 rounded border-gray-300 text-gray-900">
+                                <input type="checkbox" id="house_rules" name="house_rules" value="1" @checked(old('house_rules')) required class="h-4 w-4 rounded border-gray-300 text-gray-900">
                                 Ik ga akkoord met de huisregels*
                             </label>
                         </div>

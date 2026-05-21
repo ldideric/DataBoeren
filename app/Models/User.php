@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\Province;
 use App\Enums\UserRole;
 use App\Queries\UserQuery;
 use Database\Factories\UserFactory;
@@ -29,7 +28,6 @@ use Laravel\Cashier\Billable;
  * @property string $last_name
  * @property string $email
  * @property string|null $phone
- * @property Province|null $province
  * @property string|null $password
  * @property UserRole $role
  * @property string|null $remember_token
@@ -45,7 +43,7 @@ use Laravel\Cashier\Billable;
  *
  * @method UserQuery|static query()
  */
-#[Fillable(['first_name', 'last_name', 'email', 'phone', 'province', 'password', 'role'])]
+#[Fillable(['first_name', 'last_name', 'email', 'phone', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
 {
@@ -62,7 +60,6 @@ class User extends Authenticatable implements FilamentUser, HasName, MustVerifyE
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => UserRole::class,
-            'province' => Province::class,
         ];
     }
 

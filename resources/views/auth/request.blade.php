@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('header')
-    Inloggen
+    Mijn boekingen
 @endsection
 
 @section('content')
     <div class="bg-gray-50">
         <div class="mx-auto flex min-h-[60vh] max-w-2xl items-center justify-center px-6 py-10">
             <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
-                <h1 class="text-xl font-semibold text-gray-900">Inloggen</h1>
+                <h1 class="text-xl font-semibold text-gray-900">Mijn boekingen</h1>
                 <p class="mt-2 text-sm text-gray-600">
-                    Vul uw e-mailadres in. We sturen u een link waarmee u kunt inloggen.
+                    Vul uw e-mailadres in. We sturen u een link naar uw boekingen.
                 </p>
 
                 @if (session('status'))
@@ -45,7 +45,7 @@
                         type="submit"
                         class="w-full rounded-lg bg-black py-3 text-sm font-semibold text-white transition hover:bg-gray-900"
                     >
-                        Stuur inloglink
+                        Stuur mij de link
                     </button>
                 </form>
             </div>

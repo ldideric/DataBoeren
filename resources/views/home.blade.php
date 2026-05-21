@@ -20,17 +20,15 @@
                     Boek nu
                 </a>
 
-                @auth
-                    <div class="mt-8 border-t border-gray-200 pt-5">
-                        <p class="text-base text-gray-600">Bekijk of annuleer uw boekingen:</p>
-                        <a
-                            href="{{ route('bookings.index') }}"
-                            class="mt-2 inline-block font-semibold text-gray-900 hover:underline"
-                        >
-                            Naar mijn boekingen
-                        </a>
-                    </div>
-                @endauth
+                <div class="mt-8 border-t border-gray-200 pt-5">
+                    <p class="text-base text-gray-600">Al geboekt? Vraag een link aan om uw boekingen te bekijken of te annuleren:</p>
+                    <a
+                        href="{{ route('login') }}"
+                        class="mt-2 inline-block font-semibold text-gray-900 hover:underline"
+                    >
+                        Naar mijn boekingen
+                    </a>
+                </div>
             </div>
         </div>
     </div>

@@ -16,7 +16,7 @@
                     Uw betaling is niet afgerond. U kunt het later opnieuw proberen vanuit uw boekingen.
                 </p>
 
-                <a href="{{ route('bookings.index') }}" class="mt-6 inline-block rounded-lg border border-gray-900 px-6 py-2 text-sm font-semibold text-gray-900 transition hover:bg-gray-900 hover:text-white">
+                <a href="{{ route('login') }}" class="mt-6 inline-block rounded-lg border border-gray-900 px-6 py-2 text-sm font-semibold text-gray-900 transition hover:bg-gray-900 hover:text-white">
                     Naar mijn boekingen
                 </a>
             </div>

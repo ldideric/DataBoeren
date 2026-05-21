@@ -14,7 +14,7 @@
                     <p>Plek: <span class="font-medium text-gray-900">{{ $reservation->campsite->name }}</span></p>
                     <p>Aankomst: <span class="font-medium text-gray-900">{{ $reservation->check_in->format('d M Y') }}</span></p>
                     <p>Vertrek: <span class="font-medium text-gray-900">{{ $reservation->check_out->format('d M Y') }}</span></p>
-                    <p>Aantal personen: <span class="font-medium text-gray-900">{{ $reservation->num_people }}</span></p>
+                    <p>Aantal personen: <span class="font-medium text-gray-900">{{ $reservation->num_adults + $reservation->num_children }}</span></p>
                 </div>
 
                 {{-- @todo The amount is a €1.00 placeholder set in PaymentController::checkout(); --}}
@@ -23,14 +23,14 @@
                     U wordt doorgestuurd naar Stripe om uw betaling veilig af te ronden.
                 </p>
 
-                <form method="POST" action="{{ route('payments.checkout', $reservation) }}" class="mt-6">
+                <form method="POST" action="{{ $checkoutUrl }}" class="mt-6">
                     @csrf
                     <button type="submit" class="w-full rounded-lg bg-green-700 py-2 text-sm font-semibold text-white transition hover:bg-green-800">
                         Betalen met Stripe
                     </button>
                 </form>
 
-                <a href="{{ route('bookings.index') }}" class="mt-3 block text-center text-sm text-gray-500 hover:underline">
+                <a href="{{ $bookingsUrl }}" class="mt-3 block text-center text-sm text-gray-500 hover:underline">
                     Terug naar boekingen
                 </a>
             </div>
