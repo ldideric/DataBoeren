@@ -127,6 +127,7 @@
                             <label for="pay_method" class="block text-sm text-gray-700">Betaalmethode*</label>
                             <select id="pay_method" name="pay_method" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
                                 <option value="">Selecteer</option>
+                                <option value="online">Online betalen (Stripe)</option>
                                 <option value="creditcard">Creditcard</option>
                                 <option value="pin">Pinnen</option>
                                 <option value="contant">Contant</option>

@@ -29,7 +29,7 @@ class BookingRequest extends FormRequest
             'aantalkinderen' => ['required', 'integer', 'min:0'],
             'num_plate' => ['required', 'string', 'max:16'],
             'voertuigtype' => ['required', 'string', 'in:auto,camper,caravan'],
-            'pay_method' => ['required', 'string', 'in:creditcard,pin,contant'],
+            'pay_method' => ['required', 'string', 'in:online,creditcard,pin,contant'],
             'adult_confirmation' => ['accepted'],
             'huisregels' => ['accepted'],
         ];

@@ -20,10 +20,8 @@ class AppServiceProvider extends ServiceProvider
         if (App::environment('production', 'staging')) {
             URL::forceScheme('https');
         }
-        
-        $this->loadSubdirMigrations();
 
-        Cashier::calculateTaxes();
+        $this->loadSubdirMigrations();
     }
 
     protected function loadSubdirMigrations(): void

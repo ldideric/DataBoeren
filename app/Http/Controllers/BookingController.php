@@ -62,7 +62,7 @@ class BookingController extends Controller
          *       but only protects writes that go through this code path — Filament
          *       admin saves, Tinker, etc. can still double-book.
          */
-        DB::transaction(function () use ($request, $checkIn, $checkOut) {
+        $reservation = DB::transaction(function () use ($request, $checkIn, $checkOut) {
             $campsite = $this->lockAvailableCampsite($request, $checkIn, $checkOut);
 
             if (! $campsite) {
@@ -71,7 +71,7 @@ class BookingController extends Controller
                 ]);
             }
 
-            Reservation::create([
+            return Reservation::create([
                 'customer_id' => Auth::id(),
                 'campsite_id' => $campsite->id,
                 'source' => ReservationSource::Online,
@@ -82,6 +82,11 @@ class BookingController extends Controller
                 'status' => ReservationStatus::Pending,
             ]);
         });
+
+        // @todo pay_method is still not persisted (see Reservation model docblock / todo.md).
+        if ($data['pay_method'] === 'online') {
+            return redirect()->route('payments.show', $reservation);
+        }
 
         return redirect()
             ->route('bookings.index')
@@ -116,7 +121,7 @@ class BookingController extends Controller
             ->lockForUpdate();
 
         if ($id = $request->validated('campsite_id')) {
-            return $query->whereKey($id)->first();
+            return $query->find($id);
         }
 
         return $query->whereType($request->accommodatieType())->first();

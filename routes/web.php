@@ -4,8 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CampsiteController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 
 /* Main routes for the application. */
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -35,19 +35,12 @@ Route::middleware('auth')->group(function () {
             Route::post('/', 'store')->name('store');
             Route::delete('/{reservation}', 'destroy')->name('destroy');
         });
+
+    /* Stripe payment routes. */
+    Route::controller(PaymentController::class)->group(function () {
+        Route::get('/bookings/{reservation}/payment', 'show')->name('payments.show');
+        Route::post('/bookings/{reservation}/checkout', 'checkout')->name('payments.checkout');
+        Route::get('/checkout/success', 'success')->name('payments.success');
+        Route::get('/checkout/cancel', 'cancel')->name('payments.cancel');
+    });
 });
-
-/* Stripe checkout routes. */
-Route::get('/checkout', function (Request $request) {
-    $stripePriceId = 'price_deluxe_album';
-
-    $quantity = 1;
-
-    return $request->user()->checkout([$stripePriceId => $quantity], [
-        'success_url' => route('checkout-success'),
-        'cancel_url' => route('checkout-cancel'),
-    ]);
-})->name('checkout');
-
-Route::view('/checkout/success', 'checkout.success')->name('checkout-success');
-Route::view('/checkout/cancel', 'checkout.cancel')->name('checkout-cancel');
