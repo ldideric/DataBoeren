@@ -3,63 +3,61 @@
 namespace App\Http\Controllers;
 
 use App\Enums\UserRole;
+use App\Mail\MagicLink;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 
 class AuthController extends Controller
 {
-    public function loginForm(): View
+    public function requestForm(): View
     {
-        return view('auth.login');
+        return view('auth.request');
     }
 
-    public function login(Request $request): RedirectResponse
+    public function linkSent(): View
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string'],
-        ]);
-
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
-            return back()
-                ->withInput($request->only('email'))
-                ->withErrors(['email' => 'Onjuist e-mailadres of wachtwoord.']);
-        }
-
-        $request->session()->regenerate();
-
-        return redirect()->intended(route('bookings.index'));
+        return view('auth.link-sent');
     }
 
-    public function registerForm(): View
-    {
-        return view('auth.register');
-    }
-
-    public function register(Request $request): RedirectResponse
+    public function sendLink(Request $request): View
     {
         $data = $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'phone' => ['nullable', 'string', 'max:32'],
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'email' => ['required', 'email'],
         ]);
 
-        $user = User::create([
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'] ?? null,
-            'password' => $data['password'],
-            'role' => UserRole::Customer,
-        ]);
+        $user = User::query()
+            ->where('email', $data['email'])
+            ->where('role', UserRole::Customer)
+            ->first();
+
+        if ($user) {
+            $url = URL::temporarySignedRoute(
+                'login.verify',
+                now()->addMinutes(15),
+                ['user' => $user->id],
+            );
+
+            Mail::to($user->email)->send(new MagicLink($user, $url));
+        }
+
+        return view('auth.link-sent');
+    }
+
+    public function verify(Request $request, User $user): RedirectResponse
+    {
+        abort_unless($user->role === UserRole::Customer, 404);
 
         Auth::login($user);
+
+        if ($user->email_verified_at === null) {
+            $user->forceFill(['email_verified_at' => now()])->save();
+        }
+
         $request->session()->regenerate();
 
         return redirect()->intended(route('bookings.index'));
@@ -72,10 +70,5 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('home');
-    }
-
-    public function required(): View
-    {
-        return view('auth.required');
     }
 }

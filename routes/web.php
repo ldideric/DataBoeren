@@ -11,18 +11,28 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/campsites', [CampsiteController::class, 'index'])->name('campsites.index');
 
-Route::get('/auth/required', [AuthController::class, 'required'])->name('auth.required');
-
 /* Authentication routes. */
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::get('/login', [AuthController::class, 'requestForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'sendLink'])->name('login.send');
+    Route::get('/login/sent', [AuthController::class, 'linkSent'])->name('login.sent');
 });
 
-/* Routes that require authentication. */
-Route::middleware('auth')->group(function () {
+Route::get('/auth/link/{user}', [AuthController::class, 'verify'])
+    ->middleware('signed')
+    ->name('login.verify');
+
+/* Public booking routes (guests can book; they get a magic link afterwards). */
+Route::controller(BookingController::class)
+    ->prefix('bookings')
+    ->name('bookings.')
+    ->group(function () {
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+    });
+
+/* Routes that require an authenticated customer. */
+Route::middleware('customer.auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     /* Booking routes. */
@@ -31,8 +41,6 @@ Route::middleware('auth')->group(function () {
         ->name('bookings.')
         ->group(function () {
             Route::get('/', 'index')->name('index');
-            Route::get('/create', 'create')->name('create');
-            Route::post('/', 'store')->name('store');
             Route::delete('/{reservation}', 'destroy')->name('destroy');
         });
 

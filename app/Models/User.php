@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Province;
 use App\Enums\UserRole;
 use App\Queries\UserQuery;
 use Database\Factories\UserFactory;
@@ -28,7 +29,8 @@ use Laravel\Cashier\Billable;
  * @property string $last_name
  * @property string $email
  * @property string|null $phone
- * @property string $password
+ * @property Province|null $province
+ * @property string|null $password
  * @property UserRole $role
  * @property string|null $remember_token
  * @property Carbon|null $email_verified_at
@@ -42,12 +44,8 @@ use Laravel\Cashier\Billable;
  * @property-read string $name
  *
  * @method UserQuery|static query()
- *
- * @todo The booking form collects `city` but the users table has no address
- *       column. Add `city` (and likely `street` / `postal_code` / `country`)
- *       or split into a related `addresses` table. See [todo.md](../../todo.md).
  */
-#[Fillable(['first_name', 'last_name', 'email', 'phone', 'password', 'role'])]
+#[Fillable(['first_name', 'last_name', 'email', 'phone', 'province', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
 {
@@ -64,6 +62,7 @@ class User extends Authenticatable implements FilamentUser, HasName, MustVerifyE
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => UserRole::class,
+            'province' => Province::class,
         ];
     }
 

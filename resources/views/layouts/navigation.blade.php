@@ -12,7 +12,6 @@
                     <a href="{{ route('campsites.index') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Kampeerplaatsen</a>
                     @auth
                         <a href="{{ route('bookings.index') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Mijn boekingen</a>
-                        <a href="{{ route('bookings.create') }}" class="px-3 py-1.5 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">Reserveren</a>
                     @endauth
                 </div>
             </div>
