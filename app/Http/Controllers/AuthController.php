@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserRole;
-use App\Mail\MagicLink;
+use App\Actions\SendBookingsLink;
 use App\Models\User;
-use App\Support\SignedLink;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -22,20 +19,18 @@ class AuthController extends Controller
         return view('auth.link-sent');
     }
 
-    public function sendLink(Request $request): View
+    public function sendLink(Request $request, SendBookingsLink $sendBookingsLink): View
     {
         $data = $request->validate([
             'email' => ['required', 'email'],
         ]);
 
         $user = User::query()
+            ->whereCustomer()
             ->where('email', $data['email'])
-            ->where('role', UserRole::Customer)
             ->first();
 
-        if ($user) {
-            Mail::to($user->email)->send(new MagicLink($user, SignedLink::bookings($user)));
-        }
+        $user && $sendBookingsLink->handle($user);
 
         return view('auth.link-sent');
     }
