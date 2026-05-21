@@ -14,7 +14,7 @@
         @endif
 
         <p class="text-sm text-gray-500 mb-6">
-            Welkom terug, <span class="font-medium text-gray-700">{{ Auth::user()?->name ?? 'gast' }}</span>.
+            Welkom terug, <span class="font-medium text-gray-700">{{ $user->name }}</span>.
             Hier is een overzicht van uw boekingen.
         </p>
 
@@ -43,7 +43,7 @@
                         @if ($reservation->status !== \App\Enums\ReservationStatus::Cancelled)
                             <form
                                 method="POST"
-                                action="{{ route('bookings.destroy', $reservation) }}"
+                                action="{{ $cancelUrls[$reservation->id] }}"
                                 data-confirm="Weet u zeker dat u deze reservering wilt annuleren?"
                                 class="mt-auto pt-1"
                             >

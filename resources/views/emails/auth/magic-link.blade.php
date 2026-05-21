@@ -1,15 +1,15 @@
 <x-mail::message>
-# Inloglink
+# Uw boekingen
 
 Beste {{ $user->first_name }},
 
-U vroeg een inloglink aan voor uw account bij Camping De Groene Weide. Klik op de knop hieronder om in te loggen.
+Klik op de knop hieronder om uw boekingen bij Camping De Groene Weide te bekijken of te annuleren.
 
 <x-mail::button :url="$signedUrl">
-Inloggen
+Bekijk mijn boekingen
 </x-mail::button>
 
-Deze link is **15 minuten** geldig. Heeft u geen inloglink aangevraagd? Dan kunt u deze e-mail negeren.
+Deze link is **60 minuten** geldig. Heeft u deze link niet aangevraagd? Dan kunt u deze e-mail negeren.
 
 Groet,
 {{ config('app.name') }}

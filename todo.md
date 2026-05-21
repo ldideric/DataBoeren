@@ -3,6 +3,7 @@
 ## Payments
 - Add stub payment page at `/bookings/{reservation}/payment` (Confirm/Cancel).
 - Persist `pay_method` on a Payment row.
+- Add toeristenbelasting (tourist tax) to the invoices at a later stage.
 
 ## Booking flow
 - Add confirmation page + email after `store()`.
