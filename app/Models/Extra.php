@@ -19,14 +19,13 @@ use Illuminate\Support\Carbon;
  * @property string $name
  * @property string|null $description
  * @property BillingType $billing_type
- * @property float $price
+ * @property int $price
  * @property int|null $stock
  * @property StockType $stock_type
  * @property int|null $max_per_booking
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- *
  * @property-read Collection<ReservationExtra> $reservationExtras
  */
 #[Fillable(['name', 'description', 'billing_type', 'price', 'stock', 'stock_type', 'max_per_booking'])]

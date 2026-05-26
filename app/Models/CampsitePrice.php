@@ -14,12 +14,11 @@ use Illuminate\Support\Carbon;
  * @property string $id
  * @property string $campsite_id
  * @property string $season_id
- * @property float $nightly_rate
- * @property float $per_adult_rate
- * @property float $per_child_rate
+ * @property int $nightly_rate
+ * @property int $per_adult_rate
+ * @property int $per_child_rate
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property-read Campsite $campsite
  * @property-read Season $season
  */

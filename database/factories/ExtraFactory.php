@@ -18,7 +18,7 @@ class ExtraFactory extends Factory
             'name' => fake()->randomElement(['Bedlinnen', 'Handdoek', 'Fietsverhuur', 'BBQ', 'Kinderbedje']),
             'description' => fake()->optional()->sentence(),
             'billing_type' => fake()->randomElement(BillingType::cases()),
-            'price' => fake()->randomFloat(2, 2, 25),
+            'price' => fake()->numberBetween(200, 2500),
             'stock' => null,
             'stock_type' => StockType::Rental,
             'max_per_booking' => null,

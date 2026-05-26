@@ -1,5 +1,6 @@
 @php
-    $euro = fn ($amount) => '€ ' . number_format((float) $amount, 2, ',', '.');
+    // Amounts are integer cents; format to euros only at display time.
+    $euro = fn ($cents) => '€ ' . number_format($cents / 100, 2, ',', '.');
 @endphp
 
 <dl class="space-y-2 text-sm text-gray-700">

@@ -71,7 +71,7 @@
                                     <div class="flex items-center justify-between gap-4">
                                         <div class="text-sm">
                                             <span class="font-medium text-gray-900">{{ $extra->name }}</span>
-                                            <span class="text-gray-500">— € {{ number_format($extra->price, 2, ',', '.') }} {{ $perNight ? 'per nacht' : 'eenmalig' }}</span>
+                                            <span class="text-gray-500">— € {{ number_format($extra->price / 100, 2, ',', '.') }} {{ $perNight ? 'per nacht' : 'eenmalig' }}</span>
                                             @if ($extra->description)
                                                 <p class="text-xs text-gray-500">{{ $extra->description }}</p>
                                             @endif
@@ -174,20 +174,20 @@
                 return;
             }
 
-            const base = parseFloat(total.dataset.base);
+            const baseCents = parseInt(total.dataset.base, 10);
             const nights = parseInt(total.dataset.nights, 10);
             const euro = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
 
             const recalculate = () => {
-                let extrasTotal = 0;
+                let extrasCents = 0;
 
                 inputs.forEach((input) => {
                     const quantity = parseInt(input.value, 10) || 0;
                     const units = input.dataset.extraPerNight === '1' ? quantity * nights : quantity;
-                    extrasTotal += parseFloat(input.dataset.extraPrice) * units;
+                    extrasCents += parseInt(input.dataset.extraPrice, 10) * units;
                 });
 
-                total.textContent = euro.format(base + extrasTotal);
+                total.textContent = euro.format((baseCents + extrasCents) / 100);
             };
 
             inputs.forEach((input) => input.addEventListener('input', recalculate));

@@ -4,7 +4,6 @@ namespace App\Booking\Queries;
 
 use App\Models\Campsite;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 
 class CheckAvailability
 {

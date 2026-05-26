@@ -30,9 +30,9 @@ it('calculates the order summary with coupon and extra totals', function () {
     CampsitePrice::factory()->create([
         'campsite_id' => $campsite->id,
         'season_id' => $season->id,
-        'nightly_rate' => 20,
-        'per_adult_rate' => 5,
-        'per_child_rate' => 2,
+        'nightly_rate' => 2000,
+        'per_adult_rate' => 500,
+        'per_child_rate' => 200,
     ]);
 
     $customer = User::factory()->create();
@@ -55,7 +55,7 @@ it('calculates the order summary with coupon and extra totals', function () {
 
     $extra = Extra::factory()->create([
         'billing_type' => BillingType::PerNight,
-        'price' => 3,
+        'price' => 300,
     ]);
 
     $summary = app(CalculatePrice::class)->calculate($reservation, [
@@ -65,12 +65,12 @@ it('calculates the order summary with coupon and extra totals', function () {
     expect($summary->reservation_id)->toBe($reservation->id)
         ->and($summary->season_name)->toBe('Zomer')
         ->and($summary->num_nights)->toBe(2)
-        ->and((float) $summary->nightly_rate)->toBe(20.0)
-        ->and((float) $summary->per_adult_rate)->toBe(5.0)
-        ->and((float) $summary->per_child_rate)->toBe(2.0)
+        ->and($summary->nightly_rate)->toBe(2000)
+        ->and($summary->per_adult_rate)->toBe(500)
+        ->and($summary->per_child_rate)->toBe(200)
         ->and($summary->last_minute_applied)->toBeFalse()
         ->and($summary->last_minute_discount)->toBeNull()
-        ->and((float) $summary->coupon_discount)->toBe(16.0)
-        ->and((float) $summary->extras_total)->toBe(12.0)
-        ->and((float) $summary->total)->toBe(60.0);
+        ->and($summary->coupon_discount)->toBe(1600)
+        ->and($summary->extras_total)->toBe(1200)
+        ->and($summary->total)->toBe(6000);
 });

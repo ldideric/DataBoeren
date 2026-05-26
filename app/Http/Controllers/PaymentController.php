@@ -30,10 +30,10 @@ class PaymentController extends Controller
 
         abort_if($reservation->orderSummary === null, 409, 'Deze reservering heeft geen prijsoverzicht.');
 
-        $amountInCents = (int) round($reservation->orderSummary->total * 100);
+        $amountInCents = $reservation->orderSummary->total;
 
         return $reservation->customer->checkoutCharge($amountInCents, "Reservering {$reservation->campsite->name}", 1, [
-            'success_url' => route('payments.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'success_url' => route('payments.success').'?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('payments.cancel'),
         ]);
     }

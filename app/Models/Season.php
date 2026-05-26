@@ -16,7 +16,6 @@ use Illuminate\Support\Carbon;
  * @property string $name
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property-read Collection<SeasonPeriod> $periods
  * @property-read Collection<CampsitePrice> $campsitePrices
  */

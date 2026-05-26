@@ -17,7 +17,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon $ends_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property-read Season $season
  */
 #[Fillable(['season_id', 'starts_at', 'ends_at'])]

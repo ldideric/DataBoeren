@@ -14,13 +14,13 @@ class OrderSummaryFactory extends Factory
     public function definition(): array
     {
         $numNights = fake()->numberBetween(1, 14);
-        $nightlyRate = fake()->randomFloat(2, 10, 50);
-        $perAdultRate = fake()->randomFloat(2, 2, 15);
-        $perChildRate = fake()->randomFloat(2, 1, 8);
+        $nightlyRate = fake()->numberBetween(1000, 5000);
+        $perAdultRate = fake()->numberBetween(200, 1500);
+        $perChildRate = fake()->numberBetween(100, 800);
         $numAdults = fake()->numberBetween(1, 4);
         $numChildren = fake()->numberBetween(0, 3);
-        $extrasTotal = fake()->randomFloat(2, 0, 50);
-        $couponDiscount = fake()->optional(0.3)->randomFloat(2, 5, 30);
+        $extrasTotal = fake()->numberBetween(0, 5000);
+        $couponDiscount = fake()->optional(0.3)->numberBetween(500, 3000);
 
         $base = ($nightlyRate + $perAdultRate * $numAdults + $perChildRate * $numChildren) * $numNights;
         $total = max(0, $base + $extrasTotal - ($couponDiscount ?? 0));
@@ -36,7 +36,7 @@ class OrderSummaryFactory extends Factory
             'last_minute_discount' => null,
             'coupon_discount' => $couponDiscount,
             'extras_total' => $extrasTotal,
-            'total' => round($total, 2),
+            'total' => $total,
         ];
     }
 }

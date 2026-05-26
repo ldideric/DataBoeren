@@ -4,8 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
-        public function up(): void
+return new class extends Migration
+{
+    public function up(): void
     {
         Schema::table('subscription_items', function (Blueprint $table) {
             $table->string('meter_event_name')->nullable()->after('quantity');

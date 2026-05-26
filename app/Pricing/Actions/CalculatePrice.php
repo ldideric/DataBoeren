@@ -57,17 +57,17 @@ class CalculatePrice
             'per_adult_rate' => $rate->per_adult_rate,
             'per_child_rate' => $rate->per_child_rate,
             'last_minute_applied' => $lastMinuteDiscount > 0,
-            'last_minute_discount' => $lastMinuteDiscount > 0 ? round($lastMinuteDiscount, 2) : null,
-            'coupon_discount' => $couponDiscount > 0 ? round($couponDiscount, 2) : null,
-            'extras_total' => round($extrasTotal, 2),
-            'total' => round($total, 2),
+            'last_minute_discount' => $lastMinuteDiscount > 0 ? $lastMinuteDiscount : null,
+            'coupon_discount' => $couponDiscount > 0 ? $couponDiscount : null,
+            'extras_total' => $extrasTotal,
+            'total' => $total,
         ]);
     }
 
     /**
      * @param  array<array{extra: Extra, quantity: int}>  $extraSelections
      */
-    private function calculateDiscounts(Reservation $reservation, float $accommodation, array $extraSelections, int $nights): array
+    private function calculateDiscounts(Reservation $reservation, int $accommodation, array $extraSelections, int $nights): array
     {
         $lastMinute = $this->lastMinuteDiscount($reservation, $accommodation);
         $coupon = $this->couponDiscount($reservation, max(0, $accommodation - $lastMinute), $extraSelections, $nights);
@@ -84,33 +84,33 @@ class CalculatePrice
             ?? throw new RuntimeException("No season covers check-in date {$reservation->check_in->toDateString()}.");
     }
 
-    public static function lineSubtotal(Extra $extra, int $quantity, int $nights): float
+    public static function lineSubtotal(Extra $extra, int $quantity, int $nights): int
     {
         $units = $extra->billing_type === BillingType::PerNight ? $quantity * $nights : $quantity;
 
-        return round($extra->price * $units, 2);
+        return $extra->price * $units;
     }
 
-    private function lastMinuteDiscount(Reservation $reservation, float $baseAmount): float
+    private function lastMinuteDiscount(Reservation $reservation, int $baseAmount): int
     {
         $config = config('pricing.last_minute');
 
         if (! $config['enabled'] || now()->diffInDays($reservation->check_in, false) > $config['threshold_days']) {
-            return 0.0;
+            return 0;
         }
 
-        return round($baseAmount * $config['discount_percent'] / 100, 2);
+        return (int) round($baseAmount * $config['discount_percent'] / 100);
     }
 
     /**
      * @param  array<array{extra: Extra, quantity: int}>  $extraSelections
      */
-    private function couponDiscount(Reservation $reservation, float $baseAmount, array $extraSelections, int $nights): float
+    private function couponDiscount(Reservation $reservation, int $baseAmount, array $extraSelections, int $nights): int
     {
         $coupon = $reservation->coupon;
 
         if (! $coupon instanceof Coupon) {
-            return 0.0;
+            return 0;
         }
 
         $base = match ($coupon->scope) {
@@ -120,11 +120,10 @@ class CalculatePrice
                 ->sum(fn (array $line) => self::lineSubtotal($line['extra'], $line['quantity'], $nights)),
         };
 
-        $discount = match ($coupon->discount_type) {
-            DiscountType::Flat => min($coupon->discount_value, $base),
-            DiscountType::Percent => $base * $coupon->discount_value / 100,
+        // discount_value is euros for a flat coupon (→ cents) but a percentage for a percent coupon.
+        return match ($coupon->discount_type) {
+            DiscountType::Flat => min((int) round($coupon->discount_value * 100), $base),
+            DiscountType::Percent => (int) round($base * $coupon->discount_value / 100),
         };
-
-        return round($discount, 2);
     }
 }

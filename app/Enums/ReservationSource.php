@@ -2,8 +2,8 @@
 
 namespace App\Enums;
 
-enum ReservationSource:string
+enum ReservationSource: string
 {
-case Online = 'online';
-case Employee = 'employee';
+    case Online = 'online';
+    case Employee = 'employee';
 }
