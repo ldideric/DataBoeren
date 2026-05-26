@@ -17,7 +17,10 @@ use Throwable;
 
 class CreateReservation
 {
-    public function __construct(private readonly CalculatePrice $calculatePrice) {}
+    public function __construct(
+        private readonly CalculatePrice $calculatePrice,
+        private readonly ResolveBookingExtras $resolveBookingExtras,
+    ) {}
 
     /**
      * Find-or-create the customer and store a pending reservation for them,
@@ -82,10 +85,29 @@ class CreateReservation
             // mail/redirect don't re-query.
             $reservation->setRelation('customer', $customer)->setRelation('campsite', $campsite);
 
-            $this->priceReservation($reservation);
+            $selections = $this->resolveBookingExtras->resolve($data['extras'] ?? [], $checkIn, $checkOut);
+            $this->persistExtras($reservation, $selections);
+            $this->priceReservation($reservation, $selections);
 
             return $reservation;
         });
+    }
+
+    /**
+     * @param  array<array{extra: \App\Models\Extra, quantity: int}>  $selections
+     */
+    private function persistExtras(Reservation $reservation, array $selections): void
+    {
+        $nights = (int) $reservation->check_in->diffInDays($reservation->check_out);
+
+        foreach ($selections as $line) {
+            $reservation->extras()->create([
+                'extra_id' => $line['extra']->id,
+                'quantity' => $line['quantity'],
+                'unit_price' => $line['extra']->price,
+                'subtotal' => CalculatePrice::lineSubtotal($line['extra'], $line['quantity'], $nights),
+            ]);
+        }
     }
 
     /**
@@ -95,10 +117,13 @@ class CreateReservation
      *
      * @throws ValidationException when no season covers the check-in date.
      */
-    private function priceReservation(Reservation $reservation): void
+    /**
+     * @param  array<array{extra: \App\Models\Extra, quantity: int}>  $selections
+     */
+    private function priceReservation(Reservation $reservation, array $selections): void
     {
         try {
-            $summary = $this->calculatePrice->handle($reservation);
+            $summary = $this->calculatePrice->handle($reservation, $selections);
         } catch (RuntimeException) {
             throw ValidationException::withMessages([
                 'check_in' => 'Voor de gekozen aankomstdatum is nog geen prijs ingesteld. Kies een andere datum.',

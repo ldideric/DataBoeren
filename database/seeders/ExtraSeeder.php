@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\BillingType;
+use App\Enums\StockType;
 use App\Models\Extra;
 use Illuminate\Database\Seeder;
 
@@ -15,6 +16,7 @@ class ExtraSeeder extends Seeder
             'billing_type' => BillingType::OneTime,
             'price' => 3.50,
             'stock' => null,
+            'stock_type' => StockType::Rental,
             'max_per_booking' => 1,
         ],
         [
@@ -23,6 +25,7 @@ class ExtraSeeder extends Seeder
             'billing_type' => BillingType::PerNight,
             'price' => 7.50,
             'stock' => 5,
+            'stock_type' => StockType::Rental,
             'max_per_booking' => null,
         ],
         [
@@ -31,6 +34,7 @@ class ExtraSeeder extends Seeder
             'billing_type' => BillingType::PerNight,
             'price' => 5.00,
             'stock' => 5,
+            'stock_type' => StockType::Rental,
             'max_per_booking' => null,
         ],
         [
@@ -39,6 +43,7 @@ class ExtraSeeder extends Seeder
             'billing_type' => BillingType::OneTime,
             'price' => 10.00,
             'stock' => 25,
+            'stock_type' => StockType::Consumable,
             'max_per_booking' => null,
         ],
     ];

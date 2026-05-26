@@ -39,13 +39,55 @@ class DevSeeder extends Seeder
     private function priceReservations(): void
     {
         $calculatePrice = app(CalculatePrice::class);
+        $extras = Extra::all();
 
-        Reservation::with('campsite')->whereDoesntHave('orderSummary')->each(function (Reservation $reservation) use ($calculatePrice) {
+        Reservation::with('campsite')->whereDoesntHave('orderSummary')->each(function (Reservation $reservation) use ($calculatePrice, $extras) {
+            $selections = $this->randomExtras($extras);
+
             try {
-                $calculatePrice->handle($reservation)->save();
+                $summary = $calculatePrice->handle($reservation, $selections);
             } catch (RuntimeException) {
+                return;
             }
+
+            $this->persistExtras($reservation, $selections);
+            $summary->save();
         });
+    }
+
+    /**
+     * @param  Collection<int, Extra>  $extras
+     * @return array<array{extra: Extra, quantity: int}>
+     */
+    private function randomExtras(Collection $extras): array
+    {
+        if ($extras->isEmpty() || fake()->boolean(60)) {
+            return [];
+        }
+
+        $extra = $extras->random();
+
+        return [[
+            'extra' => $extra,
+            'quantity' => min(fake()->numberBetween(1, 2), $extra->max_per_booking ?? 2),
+        ]];
+    }
+
+    /**
+     * @param  array<array{extra: Extra, quantity: int}>  $selections
+     */
+    private function persistExtras(Reservation $reservation, array $selections): void
+    {
+        $nights = (int) $reservation->check_in->diffInDays($reservation->check_out);
+
+        foreach ($selections as $line) {
+            $reservation->extras()->create([
+                'extra_id' => $line['extra']->id,
+                'quantity' => $line['quantity'],
+                'unit_price' => $line['extra']->price,
+                'subtotal' => CalculatePrice::lineSubtotal($line['extra'], $line['quantity'], $nights),
+            ]);
+        }
     }
 
     private function seedReservations(Collection $customers, Collection $campsites, User $employee, Coupon $activeCoupon): void

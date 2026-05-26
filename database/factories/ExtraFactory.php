@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\BillingType;
+use App\Enums\StockType;
 use App\Models\Extra;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,6 +20,7 @@ class ExtraFactory extends Factory
             'billing_type' => fake()->randomElement(BillingType::cases()),
             'price' => fake()->randomFloat(2, 2, 25),
             'stock' => null,
+            'stock_type' => StockType::Rental,
             'max_per_booking' => null,
         ];
     }

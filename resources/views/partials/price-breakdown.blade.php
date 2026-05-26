@@ -43,6 +43,6 @@
 
     <div class="flex justify-between border-t border-gray-200 pt-2 text-base">
         <dt class="font-semibold text-gray-900">Totaal</dt>
-        <dd class="font-bold text-gray-900">{{ $euro($order->total) }}</dd>
+        <dd class="font-bold text-gray-900" data-grand-total data-base="{{ $order->total }}" data-nights="{{ $order->num_nights }}">{{ $euro($order->total) }}</dd>
     </div>
 </dl>

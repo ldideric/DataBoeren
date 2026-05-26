@@ -8,8 +8,10 @@ use App\Actions\SendBookingsLink;
 use App\Enums\ReservationStatus;
 use App\Http\Requests\BookingRequest;
 use App\Models\Campsite;
+use App\Models\Extra;
 use App\Models\OrderSummary;
 use App\Models\Reservation;
+use Illuminate\Support\Collection;
 use App\Models\User;
 use App\Support\SignedLink;
 use App\Support\StayCriteria;
@@ -84,7 +86,19 @@ class BookingController extends Controller
             'children' => $criteria->children,
             'vehicles' => $criteria->vehicles,
             'order' => $this->previewPrice($calculatePrice, $campsite, $criteria),
+            'extras' => $this->availableExtras($criteria),
         ]);
+    }
+
+    private function availableExtras(StayCriteria $criteria): Collection
+    {
+        return Extra::query()
+            ->orderBy('name')
+            ->get()
+            ->map(fn (Extra $extra) => [
+                'model' => $extra,
+                'cap' => $extra->maxSelectableBetween($criteria->checkIn, $criteria->checkOut),
+            ]);
     }
 
     private function previewPrice(CalculatePrice $calculatePrice, Campsite $campsite, StayCriteria $criteria): ?OrderSummary
