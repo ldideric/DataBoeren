@@ -37,12 +37,13 @@ class CampsiteSeeder extends Seeder
             foreach (self::SEASON_BY_KEY as $key => $seasonName) {
                 $rate = $record['pricing'][$key];
 
+                // The JSON holds euros; money is stored as integer cents.
                 $campsite->prices()->updateOrCreate(
                     ['season_id' => $seasons[$seasonName] ?? throw new RuntimeException("Missing season \"{$seasonName}\" — run SeasonSeeder first.")],
                     [
-                        'nightly_rate' => $rate['nightly_rate'],
-                        'per_adult_rate' => $rate['per_person_rate'],
-                        'per_child_rate' => $rate['per_child_rate'],
+                        'nightly_rate' => (int) round($rate['nightly_rate'] * 100),
+                        'per_adult_rate' => (int) round($rate['per_person_rate'] * 100),
+                        'per_child_rate' => (int) round($rate['per_child_rate'] * 100),
                     ],
                 );
             }

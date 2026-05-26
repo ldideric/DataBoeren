@@ -51,6 +51,9 @@ class ExtraSeeder extends Seeder
     public function run(): void
     {
         foreach (self::EXTRAS as $extra) {
+            // The const holds euros; money is stored as integer cents.
+            $extra['price'] = (int) round($extra['price'] * 100);
+
             Extra::updateOrCreate(['name' => $extra['name']], $extra);
         }
 
