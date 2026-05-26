@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\CalculatePrice;
 use App\Actions\CreateReservation;
 use App\Actions\SendBookingsLink;
 use App\Enums\ReservationStatus;
 use App\Http\Requests\BookingRequest;
 use App\Models\Campsite;
+use App\Models\OrderSummary;
 use App\Models\Reservation;
 use App\Models\User;
 use App\Support\SignedLink;
@@ -14,6 +16,7 @@ use App\Support\StayCriteria;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use RuntimeException;
 
 class BookingController extends Controller
 {
@@ -35,7 +38,7 @@ class BookingController extends Controller
         ]);
     }
 
-    public function create(Request $request): View|RedirectResponse
+    public function create(Request $request, CalculatePrice $calculatePrice): View|RedirectResponse
     {
         $campsite = $request->filled('campsite')
             ? Campsite::find($request->query('campsite'))
@@ -80,7 +83,24 @@ class BookingController extends Controller
             'adults' => $criteria->adults,
             'children' => $criteria->children,
             'vehicles' => $criteria->vehicles,
+            'order' => $this->previewPrice($calculatePrice, $campsite, $criteria),
         ]);
+    }
+
+    private function previewPrice(CalculatePrice $calculatePrice, Campsite $campsite, StayCriteria $criteria): ?OrderSummary
+    {
+        $preview = (new Reservation([
+            'check_in' => $criteria->checkIn,
+            'check_out' => $criteria->checkOut,
+            'num_adults' => $criteria->adults,
+            'num_children' => $criteria->children,
+        ]))->setRelation('campsite', $campsite);
+
+        try {
+            return $calculatePrice->handle($preview);
+        } catch (RuntimeException) {
+            return null;
+        }
     }
 
     public function store(BookingRequest $request, CreateReservation $createReservation, SendBookingsLink $sendBookingsLink): RedirectResponse

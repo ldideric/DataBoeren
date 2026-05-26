@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Actions\CalculatePrice;
 use App\Enums\UserRole;
 use App\Models\Campsite;
 use App\Models\Coupon;
@@ -10,6 +11,7 @@ use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
+use RuntimeException;
 
 class DevSeeder extends Seeder
 {
@@ -31,6 +33,19 @@ class DevSeeder extends Seeder
         Coupon::factory()->freeExtra($firepit)->create(['title' => 'Gratis vuurkorf']);
 
         $this->seedReservations($customers, $campsites, $employee, $active);
+        $this->priceReservations();
+    }
+
+    private function priceReservations(): void
+    {
+        $calculatePrice = app(CalculatePrice::class);
+
+        Reservation::with('campsite')->whereDoesntHave('orderSummary')->each(function (Reservation $reservation) use ($calculatePrice) {
+            try {
+                $calculatePrice->handle($reservation)->save();
+            } catch (RuntimeException) {
+            }
+        });
     }
 
     private function seedReservations(Collection $customers, Collection $campsites, User $employee, Coupon $activeCoupon): void

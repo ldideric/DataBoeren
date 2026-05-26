@@ -57,6 +57,19 @@
                         </div>
                     </div>
 
+                    @isset($order)
+                        <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+                            <h2 class="text-sm font-semibold text-gray-700">Prijsoverzicht</h2>
+                            <div class="mt-2">
+                                @include('partials.price-breakdown', [
+                                    'order' => $order,
+                                    'adults' => $adults,
+                                    'children' => $children,
+                                ])
+                            </div>
+                        </div>
+                    @endisset
+
                     <fieldset>
                         <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Persoonsgegevens</legend>
 

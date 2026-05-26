@@ -12,14 +12,19 @@ use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use RuntimeException;
 use Throwable;
 
 class CreateReservation
 {
+    public function __construct(private readonly CalculatePrice $calculatePrice) {}
+
     /**
      * Find-or-create the customer and store a pending reservation for them,
      * holding a row lock on the campsite for the duration of the transaction
-     * so concurrent requests can't double-book the same dates.
+     * so concurrent requests can't double-book the same dates. The frozen
+     * OrderSummary (the amount owed) is computed and stored in the same
+     * transaction, so a reservation always has an invoice to pay.
      *
      * @throws ValidationException|Throwable when the campsite is no longer available.
      */
@@ -73,9 +78,35 @@ class CreateReservation
                 'status' => ReservationStatus::Pending,
             ]);
 
-            // Hand the customer back loaded so callers can mail/redirect without a re-query.
-            return $reservation->setRelation('customer', $customer);
+            // Hand the customer/campsite back loaded so the price calc and any
+            // mail/redirect don't re-query.
+            $reservation->setRelation('customer', $customer)->setRelation('campsite', $campsite);
+
+            $this->priceReservation($reservation);
+
+            return $reservation;
         });
+    }
+
+    /**
+     * Compute and persist the frozen OrderSummary. No extras are selected during
+     * the booking flow yet, so accommodation + any automatic last-minute discount
+     * is the whole invoice.
+     *
+     * @throws ValidationException when no season covers the check-in date.
+     */
+    private function priceReservation(Reservation $reservation): void
+    {
+        try {
+            $summary = $this->calculatePrice->handle($reservation);
+        } catch (RuntimeException) {
+            throw ValidationException::withMessages([
+                'check_in' => 'Voor de gekozen aankomstdatum is nog geen prijs ingesteld. Kies een andere datum.',
+            ]);
+        }
+
+        $summary->save();
+        $reservation->setRelation('orderSummary', $summary);
     }
 
     private function lockAvailableCampsite(BookingRequest $request, Carbon $checkIn, Carbon $checkOut): ?Campsite
