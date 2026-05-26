@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support;
+namespace App\Booking\DTO;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;

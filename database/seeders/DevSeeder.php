@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Actions\CalculatePrice;
 use App\Enums\UserRole;
 use App\Models\Campsite;
 use App\Models\Coupon;
 use App\Models\Extra;
 use App\Models\Reservation;
 use App\Models\User;
+use App\Pricing\Actions\CalculatePrice;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 use RuntimeException;
@@ -45,7 +45,7 @@ class DevSeeder extends Seeder
             $selections = $this->randomExtras($extras);
 
             try {
-                $summary = $calculatePrice->handle($reservation, $selections);
+                $summary = $calculatePrice->calculate($reservation, $selections);
             } catch (RuntimeException) {
                 return;
             }

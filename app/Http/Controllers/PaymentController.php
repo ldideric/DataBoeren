@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Auth\Services\SignedUrlGenerator;
 use App\Models\Reservation;
-use App\Support\SignedLink;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Laravel\Cashier\Checkout;
 
 class PaymentController extends Controller
 {
-    public function show(Reservation $reservation): View
+    public function show(Reservation $reservation, SignedUrlGenerator $urls): View
     {
         $reservation->loadMissing('campsite', 'orderSummary');
 
@@ -19,8 +19,8 @@ class PaymentController extends Controller
         return view('payments.show', [
             'reservation' => $reservation,
             'order' => $reservation->orderSummary,
-            'checkoutUrl' => SignedLink::checkout($reservation),
-            'bookingsUrl' => SignedLink::bookings($reservation->customer),
+            'checkoutUrl' => $urls->checkout($reservation),
+            'bookingsUrl' => $urls->bookings($reservation->customer),
         ]);
     }
 

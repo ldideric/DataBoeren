@@ -1,46 +1,47 @@
 <?php
 
-namespace App\Support;
+namespace App\Auth\Services;
 
 use App\Models\Reservation;
 use App\Models\User;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Contracts\Routing\UrlGenerator;
 
-class SignedLink
+class SignedUrlGenerator
 {
-    /** Amount of minutes a signed url is valid */
-    public const int TTL_MINUTES = 60;
+    public const TTL_MINUTES = 60;
 
-    public static function bookings(User $user): string
+    public function __construct(private readonly UrlGenerator $url) {}
+
+    public function bookings(User $user): string
     {
-        return URL::temporarySignedRoute(
+        return $this->url->temporarySignedRoute(
             'bookings.index',
             now()->addMinutes(self::TTL_MINUTES),
             ['user' => $user->id],
         );
     }
 
-    public static function cancelReservation(User $user, Reservation $reservation): string
+    public function cancelReservation(User $user, Reservation $reservation): string
     {
-        return URL::temporarySignedRoute(
+        return $this->url->temporarySignedRoute(
             'bookings.destroy',
             now()->addMinutes(self::TTL_MINUTES),
             ['user' => $user->id, 'reservation' => $reservation->id],
         );
     }
 
-    public static function payment(Reservation $reservation): string
+    public function payment(Reservation $reservation): string
     {
-        return URL::temporarySignedRoute(
+        return $this->url->temporarySignedRoute(
             'payments.show',
             now()->addMinutes(self::TTL_MINUTES),
             ['reservation' => $reservation->id],
         );
     }
 
-    public static function checkout(Reservation $reservation): string
+    public function checkout(Reservation $reservation): string
     {
-        return URL::temporarySignedRoute(
+        return $this->url->temporarySignedRoute(
             'payments.checkout',
             now()->addMinutes(self::TTL_MINUTES),
             ['reservation' => $reservation->id],
