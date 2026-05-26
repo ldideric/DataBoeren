@@ -4,8 +4,11 @@ namespace App\Enums;
 
 enum CampsiteType: string
 {
-    case Tent = 'tent';
-    case Trekkerveld = 'trekkerveld';
-    case CamperVan = 'camper_van';
-    case Caravan = 'caravan';
+    case Varkensveld = 'varkensveld';
+    case Paardenveld = 'paardenveld';
+    case Konijnenveld = 'konijnenveld';
+    case Geitenveld = 'geitenveld';
+    case Koeienveld = 'koeienveld';
+    case Schapenveld = 'schapenveld';
+    case Kippenveld = 'kippenveld';
 }

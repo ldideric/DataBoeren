@@ -4,11 +4,9 @@ namespace Database\Seeders;
 
 use App\Enums\UserRole;
 use App\Models\Campsite;
-use App\Models\CampsitePrice;
 use App\Models\Coupon;
 use App\Models\Extra;
 use App\Models\Reservation;
-use App\Models\Season;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
@@ -24,29 +22,15 @@ class DevSeeder extends Seeder
         ]);
 
         $customers = User::factory()->count(20)->create();
-        $campsites = Campsite::factory()->count(10)->create();
-
-        CampsitePrice::factory()->createMany(
-            $campsites->flatMap(
-                fn (Campsite $campsite) => Season::all()->map(fn (Season $season) => [
-                    'campsite_id' => $campsite->id,
-                    'season_id' => $season->id,
-                ])
-            )->all()
-        );
-
-        Extra::factory()->count(3)->create();
-        $firepit = Extra::factory()->limitedStock(5)->create(['name' => 'Vuurkorf']);
-        Extra::factory()->cappedPerBooking(3)->create(['name' => 'Hond']);
+        $campsites = Campsite::all();
+        $firepit = Extra::where('name', 'Vuurkorf')->first();
 
         $active = Coupon::factory()->create();
         Coupon::factory()->expired()->create();
         Coupon::factory()->exhausted()->create();
         Coupon::factory()->freeExtra($firepit)->create(['title' => 'Gratis vuurkorf']);
 
-        $activeCoupon = $active;
-
-        $this->seedReservations($customers, $campsites, $employee, $activeCoupon);
+        $this->seedReservations($customers, $campsites, $employee, $active);
     }
 
     private function seedReservations(Collection $customers, Collection $campsites, User $employee, Coupon $activeCoupon): void

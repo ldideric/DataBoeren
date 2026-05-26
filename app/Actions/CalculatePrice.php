@@ -10,6 +10,7 @@ use App\Models\Extra;
 use App\Models\OrderSummary;
 use App\Models\Reservation;
 use App\Models\Season;
+use App\Models\SeasonPeriod;
 use RuntimeException;
 
 /**
@@ -81,10 +82,10 @@ class CalculatePrice
 
     private function seasonFor(Reservation $reservation): Season
     {
-        return Season::query()
+        return SeasonPeriod::query()
             ->where('starts_at', '<=', $reservation->check_in)
             ->where('ends_at', '>=', $reservation->check_in)
-            ->first()
+            ->first()?->season
             ?? throw new RuntimeException("No season covers check-in date {$reservation->check_in->toDateString()}.");
     }
 
