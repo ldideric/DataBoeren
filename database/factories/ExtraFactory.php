@@ -18,12 +18,18 @@ class ExtraFactory extends Factory
             'description' => fake()->optional()->sentence(),
             'billing_type' => fake()->randomElement(BillingType::cases()),
             'price' => fake()->randomFloat(2, 2, 25),
-            'available' => true,
+            'stock' => null,
+            'max_per_booking' => null,
         ];
     }
 
-    public function unavailable(): static
+    public function limitedStock(int $stock = 5): static
     {
-        return $this->state(['available' => false]);
+        return $this->state(['stock' => $stock]);
+    }
+
+    public function cappedPerBooking(int $max = 3): static
+    {
+        return $this->state(['max_per_booking' => $max]);
     }
 }

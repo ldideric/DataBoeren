@@ -15,14 +15,15 @@ use Illuminate\Support\Carbon;
  * @property string $campsite_id
  * @property string $season_id
  * @property float $nightly_rate
- * @property float $per_person_rate
+ * @property float $per_adult_rate
+ * @property float $per_child_rate
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
  * @property-read Campsite $campsite
  * @property-read Season $season
  */
-#[Fillable(['campsite_id', 'season_id', 'nightly_rate', 'per_person_rate'])]
+#[Fillable(['campsite_id', 'season_id', 'nightly_rate', 'per_adult_rate', 'per_child_rate'])]
 class CampsitePrice extends Model
 {
     /** @use HasFactory<CampsitePriceFactory> */

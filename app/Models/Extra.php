@@ -19,14 +19,15 @@ use Illuminate\Support\Carbon;
  * @property string|null $description
  * @property BillingType $billing_type
  * @property float $price
- * @property bool $available
+ * @property int|null $stock
+ * @property int|null $max_per_booking
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
  *
  * @property-read Collection<ReservationExtra> $reservationExtras
  */
-#[Fillable(['name', 'description', 'billing_type', 'price', 'available'])]
+#[Fillable(['name', 'description', 'billing_type', 'price', 'stock', 'max_per_booking'])]
 class Extra extends Model
 {
     /** @use HasFactory<ExtraFactory> */

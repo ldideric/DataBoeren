@@ -35,12 +35,14 @@ class DevSeeder extends Seeder
             )->all()
         );
 
-        Extra::factory()->count(5)->create();
-        Extra::factory()->unavailable()->count(2)->create();
+        Extra::factory()->count(3)->create();
+        $firepit = Extra::factory()->limitedStock(5)->create(['name' => 'Vuurkorf']);
+        Extra::factory()->cappedPerBooking(3)->create(['name' => 'Hond']);
 
         $active = Coupon::factory()->create();
         Coupon::factory()->expired()->create();
         Coupon::factory()->exhausted()->create();
+        Coupon::factory()->freeExtra($firepit)->create(['title' => 'Gratis vuurkorf']);
 
         $activeCoupon = $active;
 

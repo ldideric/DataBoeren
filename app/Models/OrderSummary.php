@@ -16,7 +16,8 @@ use Illuminate\Support\Carbon;
  * @property string $season_name
  * @property int $num_nights
  * @property float $nightly_rate
- * @property float $per_person_rate
+ * @property float $per_adult_rate
+ * @property float $per_child_rate
  * @property bool $last_minute_applied
  * @property float|null $last_minute_discount
  * @property float|null $coupon_discount
@@ -27,7 +28,7 @@ use Illuminate\Support\Carbon;
  *
  * @property-read Reservation $reservation
  */
-#[Fillable(['reservation_id', 'season_name', 'num_nights', 'nightly_rate', 'per_person_rate', 'last_minute_applied', 'last_minute_discount', 'coupon_discount', 'extras_total', 'total'])]
+#[Fillable(['reservation_id', 'season_name', 'num_nights', 'nightly_rate', 'per_adult_rate', 'per_child_rate', 'last_minute_applied', 'last_minute_discount', 'coupon_discount', 'extras_total', 'total'])]
 class OrderSummary extends Model
 {
     /** @use HasFactory<OrderSummaryFactory> */
