@@ -2,7 +2,6 @@
 
 namespace App\Queries;
 
-use App\Enums\CampsiteType;
 use App\Enums\ReservationStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;

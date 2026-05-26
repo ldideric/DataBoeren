@@ -97,7 +97,10 @@
                                     @foreach (\App\Enums\CampsiteType::cases() as $type)
                                         <label class="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-gray-100">
                                             <input type="radio" name="type" value="{{ $type->value }}" data-filter-input class="h-4 w-4 accent-green-600">
-                                            <span>{{ \Illuminate\Support\Str::headline($type->value) }}</span>
+                                            <div class="flex flex-col">
+                                                <span class="text-base font-normal text-gray-900">{{ $type->getHeadline() }}</span>
+                                                <span class="text-sm text-gray-500">{{ $type->getDescription() }}</span>
+                                            </div>
                                         </label>
                                     @endforeach
                                 </div>
@@ -140,14 +143,23 @@
                         <div class="mt-6 space-y-4">
                             @foreach ($campsites as $campsite)
                                 <a
-                                    href="{{ route('bookings.create', [
-                                        'campsite' => $campsite->id,
-                                        'check_in' => $checkIn->format('Y-m-d'),
-                                        'check_out' => $checkOut->format('Y-m-d'),
-                                        'adults' => $adults,
-                                        'children' => $children,
-                                        'vehicles' => $vehicles,
-                                    ]) }}"
+                                    href="#"
+                                    onclick="openModal(
+                                        '{{ $campsite->name }}',
+                                        '{{ \Illuminate\Support\Str::apa($campsite->type->value) }}',
+                                        '{{ $campsite->max_people }}',
+                                        '{{ $campsite->max_vehicles }}',
+                                        {{ $campsite->has_electricity ? 'true' : 'false' }},
+                                        '{{ $campsite->notes }}',
+                                        '{{ route('bookings.create', [
+                                            'campsite' => $campsite->id,
+                                            'check_in' => $checkIn->format('Y-m-d'),
+                                            'check_out' => $checkOut->format('Y-m-d'),
+                                            'adults' => $adults,
+                                            'children' => $children,
+                                            'vehicles' => $vehicles,
+                                            ]) }}'
+                                    )"
                                     data-filter-item
                                     data-type="{{ $campsite->type->value }}"
                                     class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 transition hover:scale-[1.01] hover:shadow-md sm:flex-row sm:items-center"
@@ -176,4 +188,52 @@
             </div>
         </div>
     </div>
+
+    <div id="modal" class="hidden fixed inset-0 bg-black/50 items-center justify-center ">
+        <div class="bg-white rounded-2xl p-6 w-11/12 max-w-lg">
+            <button onclick="closeModal()">X</button>
+
+            <h2 id="modal-title" class="text-3xl font-semibold text-gray-900"></h2>
+            <p id="modal-type" class="text-l font-medium text-gray"></p>
+            <div class="mt-4 aspect-3/2 bg-gray-100 rounded-lg"></div>
+
+            <div class="mt-4 flex gap-5">
+                <ul id="modal-details" class="space-y-2 text-sm text-gray-500 flex-1">
+                    <li id="modal-people"></li>
+                    <li id="modal-vehicles"></li>
+                    <li id="modal-electricity"></li>
+                </ul>
+                <p id="modal-notes" class="text-sm text-gray-700 flex-1"></p>
+            </div>
+
+            <div class="mt-4 flex justify-end">
+                <a id="modal-book-btn" class="rounded-lg px-6 py-2 text-sm font-semibold text-white" style="background: #265513;">Boek</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('modal');
+
+        function openModal(name, type, people, vehicles, electricity, notes, url) {
+            document.getElementById('modal-title').textContent = name;
+            document.getElementById('modal-type').textContent = type;
+            document.getElementById('modal-people').textContent = 'Max personen: ' + people;
+            document.getElementById('modal-vehicles').textContent = 'Max voertuigen: ' + vehicles;
+            document.getElementById('modal-electricity').textContent = 'Stroom: ' + (electricity ? 'Ja' : 'Nee');
+            document.getElementById('modal-notes').textContent = notes || 'Geen extra informatie beschikbaar';
+            document.getElementById('modal-book-btn').href = url;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+        }
+    </script>
 @endsection
