@@ -1,0 +1,802 @@
+[
+  {
+    "name": "Trekker 1",
+    "type": "Varkensveld",
+    "has_electricity": false,
+    "max_people": 1,
+    "max_vehicles": 0,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 18.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 15.0,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Trekker 2",
+    "type": "Varkensveld",
+    "has_electricity": false,
+    "max_people": 1,
+    "max_vehicles": 0,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 18.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 15.0,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Trekker 3",
+    "type": "Varkensveld",
+    "has_electricity": false,
+    "max_people": 1,
+    "max_vehicles": 0,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 18.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 15.0,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Trekker 4",
+    "type": "Varkensveld",
+    "has_electricity": false,
+    "max_people": 1,
+    "max_vehicles": 0,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 18.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 15.0,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Trekker 5",
+    "type": "Varkensveld",
+    "has_electricity": false,
+    "max_people": 1,
+    "max_vehicles": 0,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 18.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 15.0,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Trekker 6",
+    "type": "Varkensveld",
+    "has_electricity": false,
+    "max_people": 2,
+    "max_vehicles": 0,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 24.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.0,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Trekker 7",
+    "type": "Varkensveld",
+    "has_electricity": false,
+    "max_people": 2,
+    "max_vehicles": 0,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 24.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.0,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Trekker 8",
+    "type": "Varkensveld",
+    "has_electricity": false,
+    "max_people": 2,
+    "max_vehicles": 0,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 24.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.0,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Trekker 9",
+    "type": "Varkensveld",
+    "has_electricity": false,
+    "max_people": 2,
+    "max_vehicles": 0,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 24.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.0,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Trekker 10",
+    "type": "Varkensveld",
+    "has_electricity": false,
+    "max_people": 2,
+    "max_vehicles": 0,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 24.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.0,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Camper 1",
+    "type": "Paardenveld",
+    "has_electricity": true,
+    "max_people": 4,
+    "max_vehicles": 1,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 30.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Camper 2",
+    "type": "Paardenveld",
+    "has_electricity": true,
+    "max_people": 4,
+    "max_vehicles": 1,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 30.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Camper 3",
+    "type": "Paardenveld",
+    "has_electricity": true,
+    "max_people": 4,
+    "max_vehicles": 1,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 30.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Camper 4",
+    "type": "Paardenveld",
+    "has_electricity": true,
+    "max_people": 4,
+    "max_vehicles": 1,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 30.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Natuurterrein camper",
+    "type": "Paardenveld",
+    "has_electricity": true,
+    "max_people": 4,
+    "max_vehicles": 1,
+    "notes": "Natuurlijk terrein met reliëf, budget plek",
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 5.5,
+        "per_child_rate": 3.1
+      }
+    }
+  },
+  {
+    "name": "Tent 1",
+    "type": "Konijnenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 2",
+    "type": "Konijnenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 3",
+    "type": "Konijnenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 4",
+    "type": "Konijnenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 5",
+    "type": "Konijnenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 1",
+    "type": "Geitenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": "Naast het sanitair, in schaduw van sanitair gebouw overdag",
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 2",
+    "type": "Geitenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 3",
+    "type": "Geitenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 4",
+    "type": "Geitenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 5",
+    "type": "Geitenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 1",
+    "type": "Koeienveld",
+    "has_electricity": true,
+    "max_people": 8,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 27.5,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 22.92,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 2",
+    "type": "Koeienveld",
+    "has_electricity": true,
+    "max_people": 8,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 27.5,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 22.92,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 3",
+    "type": "Koeienveld",
+    "has_electricity": true,
+    "max_people": 8,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 27.5,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 22.92,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 4",
+    "type": "Koeienveld",
+    "has_electricity": true,
+    "max_people": 8,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 27.5,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 22.92,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 5",
+    "type": "Koeienveld",
+    "has_electricity": true,
+    "max_people": 8,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 27.5,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 22.92,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 1",
+    "type": "Schapenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 2",
+    "type": "Schapenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 3",
+    "type": "Schapenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 4",
+    "type": "Schapenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 5",
+    "type": "Schapenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 1",
+    "type": "Kippenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 2",
+    "type": "Kippenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 3",
+    "type": "Kippenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 4",
+    "type": "Kippenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  },
+  {
+    "name": "Tent 5",
+    "type": "Kippenveld",
+    "has_electricity": true,
+    "max_people": 5,
+    "max_vehicles": 2,
+    "notes": null,
+    "pricing": {
+      "hoog_seizoen": {
+        "nightly_rate": 25.0,
+        "per_person_rate": 7.7,
+        "per_child_rate": 4.1
+      },
+      "laag_seizoen": {
+        "nightly_rate": 20.83,
+        "per_person_rate": 6.6,
+        "per_child_rate": 3.6
+      }
+    }
+  }
+]

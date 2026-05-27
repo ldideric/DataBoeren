@@ -12,6 +12,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminUserSeeder::class,
             SeasonSeeder::class,
+            CampsiteSeeder::class,
+            ExtraSeeder::class,
         ]);
 
         if (App::isLocal()) {

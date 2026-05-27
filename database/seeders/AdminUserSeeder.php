@@ -12,7 +12,7 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         User::firstOrCreate([
-            'email' => config('admin.email', 'bertina@degroeneweide.nl')
+            'email' => config('admin.email', 'bertina@degroeneweide.nl'),
         ], [
             'first_name' => 'Bertina',
             'last_name' => 'ADMIN',

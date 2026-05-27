@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('season_periods', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->foreignUuid('season_id')->constrained()->cascadeOnDelete();
+            $table->date('starts_at');
+            $table->date('ends_at');
+            $table->timestamps();
+
+            $table->index(['starts_at', 'ends_at']);
+        });
+
+        Schema::table('seasons', function (Blueprint $table) {
+            $table->dropColumn(['starts_at', 'ends_at']);
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('seasons', function (Blueprint $table) {
+            $table->date('starts_at')->nullable();
+            $table->date('ends_at')->nullable();
+        });
+
+        Schema::dropIfExists('season_periods');
+    }
+};

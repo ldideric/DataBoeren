@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Laravel\Cashier\Billable;
 
 /**
  * @property string $id
@@ -27,17 +28,15 @@ use Illuminate\Support\Carbon;
  * @property string $last_name
  * @property string $email
  * @property string|null $phone
- * @property string $password
+ * @property string|null $password
  * @property UserRole $role
  * @property string|null $remember_token
  * @property Carbon|null $email_verified_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- *
  * @property-read Collection<Reservation> $reservations
  * @property-read Collection<Reservation> $bookedReservations
- *
  * @property-read string $name
  *
  * @method UserQuery|static query()
@@ -46,8 +45,13 @@ use Illuminate\Support\Carbon;
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
 {
+    use Billable;
+
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasUuids, SoftDeletes;
+    use HasFactory;
+    use HasUuids;
+    use Notifiable;
+    use SoftDeletes;
 
     protected function casts(): array
     {
