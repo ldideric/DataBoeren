@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-use \Illuminate\Support\Str;
+use Illuminate\Support\Str;
 
 enum CampsiteType: string
 {
@@ -24,11 +24,7 @@ enum CampsiteType: string
         return match ($this) {
             self::Paardenveld => 'Camperveld',
             self::Varkensveld => 'Trekkersveld',
-            self::Konijnenveld => 'Tentenveld',
-            self::Geitenveld => 'Tentenveld',
-            self::Koeienveld => 'Tentenveld',
-            self::Schapenveld => 'Tentenveld',
-            self::Kippenveld => 'Tentenveld',
+            default => 'Tentenveld',
         };
     }
 }

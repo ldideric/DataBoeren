@@ -19,7 +19,6 @@ use Illuminate\Support\Carbon;
  * @property float $subtotal
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property-read Reservation $reservation
  * @property-read Extra $extra
  */

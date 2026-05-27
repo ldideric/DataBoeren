@@ -36,10 +36,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- *
  * @property-read Collection<Reservation> $reservations
  * @property-read Collection<Reservation> $bookedReservations
- *
  * @property-read string $name
  *
  * @method UserQuery|static query()
@@ -49,7 +47,7 @@ use Illuminate\Support\Carbon;
 class User extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasUuids, SoftDeletes;
+    use HasFactory, HasUuids, Notifiable, SoftDeletes;
 
     protected function casts(): array
     {

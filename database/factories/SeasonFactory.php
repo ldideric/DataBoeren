@@ -18,7 +18,7 @@ class SeasonFactory extends Factory
         $endsAt = fake()->dateTimeBetween($startsAt, (clone $startsAt)->modify('+6 months'));
 
         return [
-            'name' => fake()->randomElement(self::$seasonNames) . ' ' . fake()->year(),
+            'name' => fake()->randomElement(self::$seasonNames).' '.fake()->year(),
             'starts_at' => $startsAt,
             'ends_at' => $endsAt,
         ];

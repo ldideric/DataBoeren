@@ -20,7 +20,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $paid_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property-read Reservation $reservation
  */
 #[Fillable(['reservation_id', 'amount', 'status', 'method', 'paid_at'])]

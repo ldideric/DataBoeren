@@ -25,7 +25,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- *
  * @property-read Collection<Reservation> $reservations
  */
 #[Fillable(['title', 'code', 'discount_type', 'discount_value', 'expires_at', 'max_uses', 'uses_count'])]

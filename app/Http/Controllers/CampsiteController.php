@@ -34,7 +34,7 @@ class CampsiteController extends Controller
                 ->whereAvailableBetween($checkIn, $checkOut)
                 ->orderBy('name')
                 ->get()
-            : new Collection();
+            : new Collection;
 
         return view('campsites.index', [
             'campsites' => $campsites,

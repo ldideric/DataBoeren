@@ -24,7 +24,6 @@ use Illuminate\Support\Carbon;
  * @property float $total
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property-read Reservation $reservation
  */
 #[Fillable(['reservation_id', 'season_name', 'num_nights', 'nightly_rate', 'per_person_rate', 'last_minute_applied', 'last_minute_discount', 'coupon_discount', 'extras_total', 'total'])]

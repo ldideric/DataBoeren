@@ -2,10 +2,10 @@
 
 namespace App\Enums;
 
-enum PaymentStatus:string
+enum PaymentStatus: string
 {
-case Pending = 'pending';
-case Paid = 'paid';
-case Cancelled = 'cancelled';
-case Refunded = 'refunded';
+    case Pending = 'pending';
+    case Paid = 'paid';
+    case Cancelled = 'cancelled';
+    case Refunded = 'refunded';
 }
