@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\Province;
 use App\Enums\UserRole;
 use App\Queries\UserQuery;
 use Database\Factories\UserFactory;
@@ -21,6 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Laravel\Cashier\Billable;
 
 /**
  * @property string $id
@@ -28,7 +28,6 @@ use Illuminate\Support\Carbon;
  * @property string $last_name
  * @property string $email
  * @property string|null $phone
- * @property Province|null $province
  * @property string|null $password
  * @property UserRole $role
  * @property string|null $remember_token
@@ -42,12 +41,16 @@ use Illuminate\Support\Carbon;
  *
  * @method UserQuery|static query()
  */
-#[Fillable(['first_name', 'last_name', 'email', 'phone', 'province', 'password', 'role'])]
+#[Fillable(['first_name', 'last_name', 'email', 'phone', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasUuids, Notifiable, SoftDeletes;
+    use HasFactory;
+    use Notifiable;
+    use HasUuids;
+    use SoftDeletes;
+    use Billable;
 
     protected function casts(): array
     {
@@ -55,7 +58,6 @@ class User extends Authenticatable implements FilamentUser, HasName, MustVerifyE
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => UserRole::class,
-            'province' => Province::class,
         ];
     }
 

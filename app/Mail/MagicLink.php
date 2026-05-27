@@ -18,7 +18,7 @@ class MagicLink extends Mailable implements ShouldQueue
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Uw inloglink voor De Groene Weide');
+        return new Envelope(subject: 'Uw link naar uw boekingen — De Groene Weide');
     }
 
     public function content(): Content

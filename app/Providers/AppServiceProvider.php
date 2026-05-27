@@ -18,5 +18,16 @@ class AppServiceProvider extends ServiceProvider
         if (App::environment('production', 'staging')) {
             URL::forceScheme('https');
         }
+
+        $this->loadSubdirMigrations();
+    }
+
+    protected function loadSubdirMigrations(): void
+    {
+        $migrationsPath = database_path('migrations');
+        $directories = glob($migrationsPath . '/*', GLOB_ONLYDIR);
+        $paths = array_merge([$migrationsPath], $directories);
+
+        $this->loadMigrationsFrom($paths);
     }
 }
