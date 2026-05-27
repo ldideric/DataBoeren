@@ -19,7 +19,7 @@
                                     value="{{ $checkIn?->format('Y-m-d') }}"
                                     min="{{ now()->format('Y-m-d') }}"
                                     required
-                                    class="mt-2 w-full rounded-lg border border-white px-3 py-2 text-base focus:border-olivegreen2 focus:outline-none focus:ring-2 focus:ring-olivegreen2"
+                                    class="mt-2 w-full rounded-lg border border-olivegreen2 px-3 py-2 text-base focus:border-olivegreen focus:outline-none focus:ring-2 focus:ring-olivegreen"
                                 >
                             </div>
                             <div>
@@ -31,7 +31,7 @@
                                     value="{{ $checkOut?->format('Y-m-d') }}"
                                     min="{{ now()->addDay()->format('Y-m-d') }}"
                                     required
-                                    class="mt-2 w-full rounded-lg border border-white px-3 py-2 text-base focus:border-olivegreen2 focus:outline-none focus:ring-2 focus:ring-olivegreen2"
+                                    class="mt-2 w-full rounded-lg border border-olivegreen2 px-3 py-2 text-base focus:border-olivegreen focus:outline-none focus:ring-2 focus:ring-olivegreen"
                                 >
                             </div>
                             <div class="grid grid-cols-2 gap-3">
@@ -44,7 +44,7 @@
                                         value="{{ $adults ?? 1}}"
                                         min="1"
                                         required
-                                        class="mt-2 w-full rounded-lg border border-white px-3 py-2 text-base focus:border-olivegreen2 focus:outline-none focus:ring-2 focus:ring-olivegreen2"
+                                        class="mt-2 w-full rounded-lg border border-olivegreen2 px-3 py-2 text-base focus:border-olivegreen focus:outline-none focus:ring-2 focus:ring-olivegreen"
                                     >
                                 </div>
                                 <div>
@@ -56,7 +56,7 @@
                                         value="{{ $children ?? 0 }}"
                                         min="0"
                                         required
-                                        class="mt-2 w-full rounded-lg border border-white px-3 py-2 text-base focus:border-olivegreen2 focus:outline-none focus:ring-2 focus:ring-olivegreen2"
+                                        class="mt-2 w-full rounded-lg border border-olivegreen2 px-3 py-2 text-base focus:border-olivegreen focus:outline-none focus:ring-2 focus:ring-olivegreen"
                                     >
                                 </div>
                             </div>
@@ -69,7 +69,7 @@
                                     value="{{ $vehicles ?? 0 }}"
                                     min="0"
                                     required
-                                    class="mt-2 w-full rounded-lg border border-white px-3 py-2 text-base focus:border-olivegreen2 focus:outline-none focus:ring-2 focus:ring-olivegreen2"
+                                    class="mt-2 w-full rounded-lg border border-olivegreen2 px-3 py-2 text-base focus:border-olivegreen focus:outline-none focus:ring-2 focus:ring-olivegreen"
                                 >
                             </div>
                             <button
