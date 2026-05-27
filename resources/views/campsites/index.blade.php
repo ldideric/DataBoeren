@@ -144,24 +144,23 @@
                             @foreach ($campsites as $campsite)
                                 <a
                                     href="#"
-                                    onclick="openModal(
-                                        '{{ $campsite->name }}',
-                                        '{{ \Illuminate\Support\Str::apa($campsite->type->value) }}',
-                                        '{{ $campsite->max_people }}',
-                                        '{{ $campsite->max_vehicles }}',
-                                        {{ $campsite->has_electricity ? 'true' : 'false' }},
-                                        '{{ $campsite->notes }}',
-                                        '{{ route('bookings.create', [
-                                            'campsite' => $campsite->id,
-                                            'check_in' => $checkIn->format('Y-m-d'),
-                                            'check_out' => $checkOut->format('Y-m-d'),
-                                            'adults' => $adults,
-                                            'children' => $children,
-                                            'vehicles' => $vehicles,
-                                            ]) }}'
-                                    )"
+                                    onclick="event.preventDefault(); openModal(this)"
                                     data-filter-item
                                     data-type="{{ $campsite->type->value }}"
+                                    data-name="{{ $campsite->name }}"
+                                    data-campsite-type="{{ $campsite->type->getHeadline() }}"
+                                    data-people="{{ $campsite->max_people }}"
+                                    data-vehicles="{{ $campsite->max_vehicles }}"
+                                    data-electricity="{{ $campsite->has_electricity ? 'true' : 'false' }}"
+                                    data-notes="{{ $campsite->notes }}"
+                                    data-url="{{ route('bookings.create', [
+                                        'campsite' => $campsite->id,
+                                        'check_in' => $checkIn->format('Y-m-d'),
+                                        'check_out' => $checkOut->format('Y-m-d'),
+                                        'adults' => $adults,
+                                        'children' => $children,
+                                        'vehicles' => $vehicles,
+                                    ]) }}"
                                     class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 transition hover:scale-[1.01] hover:shadow-md sm:flex-row sm:items-center"
                                 >
                                     <div class="flex-1 sm:px-4">
@@ -191,10 +190,11 @@
 
     <div id="modal" class="hidden fixed inset-0 bg-black/50 items-center justify-center ">
         <div class="bg-white rounded-2xl p-6 w-11/12 max-w-lg">
-            <button onclick="closeModal()">X</button>
-
-            <h2 id="modal-title" class="text-3xl font-semibold text-gray-900"></h2>
-            <p id="modal-type" class="text-l font-medium text-gray"></p>
+            <div class="flex items-start justify-between">
+                <h2 id="modal-title" class="text-3xl font-semibold text-gray-900"></h2>
+                <button onclick="closeModal()" class="ml-4 text-gray-400 hover:text-gray-700 text-xl leading-none">✕</button>
+            </div>
+            <p id="modal-type" class="text-lg font-medium text-gray-600"></p>
             <div class="mt-4 aspect-3/2 bg-gray-100 rounded-lg"></div>
 
             <div class="mt-4 flex gap-5">
@@ -215,14 +215,15 @@
     <script>
         const modal = document.getElementById('modal');
 
-        function openModal(name, type, people, vehicles, electricity, notes, url) {
-            document.getElementById('modal-title').textContent = name;
-            document.getElementById('modal-type').textContent = type;
-            document.getElementById('modal-people').textContent = 'Max personen: ' + people;
-            document.getElementById('modal-vehicles').textContent = 'Max voertuigen: ' + vehicles;
-            document.getElementById('modal-electricity').textContent = 'Stroom: ' + (electricity ? 'Ja' : 'Nee');
-            document.getElementById('modal-notes').textContent = notes || 'Geen extra informatie beschikbaar';
-            document.getElementById('modal-book-btn').href = url;
+        function openModal(el) {
+            const d = el.dataset;
+            document.getElementById('modal-title').textContent = d.name;
+            document.getElementById('modal-type').textContent = d.campsiteType;
+            document.getElementById('modal-people').textContent = 'Max personen: ' + d.people;
+            document.getElementById('modal-vehicles').textContent = 'Max voertuigen: ' + d.vehicles;
+            document.getElementById('modal-electricity').textContent = 'Stroom: ' + (d.electricity === 'true' ? 'Ja' : 'Nee');
+            document.getElementById('modal-notes').textContent = d.notes || 'Geen extra informatie beschikbaar';
+            document.getElementById('modal-book-btn').href = d.url;
             modal.style.display = 'flex';
         }
 
