@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
     protected function loadSubdirMigrations(): void
     {
         $migrationsPath = database_path('migrations');
-        $directories = glob($migrationsPath . '/*', GLOB_ONLYDIR);
+        $directories = glob($migrationsPath.'/*', GLOB_ONLYDIR);
         $paths = array_merge([$migrationsPath], $directories);
 
         $this->loadMigrationsFrom($paths);

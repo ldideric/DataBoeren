@@ -47,8 +47,8 @@ class User extends Authenticatable implements FilamentUser, HasName, MustVerifyE
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
-    use Notifiable;
     use HasUuids;
+    use Notifiable;
     use SoftDeletes;
     use Billable;
 

@@ -67,8 +67,8 @@ class CreateReservation
                 'source' => ReservationSource::Online,
                 'check_in' => $checkIn,
                 'check_out' => $checkOut,
-                'num_adults' => (int)$data['num_adults'],
-                'num_children' => (int)$data['num_children'],
+                'num_adults' => (int) $data['num_adults'],
+                'num_children' => (int) $data['num_children'],
                 'num_vehicles' => $request->vehicleCount(),
                 'status' => ReservationStatus::Pending,
             ]);
