@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-tan" data-filter-root>
+    <div class="bg-tan2" data-filter-root>
         <div class="mx-auto max-w-6xl px-6 py-8">
             <div class="flex flex-col gap-6 lg:flex-row">
                 <aside class="w-full lg:w-80">
                     <div class="space-y-5">
-                        <form method="GET" action="{{ route('campsites.index') }}" class="rounded-2xl bg-tan2 p-5 shadow-sm ring-1 ring-black/5 space-y-4">
+                        <form method="GET" action="{{ route('campsites.index') }}" class="rounded-2xl bg-tan p-5 shadow-sm ring-1 ring-black/5 space-y-4">
                             <h2 class="text-lg font-bold text-olivegreen2">Verblijfsgegevens</h2>
                             <p class="text-sm text-black">Vul alle velden in om beschikbare plekken te zien.</p>
 
@@ -81,7 +81,7 @@
                         </form>
 
                         @if ($hasAllCriteria && $campsites->isNotEmpty())
-                            <div class="rounded-xl border border-tan2 bg-tan2 p-5">
+                            <div class="rounded-xl border border-tan bg-tan p-5">
                                 <h2 class="text-lg font-semibold text-black">Accommodatie type</h2>
                                 <p class="mt-2 text-sm text-black">Selecteer een type om de resultaten te filteren.</p>
 
@@ -111,7 +111,7 @@
                     @if (! $hasAllCriteria)
                         <p class="mt-2 text-base text-black">Vul je verblijfsgegevens in om beschikbare plekken te zien.</p>
 
-                        <div class="mt-6 rounded-xl border border-dashed border-tan2 bg-tan2 p-10 text-center">
+                        <div class="mt-6 rounded-xl border border-dashed border-tan bg-tan p-10 text-center">
                             <p class="text-base font-medium text-olivegreen2">Nog geen zoekopdracht</p>
                             <p class="mt-2 text-sm text-black">Vul links je aankomst- en vertrekdatum, aantal personen en voertuigen in om beschikbare plekken te zien.</p>
                         </div>
@@ -121,7 +121,7 @@
                             voor {{ $adults + $children }} {{ $adults + $children === 1 ? 'persoon' : 'personen' }}.
                         </p>
 
-                        <div class="mt-6 rounded-xl border border-dashed border-tan2 bg-tan2 p-10 text-center">
+                        <div class="mt-6 rounded-xl border border-dashed border-tan bg-tan p-10 text-center">
                             <p class="text-base font-medium text-olivegreen2">Geen beschikbare plekken voor deze gegevens</p>
                             <p class="mt-2 text-sm text-black">Probeer andere data, een kleinere groep of minder voertuigen.</p>
                         </div>
@@ -132,7 +132,7 @@
                             ({{ $vehicles }} {{ $vehicles === 1 ? 'voertuig' : 'voertuigen' }}).
                         </p>
 
-                        <div class="mt-4 rounded-lg border border-tan2 bg-tan2 px-4 py-3 font-semibold text-black">
+                        <div class="mt-4 rounded-lg border border-tan bg-tan px-4 py-3 font-semibold text-black">
                             <span data-filter-count>{{ $campsites->count() }}</span> beschikbaarheden gevonden
                         </div>
 
@@ -159,7 +159,7 @@
                                     ]) }}"
                                     data-filter-item
                                     data-type="{{ $campsite->type->value }}"
-                                    class="flex flex-col gap-4 rounded-xl border border-tan2 bg-tan2 p-4 transition hover:scale-[1.01] hover:shadow-md sm:flex-row sm:items-center"
+                                    class="flex flex-col gap-4 rounded-xl border border-tan bg-tan p-4 transition hover:scale-[1.01] hover:shadow-md sm:flex-row sm:items-center"
                                 >
                                     <div class="flex-1 sm:px-4">
                                         <h3 class="text-lg font-semibold text-black">{{ $campsite->name }}</h3>
@@ -176,7 +176,7 @@
                                 </a>
                             @endforeach
 
-                            <div data-filter-empty hidden class="rounded-lg border border-dashed border-tan2 bg-tan2 p-6 text-center text-sm text-black">
+                            <div data-filter-empty hidden class="rounded-lg border border-dashed border-tan bg-tan p-6 text-center text-sm text-black">
                                 Geen accommodaties van dit type gevonden.
                             </div>
                         </div>
