@@ -62,7 +62,7 @@ it('rejects extras when stock is exhausted', function () {
 
         $this->fail('Expected validation exception was not thrown.');
     } catch (ValidationException $exception) {
-        expect($exception->errors())->toHaveKey("extras.{$extra->id}")
-            ->and($exception->errors()["extras.{$extra->id}"][0])->toBe('Nog 1 beschikbaar voor deze data.');
+        expect($exception->errors())->toHaveKey("extras.$extra->id")
+            ->and($exception->errors()["extras.$extra->id"][0])->toBe('Nog 1 beschikbaar voor deze data.');
     }
 });

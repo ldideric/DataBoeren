@@ -7,12 +7,14 @@ use App\Models\OrderSummary;
 use App\Models\Reservation;
 use App\Pricing\Actions\CalculatePrice;
 use Illuminate\Support\Carbon;
+use RuntimeException;
 
-class PreviewPrice
+readonly class PreviewPrice
 {
     public function __construct(
-        private readonly CalculatePrice $calculator,
-    ) {}
+        private CalculatePrice $calculator,
+    ) {
+    }
 
     public function handle(Campsite $campsite, Carbon $checkIn, Carbon $checkOut, int $adults, int $children): ?OrderSummary
     {
@@ -26,7 +28,7 @@ class PreviewPrice
 
         try {
             return $this->calculator->calculate($preview);
-        } catch (\RuntimeException) {
+        } catch (RuntimeException) {
             return null;
         }
     }

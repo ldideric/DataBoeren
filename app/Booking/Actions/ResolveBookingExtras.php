@@ -13,13 +13,13 @@ class ResolveBookingExtras
      * Validate and normalize extra selections from a web request, returning
      * a clean array keyed by extra ID ready for downstream consumption.
      *
-     * @param  array<string, int|string>  $quantities  Keyed by extra ID.
+     * @param array<string, int|string> $quantities Keyed by extra ID.
      * @return array<array{extra: Extra, quantity: int}>
      */
     public function resolve(array $quantities, Carbon $checkIn, Carbon $checkOut): array
     {
         $wanted = collect($quantities)
-            ->map(fn ($quantity) => (int) $quantity)
+            ->map(fn ($quantity) => (int)$quantity)
             ->filter(fn (int $quantity) => $quantity > 0);
 
         if ($wanted->isEmpty()) {
@@ -50,7 +50,7 @@ class ResolveBookingExtras
         }
 
         if ($extra->max_per_booking !== null && $line['quantity'] > $extra->max_per_booking) {
-            $this->reject($id, "Maximaal {$extra->max_per_booking} per boeking.");
+            $this->reject($id, "Maximaal $extra->max_per_booking per boeking.");
         }
 
         $remaining = GetExtraAvailability::for($extra)->remaining($checkIn, $checkOut);
@@ -59,7 +59,7 @@ class ResolveBookingExtras
             $this->reject(
                 $id,
                 $remaining > 0
-                    ? "Nog {$remaining} beschikbaar voor deze data."
+                    ? "Nog $remaining beschikbaar voor deze data."
                     : 'Niet beschikbaar voor deze data.',
             );
         }
@@ -67,6 +67,6 @@ class ResolveBookingExtras
 
     private function reject(string $id, string $message): never
     {
-        throw ValidationException::withMessages(["extras.{$id}" => $message]);
+        throw ValidationException::withMessages(["extras.$id" => $message]);
     }
 }

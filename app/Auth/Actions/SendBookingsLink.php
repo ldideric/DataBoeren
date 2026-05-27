@@ -7,9 +7,11 @@ use App\Mail\MagicLink;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
-class SendBookingsLink
+readonly class SendBookingsLink
 {
-    public function __construct(private readonly SignedUrlGenerator $urls) {}
+    public function __construct(private SignedUrlGenerator $urls)
+    {
+    }
 
     public function handle(User $user): void
     {

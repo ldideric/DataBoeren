@@ -39,11 +39,11 @@ class CampsiteSeeder extends Seeder
 
                 // The JSON holds euros; money is stored as integer cents.
                 $campsite->prices()->updateOrCreate(
-                    ['season_id' => $seasons[$seasonName] ?? throw new RuntimeException("Missing season \"{$seasonName}\" — run SeasonSeeder first.")],
+                    ['season_id' => $seasons[$seasonName] ?? throw new RuntimeException("Missing season \"$seasonName\" — run SeasonSeeder first.")],
                     [
-                        'nightly_rate' => (int) round($rate['nightly_rate'] * 100),
-                        'per_adult_rate' => (int) round($rate['per_person_rate'] * 100),
-                        'per_child_rate' => (int) round($rate['per_child_rate'] * 100),
+                        'nightly_rate' => (int)round($rate['nightly_rate'] * 100),
+                        'per_adult_rate' => (int)round($rate['per_person_rate'] * 100),
+                        'per_child_rate' => (int)round($rate['per_child_rate'] * 100),
                     ],
                 );
             }
@@ -56,8 +56,6 @@ class CampsiteSeeder extends Seeder
     {
         $path = database_path('src/campsites.json');
 
-        $records = json_decode(file_get_contents($path), true, flags: JSON_THROW_ON_ERROR);
-
-        return $records;
+        return json_decode(file_get_contents($path), true, flags: JSON_THROW_ON_ERROR);
     }
 }
