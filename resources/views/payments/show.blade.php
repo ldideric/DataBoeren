@@ -17,8 +17,14 @@
                     <p>Aantal personen: <span class="font-medium text-gray-900">{{ $reservation->num_adults + $reservation->num_children }}</span></p>
                 </div>
 
-                {{-- @todo The amount is a €1.00 placeholder set in PaymentController::checkout(); --}}
-                {{--       show the real OrderSummary.total here once it is calculated. --}}
+                <div class="mt-4">
+                    @include('partials.price-breakdown', [
+                        'order' => $order,
+                        'adults' => $reservation->num_adults,
+                        'children' => $reservation->num_children,
+                    ])
+                </div>
+
                 <p class="mt-4 text-sm text-gray-500">
                     U wordt doorgestuurd naar Stripe om uw betaling veilig af te ronden.
                 </p>

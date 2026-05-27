@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support;
+namespace App\Booking\DTO;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -13,8 +13,7 @@ final readonly class StayCriteria
         public ?int $adults,
         public ?int $children,
         public ?int $vehicles,
-    ) {
-    }
+    ) {}
 
     public static function fromRequest(Request $request, string $checkInKey = 'datestart', string $checkOutKey = 'dateend'): self
     {
@@ -45,6 +44,6 @@ final readonly class StayCriteria
 
     public function partySize(): int
     {
-        return (int)$this->adults + (int)$this->children;
+        return (int) $this->adults + (int) $this->children;
     }
 }

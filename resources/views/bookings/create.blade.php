@@ -57,6 +57,51 @@
                         </div>
                     </div>
 
+                    @if ($extras->isNotEmpty())
+                        <fieldset>
+                            <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Extra's</legend>
+
+                            <div class="mt-4 space-y-3">
+                                @foreach ($extras as $row)
+                                    @php
+                                        $extra = $row['model'];
+                                        $cap = $row['cap'];
+                                        $perNight = $extra->billing_type->value === 'per_night';
+                                    @endphp
+                                    <div class="flex items-center justify-between gap-4">
+                                        <div class="text-sm">
+                                            <span class="font-medium text-gray-900">{{ $extra->name }}</span>
+                                            <span class="text-gray-500">— € {{ number_format($extra->price / 100, 2, ',', '.') }} {{ $perNight ? 'per nacht' : 'eenmalig' }}</span>
+                                            @if ($extra->description)
+                                                <p class="text-xs text-gray-500">{{ $extra->description }}</p>
+                                            @endif
+                                            @if ($cap === 0)
+                                                <p class="text-xs text-red-600">Uitverkocht voor deze data</p>
+                                            @endif
+                                        </div>
+                                        <input type="number" name="extras[{{ $extra->id }}]" value="{{ old('extras.'.$extra->id, 0) }}"
+                                            min="0" @if ($cap !== null) max="{{ $cap }}" @endif @disabled($cap === 0)
+                                            data-extra-price="{{ $extra->price }}" data-extra-per-night="{{ $perNight ? '1' : '0' }}"
+                                            class="w-20 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
+                                    </div>
+                                @endforeach
+                            </div>
+                        </fieldset>
+                    @endif
+
+                    @isset($order)
+                        <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+                            <h2 class="text-sm font-semibold text-gray-700">Prijsoverzicht</h2>
+                            <div class="mt-2">
+                                @include('partials.price-breakdown', [
+                                    'order' => $order,
+                                    'adults' => $adults,
+                                    'children' => $children,
+                                ])
+                            </div>
+                        </div>
+                    @endisset
+
                     <fieldset>
                         <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Persoonsgegevens</legend>
 
@@ -119,4 +164,34 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const total = document.querySelector('[data-grand-total]');
+            const inputs = document.querySelectorAll('input[data-extra-price]');
+
+            if (! total || inputs.length === 0) {
+                return;
+            }
+
+            const baseCents = parseInt(total.dataset.base, 10);
+            const nights = parseInt(total.dataset.nights, 10);
+            const euro = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
+
+            const recalculate = () => {
+                let extrasCents = 0;
+
+                inputs.forEach((input) => {
+                    const quantity = parseInt(input.value, 10) || 0;
+                    const units = input.dataset.extraPerNight === '1' ? quantity * nights : quantity;
+                    extrasCents += parseInt(input.dataset.extraPrice, 10) * units;
+                });
+
+                total.textContent = euro.format((baseCents + extrasCents) / 100);
+            };
+
+            inputs.forEach((input) => input.addEventListener('input', recalculate));
+            recalculate();
+        });
+    </script>
 @endsection

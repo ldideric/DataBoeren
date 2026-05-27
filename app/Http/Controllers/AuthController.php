@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\SendBookingsLink;
+use App\Auth\Actions\SendBookingsLink;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;

@@ -35,10 +35,8 @@ use Laravel\Cashier\Billable;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- *
  * @property-read Collection<Reservation> $reservations
  * @property-read Collection<Reservation> $bookedReservations
- *
  * @property-read string $name
  *
  * @method UserQuery|static query()
@@ -47,12 +45,13 @@ use Laravel\Cashier\Billable;
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
 {
+    use Billable;
+
     /** @use HasFactory<UserFactory> */
     use HasFactory;
-    use Notifiable;
     use HasUuids;
+    use Notifiable;
     use SoftDeletes;
-    use Billable;
 
     protected function casts(): array
     {
