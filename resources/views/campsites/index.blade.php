@@ -86,7 +86,7 @@
                                 <p class="mt-2 text-sm text-black">Selecteer een type om de resultaten te filteren.</p>
 
                                 <div class="mt-4 space-y-2">
-                                    <label class="group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-olivegreen">
+                                    <label class="group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 transition font-bold hover:bg-olivegreen">
                                         <input type="radio" name="type" value="" checked data-filter-input class="h-4 w-4 accent-olivegreen">
                                         <span>Alle</span>
                                     </label>
@@ -94,8 +94,8 @@
                                         <label class="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-olivegreen">
                                             <input type="radio" name="type" value="{{ $type->value }}" data-filter-input class="h-4 w-4 accent-olivegreen">
                                             <div class="flex flex-col">
-                                                <span class="text-base font-normal text-gray-900">{{ $type->getHeadline() }}</span>
-                                                <span class="text-sm text-gray-500">{{ $type->getDescription() }}</span>
+                                                <span class="text-base font-bold text-black">{{ $type->getHeadline() }}</span>
+                                                <span class="text-sm text-black">{{ $type->getDescription() }}</span>
                                             </div>
                                         </label>
                                     @endforeach
