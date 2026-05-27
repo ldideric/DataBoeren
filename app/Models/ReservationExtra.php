@@ -15,8 +15,8 @@ use Illuminate\Support\Carbon;
  * @property string $reservation_id
  * @property string $extra_id
  * @property int $quantity
- * @property float $unit_price
- * @property float $subtotal
+ * @property int $unit_price
+ * @property int $subtotal
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read Reservation $reservation

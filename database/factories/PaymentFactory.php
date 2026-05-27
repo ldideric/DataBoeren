@@ -16,7 +16,7 @@ class PaymentFactory extends Factory
     {
         return [
             'reservation_id' => Reservation::factory(),
-            'amount' => fake()->randomFloat(2, 50, 500),
+            'amount' => fake()->numberBetween(5000, 50000),
             'status' => PaymentStatus::Paid,
             'method' => fake()->randomElement(['ideal', 'card', 'cash']),
             'paid_at' => now(),

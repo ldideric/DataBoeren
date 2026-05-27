@@ -14,13 +14,15 @@ class OrderSummaryFactory extends Factory
     public function definition(): array
     {
         $numNights = fake()->numberBetween(1, 14);
-        $nightlyRate = fake()->randomFloat(2, 10, 50);
-        $perPersonRate = fake()->randomFloat(2, 2, 15);
-        $numPeople = fake()->numberBetween(1, 4);
-        $extrasTotal = fake()->randomFloat(2, 0, 50);
-        $couponDiscount = fake()->optional(0.3)->randomFloat(2, 5, 30);
+        $nightlyRate = fake()->numberBetween(1000, 5000);
+        $perAdultRate = fake()->numberBetween(200, 1500);
+        $perChildRate = fake()->numberBetween(100, 800);
+        $numAdults = fake()->numberBetween(1, 4);
+        $numChildren = fake()->numberBetween(0, 3);
+        $extrasTotal = fake()->numberBetween(0, 5000);
+        $couponDiscount = fake()->optional(0.3)->numberBetween(500, 3000);
 
-        $base = ($nightlyRate + $perPersonRate * $numPeople) * $numNights;
+        $base = ($nightlyRate + $perAdultRate * $numAdults + $perChildRate * $numChildren) * $numNights;
         $total = max(0, $base + $extrasTotal - ($couponDiscount ?? 0));
 
         return [
@@ -28,12 +30,13 @@ class OrderSummaryFactory extends Factory
             'season_name' => fake()->randomElement(['Zomer 2025', 'Naseizoen 2025', 'Voorjaar 2026']),
             'num_nights' => $numNights,
             'nightly_rate' => $nightlyRate,
-            'per_person_rate' => $perPersonRate,
+            'per_adult_rate' => $perAdultRate,
+            'per_child_rate' => $perChildRate,
             'last_minute_applied' => false,
             'last_minute_discount' => null,
             'coupon_discount' => $couponDiscount,
             'extras_total' => $extrasTotal,
-            'total' => round($total, 2),
+            'total' => $total,
         ];
     }
 }

@@ -14,24 +14,20 @@ use Illuminate\Support\Carbon;
 /**
  * @property string $id
  * @property string $name
- * @property Carbon $starts_at
- * @property Carbon $ends_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property-read Collection<SeasonPeriod> $periods
  * @property-read Collection<CampsitePrice> $campsitePrices
  */
-#[Fillable(['name', 'starts_at', 'ends_at'])]
+#[Fillable(['name'])]
 class Season extends Model
 {
     /** @use HasFactory<SeasonFactory> */
     use HasFactory, HasUuids;
 
-    protected function casts(): array
+    public function periods(): HasMany
     {
-        return [
-            'starts_at' => 'date',
-            'ends_at' => 'date',
-        ];
+        return $this->hasMany(SeasonPeriod::class);
     }
 
     public function campsitePrices(): HasMany

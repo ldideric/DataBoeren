@@ -14,7 +14,7 @@ use Illuminate\Support\Carbon;
 /**
  * @property string $id
  * @property string $reservation_id
- * @property float $amount
+ * @property int $amount
  * @property PaymentStatus $status
  * @property string $method
  * @property Carbon|null $paid_at

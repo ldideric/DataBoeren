@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Booking\DTO\StayCriteria;
 use App\Models\Campsite;
-use App\Support\StayCriteria;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;

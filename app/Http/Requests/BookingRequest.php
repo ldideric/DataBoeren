@@ -27,6 +27,8 @@ class BookingRequest extends FormRequest
             'pay_method' => ['required', 'string', 'in:online,in_person'],
             'adult_confirmation' => ['accepted'],
             'house_rules' => ['accepted'],
+            'extras' => ['nullable', 'array'],
+            'extras.*' => ['integer', 'min:0'],
         ];
     }
 
