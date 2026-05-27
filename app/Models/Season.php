@@ -18,7 +18,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon $ends_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property-read Collection<CampsitePrice> $campsitePrices
  */
 #[Fillable(['name', 'starts_at', 'ends_at'])]

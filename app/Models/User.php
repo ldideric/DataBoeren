@@ -35,10 +35,8 @@ use Laravel\Cashier\Billable;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- *
  * @property-read Collection<Reservation> $reservations
  * @property-read Collection<Reservation> $bookedReservations
- *
  * @property-read string $name
  *
  * @method UserQuery|static query()
@@ -49,8 +47,8 @@ class User extends Authenticatable implements FilamentUser, HasName, MustVerifyE
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
-    use Notifiable;
     use HasUuids;
+    use Notifiable;
     use SoftDeletes;
     use Billable;
 

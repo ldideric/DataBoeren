@@ -37,7 +37,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- *
  * @property-read User $customer
  * @property-read User|null $bookedBy
  * @property-read User|null $cancelledBy

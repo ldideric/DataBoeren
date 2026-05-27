@@ -18,7 +18,6 @@ use Illuminate\Support\Carbon;
  * @property float $per_person_rate
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property-read Campsite $campsite
  * @property-read Season $season
  */

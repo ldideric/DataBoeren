@@ -30,7 +30,7 @@ class PaymentController extends Controller
         $amount = 100;
 
         return $reservation->customer->checkoutCharge($amount, "Reservering {$reservation->id}", 1, [
-            'success_url' => route('payments.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'success_url' => route('payments.success').'?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('payments.cancel'),
         ]);
     }
