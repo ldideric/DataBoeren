@@ -29,7 +29,9 @@ class PurgePaymentDataCommand extends Command
             ->whereNotNull('stripe_id')
             ->whereDoesntHave('subscriptions', fn ($q) => $q->whereNull('ends_at')->orWhere('ends_at', '>', now()))
             ->whereRaw('NOT EXISTS (SELECT 1 FROM payments INNER JOIN reservations ON payments.reservation_id = reservations.id WHERE reservations.customer_id = users.id)')
-            ->chunkById(100, function ($users) use ($dryRun, &$redactedUsers) {
+            ->orderBy('created_at')
+            ->orderBy('id')
+            ->chunk(100, function ($users) use ($dryRun, &$redactedUsers) {
                 if (! $dryRun) {
                     DB::transaction(function () use ($users) {
                         DB::table('users')
