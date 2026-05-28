@@ -19,9 +19,6 @@ class CampsitesTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->searchable(),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('type')
@@ -30,22 +27,13 @@ class CampsitesTable
                 IconColumn::make('has_electricity')
                     ->boolean(),
                 TextColumn::make('max_people')
-                    ->numeric()
+                    ->suffix(' pers.')
                     ->sortable(),
                 TextColumn::make('max_vehicles')
-                    ->numeric()
+                    ->suffix(' voertuig(en)')
                     ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
+                TextColumn::make('notes')
+                    ->limit(60)
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

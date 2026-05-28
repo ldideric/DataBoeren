@@ -6,6 +6,8 @@ use App\Filament\Resources\Reservations\Pages\CreateReservation;
 use App\Filament\Resources\Reservations\Pages\EditReservation;
 use App\Filament\Resources\Reservations\Pages\ListReservations;
 use App\Filament\Resources\Reservations\Pages\ViewReservation;
+use App\Filament\Resources\Reservations\RelationManagers\ExtrasRelationManager;
+use App\Filament\Resources\Reservations\RelationManagers\PaymentsRelationManager;
 use App\Filament\Resources\Reservations\Schemas\ReservationForm;
 use App\Filament\Resources\Reservations\Schemas\ReservationInfolist;
 use App\Filament\Resources\Reservations\Tables\ReservationsTable;
@@ -22,7 +24,14 @@ class ReservationResource extends Resource
 {
     protected static ?string $model = Reservation::class;
 
-    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedCalendarDays;
+
+    protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): string|\UnitEnum|null
+    {
+        return 'Reservations';
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -42,7 +51,8 @@ class ReservationResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ExtrasRelationManager::class,
+            PaymentsRelationManager::class,
         ];
     }
 

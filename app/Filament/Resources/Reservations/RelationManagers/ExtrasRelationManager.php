@@ -2,13 +2,10 @@
 
 namespace App\Filament\Resources\Reservations\RelationManagers;
 
-use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\DissociateAction;
-use Filament\Actions\DissociateBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -29,16 +26,10 @@ class ExtrasRelationManager extends RelationManager
                     ->relationship('extra', 'name')
                     ->required(),
                 TextInput::make('quantity')
-                    ->required()
                     ->numeric()
+                    ->minValue(1)
+                    ->required()
                     ->default(1),
-                TextInput::make('unit_price')
-                    ->required()
-                    ->numeric()
-                    ->prefix('$'),
-                TextInput::make('subtotal')
-                    ->required()
-                    ->numeric(),
             ]);
     }
 
@@ -47,44 +38,27 @@ class ExtrasRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->searchable(),
-                TextColumn::make('extra.name')
-                    ->searchable(),
+                TextColumn::make('extra.name'),
                 TextColumn::make('quantity')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
                 TextColumn::make('unit_price')
-                    ->money()
-                    ->sortable(),
+                    ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.'))
+                    ->label('Unit Price'),
                 TextColumn::make('subtotal')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
                 CreateAction::make(),
-                AssociateAction::make(),
             ])
             ->recordActions([
                 EditAction::make(),
-                DissociateAction::make(),
                 DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DissociateBulkAction::make(),
                     DeleteBulkAction::make(),
                 ]),
             ]);

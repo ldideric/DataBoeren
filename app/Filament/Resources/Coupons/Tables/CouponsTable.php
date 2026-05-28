@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\Coupons\Tables;
 
+use App\Enums\DiscountType;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
+use Filament\Support\Enums\FontFamily;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -18,45 +20,29 @@ class CouponsTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->searchable(),
                 TextColumn::make('title')
                     ->searchable(),
                 TextColumn::make('code')
+                    ->copyable()
+                    ->fontFamily(FontFamily::Mono)
                     ->searchable(),
                 TextColumn::make('scope')
-                    ->badge()
-                    ->searchable(),
-                TextColumn::make('extra.name')
-                    ->searchable(),
+                    ->badge(),
                 TextColumn::make('discount_type')
-                    ->badge()
-                    ->searchable(),
+                    ->badge(),
                 TextColumn::make('discount_value')
-                    ->numeric()
-                    ->sortable(),
+                    ->formatStateUsing(fn ($state, $record) =>
+                        $record->discount_type === DiscountType::Percent
+                            ? $state . '%'
+                            : '€ ' . number_format($state / 100, 2, ',', '.')
+                    ),
                 TextColumn::make('expires_at')
-                    ->date()
-                    ->sortable(),
-                TextColumn::make('max_uses')
-                    ->numeric()
+                    ->date('d/m/Y')
+                    ->color(fn ($record) => $record->expires_at?->isPast() ? 'danger' : null)
                     ->sortable(),
                 TextColumn::make('uses_count')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->formatStateUsing(fn ($state, $record) => $state . ' / ' . ($record->max_uses ?? '∞'))
+                    ->label('Uses'),
             ])
             ->filters([
                 TrashedFilter::make(),

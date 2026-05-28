@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Reservations\Tables;
 
+use App\Enums\ReservationSource;
+use App\Enums\ReservationStatus;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -9,6 +11,7 @@ use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
@@ -18,57 +21,34 @@ class ReservationsTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->searchable(),
-                TextColumn::make('customer.id')
-                    ->searchable(),
+                TextColumn::make('customer.first_name')
+                    ->formatStateUsing(fn ($state, $record) => $record->customer?->first_name . ' ' . $record->customer?->last_name)
+                    ->label('Customer')
+                    ->searchable(['customer.first_name', 'customer.last_name']),
                 TextColumn::make('campsite.name')
                     ->searchable(),
-                TextColumn::make('booked_by_user_id')
-                    ->searchable(),
-                TextColumn::make('coupon.title')
-                    ->searchable(),
-                TextColumn::make('source')
-                    ->badge()
-                    ->searchable(),
                 TextColumn::make('check_in')
-                    ->date()
+                    ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('check_out')
-                    ->date()
+                    ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('num_adults')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('num_children')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('num_vehicles')
-                    ->numeric()
-                    ->sortable(),
+                    ->formatStateUsing(fn ($state, $record) => $state . ' adult(s), ' . $record->num_children . ' child(ren)')
+                    ->label('Guests'),
                 TextColumn::make('status')
-                    ->badge()
-                    ->searchable(),
-                TextColumn::make('cancelled_at')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('cancelled_by_user_id')
-                    ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->badge(),
+                TextColumn::make('source')
+                    ->badge(),
+                TextColumn::make('orderSummary.total')
+                    ->formatStateUsing(fn ($state) => $state !== null ? '€ ' . number_format($state / 100, 2, ',', '.') : '—')
+                    ->label('Total'),
             ])
             ->filters([
+                SelectFilter::make('status')
+                    ->options(ReservationStatus::class),
+                SelectFilter::make('source')
+                    ->options(ReservationSource::class),
                 TrashedFilter::make(),
             ])
             ->recordActions([

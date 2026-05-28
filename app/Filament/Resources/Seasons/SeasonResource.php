@@ -6,6 +6,8 @@ use App\Filament\Resources\Seasons\Pages\CreateSeason;
 use App\Filament\Resources\Seasons\Pages\EditSeason;
 use App\Filament\Resources\Seasons\Pages\ListSeasons;
 use App\Filament\Resources\Seasons\Pages\ViewSeason;
+use App\Filament\Resources\Seasons\RelationManagers\CampsitePricesRelationManager;
+use App\Filament\Resources\Seasons\RelationManagers\PeriodsRelationManager;
 use App\Filament\Resources\Seasons\Schemas\SeasonForm;
 use App\Filament\Resources\Seasons\Schemas\SeasonInfolist;
 use App\Filament\Resources\Seasons\Tables\SeasonsTable;
@@ -20,7 +22,14 @@ class SeasonResource extends Resource
 {
     protected static ?string $model = Season::class;
 
-    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedSun;
+
+    protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): string|\UnitEnum|null
+    {
+        return 'Campsite';
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -40,7 +49,8 @@ class SeasonResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PeriodsRelationManager::class,
+            CampsitePricesRelationManager::class,
         ];
     }
 

@@ -2,11 +2,14 @@
 
 namespace App\Filament\Resources\Payments\Tables;
 
+use App\Enums\PaymentStatus;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Support\Enums\FontFamily;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class PaymentsTable
@@ -15,35 +18,31 @@ class PaymentsTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
+                TextColumn::make('reservation.customer.email')
+                    ->label('Customer')
                     ->searchable(),
-                TextColumn::make('reservation.id')
-                    ->searchable(),
+                TextColumn::make('reservation.check_in')
+                    ->date('d/m/Y')
+                    ->label('Check-in'),
                 TextColumn::make('amount')
-                    ->numeric()
+                    ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.'))
                     ->sortable(),
                 TextColumn::make('status')
-                    ->badge()
-                    ->searchable(),
+                    ->badge(),
                 TextColumn::make('method')
                     ->searchable(),
-                TextColumn::make('stripe_session_id')
-                    ->searchable(),
                 TextColumn::make('paid_at')
-                    ->dateTime()
+                    ->dateTime('d/m/Y H:i')
                     ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
+                TextColumn::make('stripe_session_id')
+                    ->copyable()
+                    ->limit(20)
+                    ->fontFamily(FontFamily::Mono)
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->options(PaymentStatus::class),
             ])
             ->recordActions([
                 ViewAction::make(),

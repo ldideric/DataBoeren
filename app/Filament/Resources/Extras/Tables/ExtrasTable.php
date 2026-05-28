@@ -18,38 +18,24 @@ class ExtrasTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->searchable(),
                 TextColumn::make('name')
                     ->searchable(),
+                TextColumn::make('description')
+                    ->limit(60)
+                    ->tooltip(fn ($record) => $record->description),
                 TextColumn::make('billing_type')
-                    ->badge()
-                    ->searchable(),
+                    ->badge(),
                 TextColumn::make('price')
-                    ->money()
-                    ->sortable(),
-                TextColumn::make('stock')
-                    ->numeric()
+                    ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.'))
                     ->sortable(),
                 TextColumn::make('stock_type')
-                    ->badge()
-                    ->searchable(),
-                TextColumn::make('max_per_booking')
-                    ->numeric()
+                    ->badge(),
+                TextColumn::make('stock')
+                    ->formatStateUsing(fn ($state) => $state ?? '—')
                     ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('max_per_booking')
+                    ->formatStateUsing(fn ($state) => $state ?? '—')
+                    ->sortable(),
             ])
             ->filters([
                 TrashedFilter::make(),

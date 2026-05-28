@@ -3,8 +3,10 @@
 namespace App\Filament\Resources\Reservations\Schemas;
 
 use App\Models\Reservation;
+use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\FontWeight;
 
 class ReservationInfolist
 {
@@ -12,48 +14,58 @@ class ReservationInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('id')
-                    ->label('ID'),
-                TextEntry::make('customer.id')
-                    ->label('Customer'),
-                TextEntry::make('campsite.name')
-                    ->label('Campsite'),
-                TextEntry::make('booked_by_user_id')
-                    ->placeholder('-'),
-                TextEntry::make('coupon.title')
-                    ->label('Coupon')
-                    ->placeholder('-'),
-                TextEntry::make('source')
-                    ->badge(),
-                TextEntry::make('check_in')
-                    ->date(),
-                TextEntry::make('check_out')
-                    ->date(),
-                TextEntry::make('num_adults')
-                    ->numeric(),
-                TextEntry::make('num_children')
-                    ->numeric(),
-                TextEntry::make('num_vehicles')
-                    ->numeric(),
-                TextEntry::make('status')
-                    ->badge(),
-                TextEntry::make('cancelled_at')
-                    ->dateTime()
-                    ->placeholder('-'),
-                TextEntry::make('cancellation_reason')
-                    ->placeholder('-')
-                    ->columnSpanFull(),
-                TextEntry::make('cancelled_by_user_id')
-                    ->placeholder('-'),
-                TextEntry::make('created_at')
-                    ->dateTime()
-                    ->placeholder('-'),
-                TextEntry::make('updated_at')
-                    ->dateTime()
-                    ->placeholder('-'),
-                TextEntry::make('deleted_at')
-                    ->dateTime()
-                    ->visible(fn (Reservation $record): bool => $record->trashed()),
+                Section::make('Reservation')
+                    ->schema([
+                        TextEntry::make('customer.email')
+                            ->label('Customer'),
+                        TextEntry::make('campsite.name')
+                            ->label('Campsite'),
+                        TextEntry::make('check_in')
+                            ->date('d/m/Y'),
+                        TextEntry::make('check_out')
+                            ->date('d/m/Y'),
+                        TextEntry::make('num_adults')
+                            ->label('Adults'),
+                        TextEntry::make('num_children')
+                            ->label('Children'),
+                        TextEntry::make('num_vehicles')
+                            ->label('Vehicles'),
+                        TextEntry::make('status')
+                            ->badge(),
+                        TextEntry::make('source')
+                            ->badge(),
+                        TextEntry::make('coupon.code')
+                            ->label('Coupon')
+                            ->placeholder('-'),
+                        TextEntry::make('cancellation_reason')
+                            ->placeholder('-')
+                            ->columnSpanFull()
+                            ->visible(fn (Reservation $record): bool => $record->status->value === 'cancelled'),
+                    ])
+                    ->columns(3),
+
+                Section::make('Order Summary')
+                    ->schema([
+                        TextEntry::make('orderSummary.season_name'),
+                        TextEntry::make('orderSummary.num_nights'),
+                        TextEntry::make('orderSummary.nightly_rate')
+                            ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
+                        TextEntry::make('orderSummary.per_adult_rate')
+                            ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
+                        TextEntry::make('orderSummary.per_child_rate')
+                            ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
+                        TextEntry::make('orderSummary.last_minute_discount')
+                            ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.'))
+                            ->visible(fn (Reservation $record) => (bool) $record->orderSummary?->last_minute_applied),
+                        TextEntry::make('orderSummary.coupon_discount')
+                            ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
+                        TextEntry::make('orderSummary.extras_total')
+                            ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
+                        TextEntry::make('orderSummary.total')
+                            ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.'))
+                            ->weight(FontWeight::Bold),
+                    ])
+                    ->columns(3),
             ]);
     }
 }

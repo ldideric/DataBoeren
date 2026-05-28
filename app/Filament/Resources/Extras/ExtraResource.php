@@ -22,7 +22,14 @@ class ExtraResource extends Resource
 {
     protected static ?string $model = Extra::class;
 
-    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedSparkles;
+
+    protected static ?int $navigationSort = 3;
+
+    public static function getNavigationGroup(): string|\UnitEnum|null
+    {
+        return 'Campsite';
+    }
 
     public static function form(Schema $schema): Schema
     {

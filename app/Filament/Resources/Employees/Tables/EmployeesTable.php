@@ -18,48 +18,15 @@ class EmployeesTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->searchable(),
                 TextColumn::make('first_name')
-                    ->searchable(),
-                TextColumn::make('last_name')
-                    ->searchable(),
+                    ->formatStateUsing(fn ($state, $record) => $record->first_name . ' ' . $record->last_name)
+                    ->label('Name')
+                    ->searchable(['first_name', 'last_name']),
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->copyable()
                     ->searchable(),
-                TextColumn::make('phone')
-                    ->searchable(),
-                TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
                 TextColumn::make('role')
-                    ->badge()
-                    ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('purged_at')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('stripe_id')
-                    ->searchable(),
-                TextColumn::make('pm_type')
-                    ->searchable(),
-                TextColumn::make('pm_last_four')
-                    ->searchable(),
-                TextColumn::make('trial_ends_at')
-                    ->dateTime()
-                    ->sortable(),
+                    ->badge(),
             ])
             ->filters([
                 TrashedFilter::make(),

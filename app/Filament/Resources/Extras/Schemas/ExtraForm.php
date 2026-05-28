@@ -23,17 +23,20 @@ class ExtraForm
                     ->options(BillingType::class)
                     ->required(),
                 TextInput::make('price')
-                    ->required()
                     ->numeric()
-                    ->prefix('$'),
-                TextInput::make('stock')
-                    ->numeric(),
+                    ->suffix('ct')
+                    ->hint('Store as cents, e.g. 500 = €5.00')
+                    ->required(),
                 Select::make('stock_type')
                     ->options(StockType::class)
-                    ->default('rental')
                     ->required(),
+                TextInput::make('stock')
+                    ->numeric()
+                    ->nullable()
+                    ->hint('Leave empty for unlimited'),
                 TextInput::make('max_per_booking')
-                    ->numeric(),
+                    ->numeric()
+                    ->nullable(),
             ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Employees;
 
+use App\Enums\UserRole;
 use App\Filament\Resources\Employees\Pages\CreateEmployee;
 use App\Filament\Resources\Employees\Pages\EditEmployee;
 use App\Filament\Resources\Employees\Pages\ListEmployees;
@@ -26,7 +27,14 @@ class EmployeeResource extends Resource
 
     protected static ?string $pluralLabel = 'Employees';
 
-    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedIdentification;
+
+    protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): string|\UnitEnum|null
+    {
+        return 'Staff';
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -45,9 +53,7 @@ class EmployeeResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
@@ -60,11 +66,10 @@ class EmployeeResource extends Resource
         ];
     }
 
-    public static function getRecordRouteBindingEloquentQuery(): Builder
+    public static function getEloquentQuery(): Builder
     {
-        return parent::getRecordRouteBindingEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([SoftDeletingScope::class])
+            ->whereIn('role', [UserRole::Employee, UserRole::Admin]);
     }
 }

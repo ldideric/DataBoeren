@@ -7,6 +7,7 @@ use App\Enums\DiscountType;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Get;
 use Filament\Schemas\Schema;
 
 class CouponForm
@@ -18,13 +19,15 @@ class CouponForm
                 TextInput::make('title')
                     ->required(),
                 TextInput::make('code')
-                    ->required(),
+                    ->required()
+                    ->unique(ignoreRecord: true),
                 Select::make('scope')
                     ->options(CouponScope::class)
-                    ->default('accommodation')
+                    ->live()
                     ->required(),
                 Select::make('extra_id')
-                    ->relationship('extra', 'name'),
+                    ->relationship('extra', 'name')
+                    ->visible(fn (Get $get) => $get('scope') === CouponScope::Extra->value),
                 Select::make('discount_type')
                     ->options(DiscountType::class)
                     ->required(),
@@ -33,11 +36,8 @@ class CouponForm
                     ->numeric(),
                 DatePicker::make('expires_at'),
                 TextInput::make('max_uses')
-                    ->numeric(),
-                TextInput::make('uses_count')
-                    ->required()
                     ->numeric()
-                    ->default(0),
+                    ->nullable(),
             ]);
     }
 }

@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -18,48 +19,23 @@ class CustomersTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->searchable(),
                 TextColumn::make('first_name')
-                    ->searchable(),
-                TextColumn::make('last_name')
-                    ->searchable(),
+                    ->formatStateUsing(fn ($state, $record) => $record->first_name . ' ' . $record->last_name)
+                    ->label('Name')
+                    ->searchable(['first_name', 'last_name']),
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->copyable()
                     ->searchable(),
                 TextColumn::make('phone')
                     ->searchable(),
-                TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('role')
-                    ->badge()
-                    ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('purged_at')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('stripe_id')
-                    ->searchable(),
-                TextColumn::make('pm_type')
-                    ->searchable(),
-                TextColumn::make('pm_last_four')
-                    ->searchable(),
-                TextColumn::make('trial_ends_at')
-                    ->dateTime()
-                    ->sortable(),
+                IconColumn::make('email_verified_at')
+                    ->boolean()
+                    ->label('Verified'),
+                IconColumn::make('purged_at')
+                    ->boolean()
+                    ->label('Purged')
+                    ->trueIcon('heroicon-o-no-symbol')
+                    ->trueColor('danger'),
             ])
             ->filters([
                 TrashedFilter::make(),

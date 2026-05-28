@@ -2,20 +2,9 @@
 
 namespace App\Filament\Resources\Reservations\RelationManagers;
 
-use App\Enums\PaymentStatus;
-use Filament\Actions\AssociateAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\CreateAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\DissociateAction;
-use Filament\Actions\DissociateBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\FontFamily;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -25,19 +14,7 @@ class PaymentsRelationManager extends RelationManager
 
     public function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                TextInput::make('amount')
-                    ->required()
-                    ->numeric(),
-                Select::make('status')
-                    ->options(PaymentStatus::class)
-                    ->required(),
-                TextInput::make('method')
-                    ->required(),
-                TextInput::make('stripe_session_id'),
-                DateTimePicker::make('paid_at'),
-            ]);
+        return $schema->components([]);
     }
 
     public function table(Table $table): Table
@@ -45,48 +22,23 @@ class PaymentsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->searchable(),
                 TextColumn::make('amount')
-                    ->numeric()
-                    ->sortable(),
+                    ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
                 TextColumn::make('status')
-                    ->badge()
-                    ->searchable(),
-                TextColumn::make('method')
-                    ->searchable(),
-                TextColumn::make('stripe_session_id')
-                    ->searchable(),
+                    ->badge(),
+                TextColumn::make('method'),
                 TextColumn::make('paid_at')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->dateTime('d/m/Y H:i'),
+                TextColumn::make('stripe_session_id')
+                    ->copyable()
+                    ->limit(20)
+                    ->fontFamily(FontFamily::Mono),
             ])
             ->filters([
                 //
             ])
-            ->headerActions([
-                CreateAction::make(),
-                AssociateAction::make(),
-            ])
-            ->recordActions([
-                EditAction::make(),
-                DissociateAction::make(),
-                DeleteAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DissociateBulkAction::make(),
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->headerActions([])
+            ->recordActions([])
+            ->toolbarActions([]);
     }
 }

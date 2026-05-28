@@ -6,6 +6,8 @@ use App\Filament\Resources\Campsites\Pages\CreateCampsite;
 use App\Filament\Resources\Campsites\Pages\EditCampsite;
 use App\Filament\Resources\Campsites\Pages\ListCampsites;
 use App\Filament\Resources\Campsites\Pages\ViewCampsite;
+use App\Filament\Resources\Campsites\RelationManagers\PricesRelationManager;
+use App\Filament\Resources\Campsites\RelationManagers\ReservationsRelationManager;
 use App\Filament\Resources\Campsites\Schemas\CampsiteForm;
 use App\Filament\Resources\Campsites\Schemas\CampsiteInfolist;
 use App\Filament\Resources\Campsites\Tables\CampsitesTable;
@@ -22,7 +24,14 @@ class CampsiteResource extends Resource
 {
     protected static ?string $model = Campsite::class;
 
-    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedMapPin;
+
+    protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): string|\UnitEnum|null
+    {
+        return 'Campsite';
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -42,7 +51,8 @@ class CampsiteResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PricesRelationManager::class,
+            ReservationsRelationManager::class,
         ];
     }
 
