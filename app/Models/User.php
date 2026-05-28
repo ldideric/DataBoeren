@@ -46,10 +46,10 @@ use Laravel\Cashier\Billable;
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
 {
-    use Billable;
-
     /** @use HasFactory<UserFactory> */
     use HasFactory;
+
+    use Billable;
     use HasUuids;
     use Notifiable;
     use SoftDeletes;
