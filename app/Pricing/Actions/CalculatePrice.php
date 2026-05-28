@@ -28,14 +28,14 @@ use RuntimeException;
 class CalculatePrice
 {
     /**
-     * @param array<array{extra: Extra, quantity: int}> $extraSelections
+     * @param  array<array{extra: Extra, quantity: int}>  $extraSelections
      */
     public function calculate(Reservation $reservation, array $extraSelections = []): OrderSummary
     {
         $season = $this->seasonFor($reservation);
         $rate = $reservation->campsite->prices()->where('season_id', $season->id)->firstOrFail();
 
-        $nights = (int)$reservation->check_in->diffInDays($reservation->check_out);
+        $nights = (int) $reservation->check_in->diffInDays($reservation->check_out);
 
         $accommodation = ($rate->nightly_rate
                 + $rate->per_adult_rate * $reservation->num_adults
@@ -65,7 +65,7 @@ class CalculatePrice
     }
 
     /**
-     * @param array<array{extra: Extra, quantity: int}> $extraSelections
+     * @param  array<array{extra: Extra, quantity: int}>  $extraSelections
      */
     private function calculateDiscounts(Reservation $reservation, int $accommodation, array $extraSelections, int $nights): array
     {
@@ -99,11 +99,11 @@ class CalculatePrice
             return 0;
         }
 
-        return (int)round($baseAmount * $config['discount_percent'] / 100);
+        return (int) round($baseAmount * $config['discount_percent'] / 100);
     }
 
     /**
-     * @param array<array{extra: Extra, quantity: int}> $extraSelections
+     * @param  array<array{extra: Extra, quantity: int}>  $extraSelections
      */
     private function couponDiscount(Reservation $reservation, int $baseAmount, array $extraSelections, int $nights): int
     {
@@ -122,8 +122,8 @@ class CalculatePrice
 
         // discount_value is euros for a flat coupon (→ cents) but a percentage for a percent coupon.
         return match ($coupon->discount_type) {
-            DiscountType::Flat => min((int)round($coupon->discount_value * 100), $base),
-            DiscountType::Percent => (int)round($base * $coupon->discount_value / 100),
+            DiscountType::Flat => min((int) round($coupon->discount_value * 100), $base),
+            DiscountType::Percent => (int) round($base * $coupon->discount_value / 100),
         };
     }
 }

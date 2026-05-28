@@ -13,8 +13,7 @@ readonly class PreviewPrice
 {
     public function __construct(
         private CalculatePrice $calculator,
-    ) {
-    }
+    ) {}
 
     public function handle(Campsite $campsite, Carbon $checkIn, Carbon $checkOut, int $adults, int $children): ?OrderSummary
     {
