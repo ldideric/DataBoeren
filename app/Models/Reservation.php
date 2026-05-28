@@ -55,7 +55,9 @@ use Illuminate\Support\Carbon;
 class Reservation extends Model
 {
     /** @use HasFactory<ReservationFactory> */
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory;
+    use HasUuids;
+    use SoftDeletes;
 
     protected function casts(): array
     {

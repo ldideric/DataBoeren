@@ -41,9 +41,9 @@ class CampsiteSeeder extends Seeder
                 $campsite->prices()->updateOrCreate(
                     ['season_id' => $seasons[$seasonName] ?? throw new RuntimeException("Missing season \"$seasonName\" — run SeasonSeeder first.")],
                     [
-                        'nightly_rate' => (int)round($rate['nightly_rate'] * 100),
-                        'per_adult_rate' => (int)round($rate['per_person_rate'] * 100),
-                        'per_child_rate' => (int)round($rate['per_child_rate'] * 100),
+                        'nightly_rate' => (int) round($rate['nightly_rate'] * 100),
+                        'per_adult_rate' => (int) round($rate['per_person_rate'] * 100),
+                        'per_child_rate' => (int) round($rate['per_child_rate'] * 100),
                     ],
                 );
             }

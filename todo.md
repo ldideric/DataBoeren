@@ -7,12 +7,7 @@
 
 ## Booking flow
 - Add confirmation page + email after `store()`.
-- Move `destroy` auth check into a `ReservationPolicy`.
 - Persist `huisregels` / `adult_confirmation` acceptance (audit trail — currently required at submit but discarded).
-- Store adults/children breakdown separately on reservations (currently summed into `num_people`, losing the split).
-
-## Frontend
-- Add active-link styling in the nav.
 
 ## Email (Mailgun)
 **Status:** infra-ready, app not wired. The deployment already injects `MAILGUN_DOMAIN`,
@@ -39,6 +34,3 @@ Mapping (Mailgun dashboard → env var Laravel reads): sandbox domain → `MAILG
 API key → `MAILGUN_SECRET`, base URL `https://api.mailgun.net` → `MAILGUN_ENDPOINT`
 (host only, no scheme). Sandbox → real domain later: swap the values in the server `.env` and redeploy.
 
-
-
-## remove faker from require and add to require-dev (was needed for seeding)

@@ -37,8 +37,9 @@ class EmployeeResource extends Resource
     {
         return parent::getEloquentQuery()
             ->whereNot('id', Auth::id())
-            ->where(fn (UserQuery $query) => $query
-                ->whereRoleIn(UserRole::Admin, UserRole::Employee)
+            ->where(
+                fn (UserQuery $query) => $query
+                    ->whereRoleIn(UserRole::Admin, UserRole::Employee)
             );
     }
 

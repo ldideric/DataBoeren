@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-tan">
+    <div class="bg-tan2">
         <div class="mx-auto flex min-h-[calc(100vh-56px)] max-w-6xl items-center justify-center px-6 py-12">
-            <div class="w-full max-w-lg rounded-2xl bg-tan2 p-10 text-center shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
+            <div class="w-full max-w-lg rounded-2xl bg-tan p-10 text-center shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
                 @if (session('status'))
                     <div class="mb-4 rounded-md border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-800">
                         {{ session('status') }}
