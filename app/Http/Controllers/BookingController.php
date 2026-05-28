@@ -31,10 +31,17 @@ class BookingController extends Controller
             $reservation->id => $urls->cancelReservation($user, $reservation),
         ]);
 
+        $paymentUrls = $reservations
+            ->where('status', ReservationStatus::Pending)
+            ->mapWithKeys(fn (Reservation $reservation) => [
+                $reservation->id => $urls->payment($reservation),
+            ]);
+
         return view('bookings.index', [
             'user' => $user,
             'reservations' => $reservations,
             'cancelUrls' => $cancelUrls,
+            'paymentUrls' => $paymentUrls,
         ]);
     }
 
