@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Coupons\Schemas;
 
+use App\Models\Coupon;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -13,7 +14,13 @@ class CouponInfolist
             ->components([
                 TextEntry::make('id')
                     ->label('ID'),
+                TextEntry::make('title'),
                 TextEntry::make('code'),
+                TextEntry::make('scope')
+                    ->badge(),
+                TextEntry::make('extra.name')
+                    ->label('Extra')
+                    ->placeholder('-'),
                 TextEntry::make('discount_type')
                     ->badge(),
                 TextEntry::make('discount_value')
@@ -34,7 +41,7 @@ class CouponInfolist
                     ->placeholder('-'),
                 TextEntry::make('deleted_at')
                     ->dateTime()
-                    ->placeholder('-'),
+                    ->visible(fn (Coupon $record): bool => $record->trashed()),
             ]);
     }
 }

@@ -21,7 +21,14 @@ class CouponsTable
                 TextColumn::make('id')
                     ->label('ID')
                     ->searchable(),
+                TextColumn::make('title')
+                    ->searchable(),
                 TextColumn::make('code')
+                    ->searchable(),
+                TextColumn::make('scope')
+                    ->badge()
+                    ->searchable(),
+                TextColumn::make('extra.name')
                     ->searchable(),
                 TextColumn::make('discount_type')
                     ->badge()
@@ -46,6 +53,10 @@ class CouponsTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('deleted_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 TrashedFilter::make(),
@@ -57,8 +68,8 @@ class CouponsTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
                     ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }

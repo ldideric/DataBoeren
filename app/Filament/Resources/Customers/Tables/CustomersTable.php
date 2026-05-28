@@ -20,23 +20,46 @@ class CustomersTable
             ->columns([
                 TextColumn::make('id')
                     ->label('ID')
-                    ->toggledHiddenByDefault()
                     ->searchable(),
-                TextColumn::make('name')
+                TextColumn::make('first_name')
+                    ->searchable(),
+                TextColumn::make('last_name')
                     ->searchable(),
                 TextColumn::make('email')
                     ->label('Email address')
                     ->searchable(),
                 TextColumn::make('phone')
                     ->searchable(),
+                TextColumn::make('email_verified_at')
+                    ->dateTime()
+                    ->sortable(),
+                TextColumn::make('role')
+                    ->badge()
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggledHiddenByDefault(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggledHiddenByDefault(),
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('purged_at')
+                    ->dateTime()
+                    ->sortable(),
+                TextColumn::make('deleted_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('stripe_id')
+                    ->searchable(),
+                TextColumn::make('pm_type')
+                    ->searchable(),
+                TextColumn::make('pm_last_four')
+                    ->searchable(),
+                TextColumn::make('trial_ends_at')
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->filters([
                 TrashedFilter::make(),
@@ -48,8 +71,8 @@ class CustomersTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
                     ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }

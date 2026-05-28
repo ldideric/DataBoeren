@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Coupons\Schemas;
 
+use App\Enums\CouponScope;
 use App\Enums\DiscountType;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -14,8 +15,16 @@ class CouponForm
     {
         return $schema
             ->components([
+                TextInput::make('title')
+                    ->required(),
                 TextInput::make('code')
                     ->required(),
+                Select::make('scope')
+                    ->options(CouponScope::class)
+                    ->default('accommodation')
+                    ->required(),
+                Select::make('extra_id')
+                    ->relationship('extra', 'name'),
                 Select::make('discount_type')
                     ->options(DiscountType::class)
                     ->required(),

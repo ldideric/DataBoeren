@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Campsites\Schemas;
 
+use App\Models\Campsite;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
@@ -34,7 +35,7 @@ class CampsiteInfolist
                     ->placeholder('-'),
                 TextEntry::make('deleted_at')
                     ->dateTime()
-                    ->placeholder('-'),
+                    ->visible(fn (Campsite $record): bool => $record->trashed()),
             ]);
     }
 }
