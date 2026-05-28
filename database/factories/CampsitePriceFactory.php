@@ -17,8 +17,9 @@ class CampsitePriceFactory extends Factory
         return [
             'campsite_id' => Campsite::factory(),
             'season_id' => Season::factory(),
-            'nightly_rate' => fake()->randomFloat(2, 10, 50),
-            'per_person_rate' => fake()->randomFloat(2, 2, 15),
+            'nightly_rate' => fake()->numberBetween(1000, 5000),
+            'per_adult_rate' => fake()->numberBetween(200, 1500),
+            'per_child_rate' => fake()->numberBetween(100, 800),
         ];
     }
 }

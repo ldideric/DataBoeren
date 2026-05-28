@@ -2,123 +2,132 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CampsiteType;
-use App\Enums\ReservationSource;
+use App\Auth\Actions\SendBookingsLink;
+use App\Auth\Services\SignedUrlGenerator;
+use App\Booking\Actions\CreateReservation;
+use App\Booking\DTO\StayCriteria;
+use App\Booking\Queries\CheckAvailability;
+use App\Booking\Queries\GetAvailableExtras;
+use App\Booking\Queries\PreviewPrice;
 use App\Enums\ReservationStatus;
 use App\Http\Requests\BookingRequest;
 use App\Models\Campsite;
 use App\Models\Reservation;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 
 class BookingController extends Controller
 {
-    public function index(): View
+    public function index(User $user, SignedUrlGenerator $urls): View
     {
-        $reservations = Auth::user()
-            ->reservations()
+        $reservations = $user->reservations()
             ->with('campsite')
             ->latest('check_in')
             ->get();
 
+        $cancelUrls = $reservations->mapWithKeys(fn (Reservation $reservation) => [
+            $reservation->id => $urls->cancelReservation($user, $reservation),
+        ]);
+
         return view('bookings.index', [
+            'user' => $user,
             'reservations' => $reservations,
+            'cancelUrls' => $cancelUrls,
         ]);
     }
 
-    public function create(Request $request): View
-    {
+    public function create(
+        Request $request,
+        CheckAvailability $checkAvailability,
+        GetAvailableExtras $getAvailableExtras,
+        PreviewPrice $previewPrice,
+    ): View|RedirectResponse {
         $campsite = $request->filled('campsite')
             ? Campsite::find($request->query('campsite'))
             : null;
 
+        if (! $campsite) {
+            return redirect()
+                ->route('campsites.index')
+                ->with('status', 'Kies eerst een kampeerplaats.');
+        }
+
+        $criteria = StayCriteria::fromRequest($request, 'check_in', 'check_out');
+
+        if (! $criteria->isComplete()) {
+            return redirect()
+                ->route('campsites.index')
+                ->with('status', 'Vul eerst je verblijfsgegevens in.');
+        }
+
+        $fits = $checkAvailability->handle(
+            $campsite,
+            $criteria->partySize(),
+            $criteria->vehicles,
+            $criteria->checkIn,
+            $criteria->checkOut,
+        );
+
+        if (! $fits) {
+            return redirect()
+                ->route('campsites.index', [
+                    'datestart' => $criteria->checkIn->format('Y-m-d'),
+                    'dateend' => $criteria->checkOut->format('Y-m-d'),
+                    'adults' => $criteria->adults,
+                    'children' => $criteria->children,
+                    'vehicles' => $criteria->vehicles,
+                ])
+                ->with('status', 'Deze plek is niet (meer) beschikbaar voor je verblijfsgegevens.');
+        }
+
         return view('bookings.create', [
-            'campsiteTypes' => CampsiteType::cases(),
             'campsite' => $campsite,
+            'checkIn' => $criteria->checkIn,
+            'checkOut' => $criteria->checkOut,
+            'adults' => $criteria->adults,
+            'children' => $criteria->children,
+            'vehicles' => $criteria->vehicles,
+            'order' => $previewPrice->handle($campsite, $criteria->checkIn, $criteria->checkOut, $criteria->adults, $criteria->children),
+            'extras' => $getAvailableExtras->handle($criteria->checkIn, $criteria->checkOut),
         ]);
     }
 
-    public function store(BookingRequest $request): RedirectResponse
+    public function store(BookingRequest $request, CreateReservation $createReservation, SendBookingsLink $sendBookingsLink, SignedUrlGenerator $urls): RedirectResponse
     {
-        $data = $request->validated();
-        $checkIn = Carbon::parse($data['check_in']);
-        $checkOut = Carbon::parse($data['check_out']);
+        $reservation = $createReservation->handle($request);
 
-        /**
-         * @todo Postgres prod: replace this app-level lock with a database-level
-         *       exclusion constraint:
-         *         CREATE EXTENSION btree_gist;
-         *         ALTER TABLE reservations ADD CONSTRAINT reservations_no_overlap
-         *           EXCLUDE USING gist (
-         *             campsite_id WITH =,
-         *             daterange(check_in, check_out, '[)') WITH &&
-         *           ) WHERE (status IN ('pending', 'confirmed') AND deleted_at IS NULL);
-         *       The lockForUpdate() approach below works on both MySQL and Postgres
-         *       but only protects writes that go through this code path — Filament
-         *       admin saves, Tinker, etc. can still double-book.
-         */
-        DB::transaction(function () use ($request, $checkIn, $checkOut) {
-            $campsite = $this->lockAvailableCampsite($request, $checkIn, $checkOut);
+        // Online: send the customer straight to the (signed) Stripe payment page.
+        // @todo pay_method is still not persisted (see Reservation model docblock / todo.md).
+        if ($request->validated('pay_method') === 'online') {
+            return redirect()->to($urls->payment($reservation));
+        }
 
-            if (! $campsite) {
-                throw ValidationException::withMessages([
-                    'campsite_id' => 'De gekozen plek is niet (meer) beschikbaar voor deze data.',
-                ]);
-            }
-
-            Reservation::create([
-                'customer_id' => Auth::id(),
-                'campsite_id' => $campsite->id,
-                'source' => ReservationSource::Online,
-                'check_in' => $checkIn,
-                'check_out' => $checkOut,
-                'num_people' => $request->partySize(),
-                'num_vehicles' => 1,
-                'status' => ReservationStatus::Pending,
-            ]);
-        });
+        $sendBookingsLink->handle($reservation->customer);
 
         return redirect()
-            ->route('bookings.index')
-            ->with('status', 'Uw reservering is ingediend.');
+            ->route('login.sent')
+            ->with('status', 'Uw reservering is ingediend. We hebben u een e-mail gestuurd met een link om uw boeking te bekijken of te annuleren.');
     }
 
-    public function destroy(Reservation $reservation): RedirectResponse
+    public function destroy(User $user, Reservation $reservation, SignedUrlGenerator $urls): RedirectResponse
     {
-        abort_if($reservation->customer_id !== Auth::id(), 403);
+        abort_if($reservation->customer_id !== $user->id, 403);
 
         if ($reservation->status === ReservationStatus::Cancelled) {
-            return redirect()->route('bookings.index');
+            return redirect()->to($urls->bookings($user));
         }
 
         $reservation->update([
             'status' => ReservationStatus::Cancelled,
             'cancelled_at' => now(),
             'cancellation_reason' => 'Geannuleerd door klant',
-            'cancelled_by_user_id' => Auth::id(),
+            'cancelled_by_user_id' => $user->id,
         ]);
 
         return redirect()
-            ->route('bookings.index')
+            ->to($urls->bookings($user))
             ->with('status', 'Reservering geannuleerd.');
-    }
-
-    private function lockAvailableCampsite(BookingRequest $request, Carbon $checkIn, Carbon $checkOut): ?Campsite
-    {
-        $query = Campsite::query()
-            ->whereFitsParty($request->partySize())
-            ->whereAvailableBetween($checkIn, $checkOut)
-            ->lockForUpdate();
-
-        if ($id = $request->validated('campsite_id')) {
-            return $query->whereKey($id)->first();
-        }
-
-        return $query->whereType($request->accommodatieType())->first();
     }
 }

@@ -15,14 +15,14 @@ class ReservationExtraFactory extends Factory
     public function definition(): array
     {
         $quantity = fake()->numberBetween(1, 5);
-        $unitPrice = fake()->randomFloat(2, 2, 25);
+        $unitPrice = fake()->numberBetween(200, 2500);
 
         return [
             'reservation_id' => Reservation::factory(),
             'extra_id' => Extra::factory(),
             'quantity' => $quantity,
             'unit_price' => $unitPrice,
-            'subtotal' => round($quantity * $unitPrice, 2),
+            'subtotal' => $quantity * $unitPrice,
         ];
     }
 }

@@ -23,128 +23,135 @@
                 <form id="registratie" class="mt-6 space-y-6" method="POST" action="{{ route('bookings.store') }}">
                     @csrf
 
-                    @if ($campsite)
-                        <input type="hidden" name="campsite_id" value="{{ $campsite->id }}">
+                    <input type="hidden" name="campsite_id" value="{{ $campsite->id }}">
+                    <input type="hidden" name="check_in" value="{{ $checkIn->format('Y-m-d') }}">
+                    <input type="hidden" name="check_out" value="{{ $checkOut->format('Y-m-d') }}">
+                    <input type="hidden" name="num_adults" value="{{ $adults }}">
+                    <input type="hidden" name="num_children" value="{{ $children }}">
+                    <input type="hidden" name="num_vehicles" value="{{ $vehicles }}">
 
-                        <div class="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-900">
+                    <div class="space-y-2 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-900">
+                        <div>
                             Gekozen plek: <strong>{{ $campsite->name }}</strong>
                             ({{ \Illuminate\Support\Str::headline($campsite->type->value) }})
                         </div>
+                        <div>
+                            Verblijf:
+                            <strong>{{ $checkIn->format('d M Y') }}</strong> t/m
+                            <strong>{{ $checkOut->format('d M Y') }}</strong>
+                        </div>
+                        <div>
+                            Groep:
+                            <strong>{{ $adults }}</strong> {{ $adults === 1 ? 'volwassene' : 'volwassenen' }},
+                            <strong>{{ $children }}</strong> {{ $children === 1 ? 'kind' : 'kinderen' }},
+                            <strong>{{ $vehicles }}</strong> {{ $vehicles === 1 ? 'voertuig' : 'voertuigen' }}.
+                        </div>
+                        <div class="pt-1">
+                            <a href="{{ route('campsites.index', [
+                                'datestart' => $checkIn->format('Y-m-d'),
+                                'dateend' => $checkOut->format('Y-m-d'),
+                                'adults' => $adults,
+                                'children' => $children,
+                                'vehicles' => $vehicles,
+                            ]) }}" class="underline">Wijzig verblijfsgegevens</a>
+                        </div>
+                    </div>
+
+                    @if ($extras->isNotEmpty())
+                        <fieldset>
+                            <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Extra's</legend>
+
+                            <div class="mt-4 space-y-3">
+                                @foreach ($extras as $row)
+                                    @php
+                                        $extra = $row['model'];
+                                        $cap = $row['cap'];
+                                        $perNight = $extra->billing_type->value === 'per_night';
+                                    @endphp
+                                    <div class="flex items-center justify-between gap-4">
+                                        <div class="text-sm">
+                                            <span class="font-medium text-gray-900">{{ $extra->name }}</span>
+                                            <span class="text-gray-500">— € {{ number_format($extra->price / 100, 2, ',', '.') }} {{ $perNight ? 'per nacht' : 'eenmalig' }}</span>
+                                            @if ($extra->description)
+                                                <p class="text-xs text-gray-500">{{ $extra->description }}</p>
+                                            @endif
+                                            @if ($cap === 0)
+                                                <p class="text-xs text-red-600">Uitverkocht voor deze data</p>
+                                            @endif
+                                        </div>
+                                        <input type="number" name="extras[{{ $extra->id }}]" value="{{ old('extras.'.$extra->id, 0) }}"
+                                            min="0" @if ($cap !== null) max="{{ $cap }}" @endif @disabled($cap === 0)
+                                            data-extra-price="{{ $extra->price }}" data-extra-per-night="{{ $perNight ? '1' : '0' }}"
+                                            class="w-20 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
+                                    </div>
+                                @endforeach
+                            </div>
+                        </fieldset>
                     @endif
+
+                    @isset($order)
+                        <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+                            <h2 class="text-sm font-semibold text-gray-700">Prijsoverzicht</h2>
+                            <div class="mt-2">
+                                @include('partials.price-breakdown', [
+                                    'order' => $order,
+                                    'adults' => $adults,
+                                    'children' => $children,
+                                ])
+                            </div>
+                        </div>
+                    @endisset
+
                     <fieldset>
                         <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Persoonsgegevens</legend>
 
                         <div class="mt-4 grid gap-4 sm:grid-cols-2">
                             <div>
                                 <label for="first_name" class="block text-sm text-gray-700">Voornaam*</label>
-                                <input type="text" id="first_name" name="first_name" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
+                                <input type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
                             </div>
                             <div>
                                 <label for="last_name" class="block text-sm text-gray-700">Achternaam*</label>
-                                <input type="text" id="last_name" name="last_name" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
+                                <input type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
                             </div>
-                        </div>
-
-                        <div class="mt-4">
-                            <label for="city" class="block text-sm text-gray-700">Woonplaats*</label>
-                            <input type="text" id="city" name="city" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
                         </div>
 
                         <div class="mt-4 grid gap-4 sm:grid-cols-2">
                             <div>
                                 <label for="phone" class="block text-sm text-gray-700">Telefoonnummer*</label>
-                                <input type="tel" id="phone" name="phone" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
+                                <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
                             </div>
                             <div>
                                 <label for="email" class="block text-sm text-gray-700">E-mailadres*</label>
-                                <input type="email" id="email" name="email" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
+                                <input type="email" id="email" name="email" value="{{ old('email') }}" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
                             </div>
                         </div>
                     </fieldset>
 
                     <fieldset>
-                        <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Reservering &amp; Verblijf</legend>
-
-                        <div class="mt-4 grid gap-4 sm:grid-cols-2">
-                            <div>
-                                <label for="check_in" class="block text-sm text-gray-700">Aankomstdatum*</label>
-                                <input type="date" id="check_in" name="check_in" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
-                            </div>
-                            <div>
-                                <label for="check_out" class="block text-sm text-gray-700">Vertrekdatum*</label>
-                                <input type="date" id="check_out" name="check_out" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
-                            </div>
-                        </div>
-
-                        <div class="mt-4 grid gap-4 sm:grid-cols-2">
-                            @unless ($campsite)
-                                <div>
-                                    <label for="accommodatietype" class="block text-sm text-gray-700">Type accommodatie*</label>
-                                    <select id="accommodatietype" name="accommodatietype" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
-                                        <option value="">Selecteer</option>
-                                        @foreach ($campsiteTypes as $type)
-                                            <option value="{{ $type->value }}" @selected(old('accommodatietype', request('type')) === $type->value)>{{ \Illuminate\Support\Str::headline($type->value) }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            @endunless
-                            <div>
-                                <label for="num_people" class="block text-sm text-gray-700">Aantal personen*</label>
-                                <input type="number" id="num_people" name="num_people" min="1" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
-                            </div>
-                        </div>
-
-                        <div class="mt-4">
-                            <label for="aantalkinderen" class="block text-sm text-gray-700">Aantal kinderen*</label>
-                            <input type="number" id="aantalkinderen" name="aantalkinderen" min="0" value="0" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
-                        </div>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Voertuiginformatie</legend>
-
-                        <div class="mt-4 grid gap-4 sm:grid-cols-2">
-                            <div>
-                                <label for="num_plate" class="block text-sm text-gray-700">Kenteken*</label>
-                                <input type="text" id="num_plate" name="num_plate" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
-                            </div>
-                            <div>
-                                <label for="voertuigtype" class="block text-sm text-gray-700">Type voertuig*</label>
-                                <select id="voertuigtype" name="voertuigtype" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
-                                    <option value="">Selecteer</option>
-                                    <option value="auto">Auto</option>
-                                    <option value="camper">Camper</option>
-                                    <option value="caravan">Caravan</option>
-                                </select>
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Overig</legend>
+                        <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Betaalmethode</legend>
 
                         <div class="mt-4">
                             <label for="pay_method" class="block text-sm text-gray-700">Betaalmethode*</label>
                             <select id="pay_method" name="pay_method" required class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10">
                                 <option value="">Selecteer</option>
-                                <option value="creditcard">Creditcard</option>
-                                <option value="pin">Pinnen</option>
-                                <option value="contant">Contant</option>
+                                <option value="online" @selected(old('pay_method') === 'online')>Online betalen (Stripe)</option>
+                                <option value="in_person" @selected(old('pay_method') === 'in_person')>Betalen op locatie</option>
                             </select>
                         </div>
                     </fieldset>
 
                     <fieldset>
-                        <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Checkboxes</legend>
+                        <legend class="w-full border-b border-gray-200 pb-2 text-sm font-semibold text-gray-700">Akkoord</legend>
 
                         <div class="mt-4 space-y-2 text-sm text-gray-700">
                             <label class="flex items-center gap-2">
-                                <input type="checkbox" id="adult_confirmation" name="adult_confirmation" value="1" required class="h-4 w-4 rounded border-gray-300 text-gray-900">
+                                <input type="checkbox" id="adult_confirmation" name="adult_confirmation" value="1" @checked(old('adult_confirmation')) required class="h-4 w-4 rounded border-gray-300 text-gray-900">
                                 Ik ben 18 jaar of ouder*
                             </label>
 
                             <label class="flex items-center gap-2">
-                                <input type="checkbox" id="huisregels" name="huisregels" value="1" required class="h-4 w-4 rounded border-gray-300 text-gray-900">
+                                <input type="checkbox" id="house_rules" name="house_rules" value="1" @checked(old('house_rules')) required class="h-4 w-4 rounded border-gray-300 text-gray-900">
                                 Ik ga akkoord met de huisregels*
                             </label>
                         </div>
@@ -157,4 +164,34 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const total = document.querySelector('[data-grand-total]');
+            const inputs = document.querySelectorAll('input[data-extra-price]');
+
+            if (! total || inputs.length === 0) {
+                return;
+            }
+
+            const baseCents = parseInt(total.dataset.base, 10);
+            const nights = parseInt(total.dataset.nights, 10);
+            const euro = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
+
+            const recalculate = () => {
+                let extrasCents = 0;
+
+                inputs.forEach((input) => {
+                    const quantity = parseInt(input.value, 10) || 0;
+                    const units = input.dataset.extraPerNight === '1' ? quantity * nights : quantity;
+                    extrasCents += parseInt(input.dataset.extraPrice, 10) * units;
+                });
+
+                total.textContent = euro.format((baseCents + extrasCents) / 100);
+            };
+
+            inputs.forEach((input) => input.addEventListener('input', recalculate));
+            recalculate();
+        });
+    </script>
 @endsection

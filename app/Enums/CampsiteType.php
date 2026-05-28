@@ -2,10 +2,29 @@
 
 namespace App\Enums;
 
+use Illuminate\Support\Str;
+
 enum CampsiteType: string
 {
-    case Tent = 'tent';
-    case Trekkerveld = 'trekkerveld';
-    case CamperVan = 'camper_van';
-    case Caravan = 'caravan';
+    case Paardenveld = 'paardenveld';
+    case Varkensveld = 'varkensveld';
+    case Konijnenveld = 'konijnenveld';
+    case Geitenveld = 'geitenveld';
+    case Koeienveld = 'koeienveld';
+    case Schapenveld = 'schapenveld';
+    case Kippenveld = 'kippenveld';
+
+    public function getHeadline(): string
+    {
+        return Str::headline($this->value);
+    }
+
+    public function getDescription(): string
+    {
+        return match ($this) {
+            self::Paardenveld => 'Camperveld',
+            self::Varkensveld => 'Trekkersveld',
+            default => 'Tentenveld',
+        };
+    }
 }

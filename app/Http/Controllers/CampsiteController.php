@@ -2,28 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Booking\DTO\StayCriteria;
 use App\Models\Campsite;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class CampsiteController extends Controller
 {
     public function index(Request $request): View
     {
-        $checkIn = $request->date('datestart');
-        $checkOut = $request->date('dateend');
+        $criteria = StayCriteria::fromRequest($request);
 
-        $hasRange = $checkIn && $checkOut && $checkOut->greaterThan($checkIn);
-
-        $campsites = Campsite::query()
-            ->when($hasRange, fn ($q) => $q->whereAvailableBetween($checkIn, $checkOut))
-            ->orderBy('name')
-            ->get();
+        $campsites = $criteria->isComplete()
+            ? Campsite::query()
+                ->whereFitsParty($criteria->partySize(), $criteria->vehicles)
+                ->whereAvailableBetween($criteria->checkIn, $criteria->checkOut)
+                ->orderBy('name')
+                ->get()
+            : new Collection;
 
         return view('campsites.index', [
             'campsites' => $campsites,
-            'checkIn' => $checkIn,
-            'checkOut' => $checkOut,
+            'checkIn' => $criteria->checkIn,
+            'checkOut' => $criteria->checkOut,
+            'adults' => $criteria->adults,
+            'children' => $criteria->children,
+            'vehicles' => $criteria->vehicles,
+            'hasAllCriteria' => $criteria->isComplete(),
         ]);
     }
 }

@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Laravel\Cashier\Billable;
 
 /**
  * @property string $id
@@ -27,31 +28,30 @@ use Illuminate\Support\Carbon;
  * @property string $last_name
  * @property string $email
  * @property string|null $phone
- * @property string $password
+ * @property string|null $password
  * @property UserRole $role
  * @property string|null $remember_token
  * @property Carbon|null $email_verified_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- *
  * @property-read Collection<Reservation> $reservations
  * @property-read Collection<Reservation> $bookedReservations
- *
  * @property-read string $name
  *
  * @method UserQuery|static query()
- *
- * @todo The booking form collects `city` but the users table has no address
- *       column. Add `city` (and likely `street` / `postal_code` / `country`)
- *       or split into a related `addresses` table. See [todo.md](../../todo.md).
  */
 #[Fillable(['first_name', 'last_name', 'email', 'phone', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
 {
+    use Billable;
+
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasUuids, SoftDeletes;
+    use HasFactory;
+    use HasUuids;
+    use Notifiable;
+    use SoftDeletes;
 
     protected function casts(): array
     {
