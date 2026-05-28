@@ -13,7 +13,8 @@ final readonly class StayCriteria
         public ?int $adults,
         public ?int $children,
         public ?int $vehicles,
-    ) {}
+    ) {
+    }
 
     public static function fromRequest(Request $request, string $checkInKey = 'datestart', string $checkOutKey = 'dateend'): self
     {

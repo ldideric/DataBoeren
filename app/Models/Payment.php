@@ -26,7 +26,8 @@ use Illuminate\Support\Carbon;
 class Payment extends Model
 {
     /** @use HasFactory<PaymentFactory> */
-    use HasFactory, HasUuids;
+    use HasFactory;
+    use HasUuids;
 
     protected function casts(): array
     {

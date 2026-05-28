@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Mail;
 
 readonly class SendBookingsLink
 {
-    public function __construct(private SignedUrlGenerator $urls) {}
+    public function __construct(private SignedUrlGenerator $urls)
+    {
+    }
 
     public function handle(User $user): void
     {

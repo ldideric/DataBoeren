@@ -22,7 +22,8 @@ readonly class CreateReservation
         private FindAvailableCampsite $findAvailableCampsite,
         private CalculatePrice $calculatePrice,
         private ResolveBookingExtras $resolveBookingExtras,
-    ) {}
+    ) {
+    }
 
     /**
      * Find-or-create the customer and store a pending reservation for them,
