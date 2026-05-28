@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/campsites', [CampsiteController::class, 'index'])->name('campsites.index');
+Route::get('/map', fn () => view('map.index'))->name('map.index');
 
 Route::get('/auth/required', [AuthController::class, 'required'])->name('auth.required');
 
