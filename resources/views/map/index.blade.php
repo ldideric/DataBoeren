@@ -35,8 +35,6 @@
                     window.L.imageOverlay(imageUrl, imageBounds).addTo(map);
                     map.setMaxBounds(imageBounds);
                     map.options.maxBoundsViscosity = 1.0;
-                    // map.options.zoomsnap = 0;
-                    // map.options.zoomdelta = 0.1;
 
                     markers.forEach(({ name, position }) => {
                         window.L.marker(position)
