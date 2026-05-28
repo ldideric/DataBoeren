@@ -37,7 +37,9 @@ class PurgePersonalDataCommand extends Command
                         );
                 });
             })
-            ->chunkById(100, function ($users) use ($dryRun, &$purgedUsers) {
+            ->orderBy('created_at')
+            ->orderBy('id')
+            ->chunk(100, function ($users) use ($dryRun, &$purgedUsers) {
                 if (! $dryRun) {
                     DB::transaction(function () use ($users) {
                         DB::table('users')
@@ -46,6 +48,7 @@ class PurgePersonalDataCommand extends Command
                                 'first_name' => null,
                                 'last_name' => null,
                                 'email' => null,
+                                'email_verified_at' => null,
                                 'phone' => null,
                                 'password' => null,
                                 'remember_token' => null,

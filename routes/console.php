@@ -11,14 +11,22 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::daily()
+Schedule::command(PurgePersonalDataCommand::class)
+    ->name('purge:personal-data')
+    ->daily()
     ->onOneServer()
     ->timezone('Europe/Amsterdam')
     ->environments(['production'])
     ->runInBackground()
     ->withoutOverlapping()
-    ->onFailure(fn (Stringable $output) => Log::error('Purge job failed', ['output' => (string) $output]))
-    ->group(function () {
-        Schedule::command(PurgePersonalDataCommand::class)->name('purge:personal-data');
-        Schedule::command(PurgePaymentDataCommand::class)->name('purge:payment-data');
-    });
+    ->onFailure(fn ($output) => Log::error('Purge personal-data job failed', ['output' => (string) $output]));
+
+Schedule::command(PurgePaymentDataCommand::class)
+    ->name('purge:payment-data')
+    ->daily()
+    ->onOneServer()
+    ->timezone('Europe/Amsterdam')
+    ->environments(['production'])
+    ->runInBackground()
+    ->withoutOverlapping()
+    ->onFailure(fn ($output) => Log::error('Purge payment-data job failed', ['output' => (string) $output]));

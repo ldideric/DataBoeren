@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 uses(RefreshDatabase::class);
 
 it('redacts personal data for customer whose latest reservation checked out 37 months ago', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create(['email_verified_at' => now()]);
     $campsite = Campsite::factory()->create();
 
     Reservation::factory()
@@ -28,6 +28,7 @@ it('redacts personal data for customer whose latest reservation checked out 37 m
     expect($user->first_name)->toBeNull()
         ->and($user->last_name)->toBeNull()
         ->and($user->email)->toBeNull()
+        ->and($user->email_verified_at)->toBeNull()
         ->and($user->phone)->toBeNull()
         ->and($user->password)->toBeNull()
         ->and($user->purged_at)->not->toBeNull();
@@ -54,6 +55,27 @@ it('does not purge customer with a future reservation', function () {
             'check_in' => now()->addDays(10)->toDateString(),
             'check_out' => now()->addDays(14)->toDateString(),
         ]);
+
+    $this->artisan(PurgePersonalDataCommand::class)->assertSuccessful();
+
+    expect($user->fresh()->purged_at)->toBeNull();
+});
+
+it('does not purge customer with an active subscription', function () {
+    $user = User::factory()->create();
+    DB::table('users')->where('id', $user->id)->update(['created_at' => now()->subMonths(40)]);
+    DB::table('subscriptions')->insert([
+        'user_id' => $user->id,
+        'type' => 'default',
+        'stripe_id' => 'sub_active_personal',
+        'stripe_status' => 'active',
+        'stripe_price' => null,
+        'quantity' => null,
+        'trial_ends_at' => null,
+        'ends_at' => null,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
 
     $this->artisan(PurgePersonalDataCommand::class)->assertSuccessful();
 
