@@ -17,8 +17,8 @@ class SeasonsTable
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('season_periods_count')
-                    ->counts('seasonPeriods')
+                TextColumn::make('periods_count')
+                    ->counts('periods')
                     ->label('Periods'),
             ])
             ->filters([

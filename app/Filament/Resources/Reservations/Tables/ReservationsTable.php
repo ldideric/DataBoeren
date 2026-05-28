@@ -13,6 +13,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Table;
 
 class ReservationsTable
@@ -24,7 +25,7 @@ class ReservationsTable
                 TextColumn::make('customer.first_name')
                     ->formatStateUsing(fn ($state, $record) => $record->customer?->first_name . ' ' . $record->customer?->last_name)
                     ->label('Customer')
-                    ->searchable(['customer.first_name', 'customer.last_name']),
+                    ->searchable(query: fn (Builder $query, string $search) => $query->whereHas('customer', fn ($q) => $q->where('first_name', 'like', "%{$search}%")->orWhere('last_name', 'like', "%{$search}%"))),
                 TextColumn::make('campsite.name')
                     ->searchable(),
                 TextColumn::make('check_in')

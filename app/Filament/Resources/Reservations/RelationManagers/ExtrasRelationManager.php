@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Reservations\RelationManagers;
 
+use App\Models\Extra;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -51,7 +52,14 @@ class ExtrasRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->mutateFormDataUsing(function (array $data): array {
+                        $extra = Extra::findOrFail($data['extra_id']);
+                        $data['unit_price'] = $extra->price;
+                        $data['subtotal']   = $extra->price * $data['quantity'];
+
+                        return $data;
+                    }),
             ])
             ->recordActions([
                 EditAction::make(),
