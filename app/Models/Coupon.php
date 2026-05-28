@@ -36,7 +36,9 @@ use Illuminate\Support\Carbon;
 class Coupon extends Model
 {
     /** @use HasFactory<CouponFactory> */
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory;
+    use HasUuids;
+    use SoftDeletes;
 
     protected function casts(): array
     {

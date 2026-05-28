@@ -13,13 +13,13 @@ class ResolveBookingExtras
      * Validate and normalize extra selections from a web request, returning
      * a clean array keyed by extra ID ready for downstream consumption.
      *
-     * @param array<string, int|string> $quantities Keyed by extra ID.
+     * @param  array<string, int|string>  $quantities  Keyed by extra ID.
      * @return array<array{extra: Extra, quantity: int}>
      */
     public function resolve(array $quantities, Carbon $checkIn, Carbon $checkOut): array
     {
         $wanted = collect($quantities)
-            ->map(fn ($quantity) => (int)$quantity)
+            ->map(fn ($quantity) => (int) $quantity)
             ->filter(fn (int $quantity) => $quantity > 0);
 
         if ($wanted->isEmpty()) {

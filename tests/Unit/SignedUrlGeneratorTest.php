@@ -10,13 +10,13 @@ afterEach(fn () => Mockery::close());
 test('signed url generator delegates to the url generator', function () {
     $url = Mockery::mock(UrlGenerator::class);
     $url->shouldReceive('temporarySignedRoute')
-        ->andReturnUsing(fn ($name, $expiration, $parameters) => "signed://$name/" . implode('-', (array)$parameters));
+        ->andReturnUsing(fn ($name, $expiration, $parameters) => "signed://$name/".implode('-', (array) $parameters));
 
     $generator = new SignedUrlGenerator($url);
 
-    $user = new User;
+    $user = new User();
     $user->id = 7;
-    $reservation = new Reservation;
+    $reservation = new Reservation();
     $reservation->id = 13;
 
     expect($generator->bookings($user))->toBe('signed://bookings.index/7')

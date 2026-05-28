@@ -26,7 +26,8 @@ use Illuminate\Support\Carbon;
 class CampsitePrice extends Model
 {
     /** @use HasFactory<CampsitePriceFactory> */
-    use HasFactory, HasUuids;
+    use HasFactory;
+    use HasUuids;
 
     public function campsite(): BelongsTo
     {

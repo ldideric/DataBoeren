@@ -65,15 +65,15 @@ readonly class CreateReservation
                 'source' => ReservationSource::Online,
                 'check_in' => $checkIn,
                 'check_out' => $checkOut,
-                'num_adults' => (int)$data['num_adults'],
-                'num_children' => (int)$data['num_children'],
+                'num_adults' => (int) $data['num_adults'],
+                'num_children' => (int) $data['num_children'],
                 'num_vehicles' => $request->vehicleCount(),
                 'status' => ReservationStatus::Pending,
             ]);
             $reservation->setRelation('customer', $customer)->setRelation('campsite', $campsite);
 
             $selections = $this->resolveBookingExtras->resolve($data['extras'] ?? [], $checkIn, $checkOut);
-            $nights = (int)$checkIn->diffInDays($checkOut);
+            $nights = (int) $checkIn->diffInDays($checkOut);
 
             foreach ($selections as $line) {
                 $reservation->extras()->create([
