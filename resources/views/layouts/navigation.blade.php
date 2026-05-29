@@ -14,7 +14,7 @@
             </div>
 
             <div class="flex items-center gap-3 text-sm">
-                <a href="{{ route('login') }}" class="px-3 py-1.5 border border-gray-200 rounded-md text-white hover:bg-olivegreen2 hover:border-olivegreen2 transition-colors">
+                <a href="{{ route('login') }}" class="px-3 py-1.5 border border-white rounded-md text-white hover:bg-olivegreen2 hover:border-olivegreen2 transition-colors">
                     Mijn boekingen
                 </a>
             </div>
