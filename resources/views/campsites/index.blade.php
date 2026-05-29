@@ -187,16 +187,18 @@
     </div>
 
     <div id="modal" class="hidden fixed inset-0 bg-black/50 items-center justify-center ">
-        <div class="bg-white rounded-2xl p-6 w-11/12 max-w-lg">
-            <div class="flex items-start justify-between">
-                <h2 id="modal-title" class="text-3xl font-semibold text-gray-900"></h2>
-                <button onclick="closeModal()" class="ml-4 text-gray-400 hover:text-gray-700 text-xl leading-none">✕</button>
+        <div class="bg-tan rounded-2xl w-11/12 max-w-lg overflow-hidden">
+            <div class="bg-olivegreen p-6">
+                <div class="flex items-start justify-between">
+                    <h2 id="modal-title" class="text-3xl font-semibold text-gray-900"></h2>
+                    <button onclick="closeModal()" class="ml-4 text-gray-400 hover:text-gray-700 text-xl leading-none">✕</button>
+                </div>
+                <p id="modal-type" class="text-lg font-medium text-gray-800"></p>
             </div>
-            <p id="modal-type" class="text-lg font-medium text-gray-600"></p>
-            <div class="mt-4 aspect-3/2 bg-gray-100 rounded-lg"></div>
+            <div class="mt-4 aspect-3/2 bg-gray-100 rounded-lg mx-6"></div>
 
-            <div class="mt-4 flex gap-5">
-                <ul id="modal-details" class="space-y-2 text-sm text-gray-500 flex-1">
+            <div class="mt-4 flex gap-5 p-6">
+                <ul id="modal-details" class="space-y-2 text-sm text-cerulean2 flex-1">
                     <li id="modal-people"></li>
                     <li id="modal-vehicles"></li>
                     <li id="modal-electricity"></li>
@@ -204,8 +206,8 @@
                 <p id="modal-notes" class="text-sm text-gray-700 flex-1"></p>
             </div>
 
-            <div class="mt-4 flex justify-end">
-                <a id="modal-book-btn" class="rounded-lg px-6 py-2 text-sm font-semibold text-white" style="background: #265513;">Boek</a>
+            <div class="m-4 flex justify-end">
+                <a id="modal-book-btn" class="bg-cerulean hover:bg-cerulean2 rounded-lg px-6 py-2 text-sm font-semibold text-white">Boek</a>
             </div>
         </div>
     </div>
