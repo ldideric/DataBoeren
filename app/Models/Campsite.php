@@ -34,7 +34,9 @@ use Illuminate\Support\Carbon;
 class Campsite extends Model
 {
     /** @use HasFactory<CampsiteFactory> */
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory;
+    use HasUuids;
+    use SoftDeletes;
 
     protected function casts(): array
     {

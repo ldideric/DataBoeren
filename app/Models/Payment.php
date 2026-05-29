@@ -17,16 +17,18 @@ use Illuminate\Support\Carbon;
  * @property int $amount
  * @property PaymentStatus $status
  * @property string $method
+ * @property string|null $stripe_session_id
  * @property Carbon|null $paid_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read Reservation $reservation
  */
-#[Fillable(['reservation_id', 'amount', 'status', 'method', 'paid_at'])]
+#[Fillable(['reservation_id', 'amount', 'status', 'method', 'stripe_session_id', 'paid_at'])]
 class Payment extends Model
 {
     /** @use HasFactory<PaymentFactory> */
-    use HasFactory, HasUuids;
+    use HasFactory;
+    use HasUuids;
 
     protected function casts(): array
     {

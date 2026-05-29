@@ -41,21 +41,28 @@
                         </div>
 
                         @if ($reservation->status !== \App\Enums\ReservationStatus::Cancelled)
-                            <form
-                                method="POST"
-                                action="{{ $cancelUrls[$reservation->id] }}"
-                                data-confirm="Weet u zeker dat u deze reservering wilt annuleren?"
-                                class="mt-auto pt-1"
-                            >
-                                @csrf
-                                @method('DELETE')
-                                <button
-                                    type="submit"
-                                    class="w-full text-center text-sm px-3 py-1.5 border border-gray-200 text-gray-600 rounded-md hover:bg-gray-50 transition-colors"
+                            <div class="mt-auto pt-1 flex flex-col gap-2">
+                                @if ($reservation->status === \App\Enums\ReservationStatus::Pending && isset($paymentUrls[$reservation->id]))
+                                    <a href="{{ $paymentUrls[$reservation->id] }}" class="block w-full text-center text-sm px-3 py-1.5 bg-green-700 text-white rounded-md hover:bg-green-800 transition-colors">
+                                        Betalen
+                                    </a>
+                                @endif
+
+                                <form
+                                    method="POST"
+                                    action="{{ $cancelUrls[$reservation->id] }}"
+                                    data-confirm="Weet u zeker dat u deze reservering wilt annuleren?"
                                 >
-                                    Annuleren
-                                </button>
-                            </form>
+                                    @csrf
+                                    @method('DELETE')
+                                    <button
+                                        type="submit"
+                                        class="w-full text-center text-sm px-3 py-1.5 border border-gray-200 text-gray-600 rounded-md hover:bg-gray-50 transition-colors"
+                                    >
+                                        Annuleren
+                                    </button>
+                                </form>
+                            </div>
                         @endif
 
                     </div>

@@ -32,7 +32,9 @@ use Illuminate\Support\Carbon;
 class Extra extends Model
 {
     /** @use HasFactory<ExtraFactory> */
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory;
+    use HasUuids;
+    use SoftDeletes;
 
     protected function casts(): array
     {

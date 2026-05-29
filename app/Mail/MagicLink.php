@@ -12,9 +12,12 @@ use Illuminate\Queue\SerializesModels;
 
 class MagicLink extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
-    public function __construct(public User $user, public string $signedUrl) {}
+    public function __construct(public User $user, public string $signedUrl)
+    {
+    }
 
     public function envelope(): Envelope
     {
