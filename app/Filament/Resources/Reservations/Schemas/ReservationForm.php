@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Reservations\Schemas;
 use App\Enums\ReservationSource;
 use App\Enums\ReservationStatus;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -28,10 +29,11 @@ class ReservationForm
                 DatePicker::make('check_in')
                     ->required(),
                 DatePicker::make('check_out')
-                    ->required(),
+                    ->required()
+                    ->afterOrEqual(fn (Get $get) => $get('check_in') ?: 'today'),
                 TextInput::make('num_adults')
                     ->numeric()
-                    ->minValue(0)
+                    ->minValue(1)
                     ->required(),
                 TextInput::make('num_children')
                     ->numeric()
@@ -46,15 +48,15 @@ class ReservationForm
                     ->relationship('coupon', 'code')
                     ->searchable()
                     ->nullable(),
-                Select::make('source')
-                    ->options(ReservationSource::class)
-                    ->default(ReservationSource::Employee->value)
-                    ->required(),
+                Hidden::make('source')
+                    ->default(ReservationSource::Employee->value),
                 Select::make('status')
                     ->options(ReservationStatus::class)
+                    ->default(ReservationStatus::Confirmed->value)
                     ->required(),
                 Textarea::make('cancellation_reason')
                     ->visible(fn (Get $get) => $get('status') === ReservationStatus::Cancelled->value)
+                    ->required(fn (Get $get) => $get('status') === ReservationStatus::Cancelled->value)
                     ->columnSpanFull(),
             ]);
     }

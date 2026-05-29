@@ -5,14 +5,13 @@ declare(strict_types=1);
 use App\Enums\ReservationSource;
 use App\Enums\ReservationStatus;
 use App\Enums\UserRole;
-use App\Filament\Resources\Reservations\Pages\CreateReservation;
+use App\Filament\Pages\NewBooking;
 use App\Filament\Resources\Reservations\Pages\EditReservation;
 use App\Filament\Resources\Reservations\Pages\ListReservations;
 use App\Filament\Resources\Reservations\Pages\ViewReservation;
 use App\Filament\Resources\Reservations\RelationManagers\ExtrasRelationManager;
 use App\Filament\Resources\Reservations\RelationManagers\PaymentsRelationManager;
 use App\Filament\Resources\Reservations\ReservationResource;
-use App\Models\Campsite;
 use App\Models\Extra;
 use App\Models\Payment;
 use App\Models\Reservation;
@@ -118,63 +117,11 @@ it('can bulk delete reservations', function () {
     $reservations->each(fn ($r) => $this->assertSoftDeleted($r));
 });
 
-// Create page
+// New booking page (replaces create page)
 
-it('can render the create reservation page', function () {
-    Livewire::test(CreateReservation::class)
+it('can render the new booking page', function () {
+    Livewire::test(NewBooking::class)
         ->assertSuccessful();
-});
-
-it('can create a reservation', function () {
-    $customer = User::factory()->create();
-    $campsite = Campsite::factory()->create();
-
-    Livewire::test(CreateReservation::class)
-        ->fillForm([
-            'customer_id' => $customer->id,
-            'campsite_id' => $campsite->id,
-            'check_in'    => '2026-07-01',
-            'check_out'   => '2026-07-07',
-            'num_adults'  => 2,
-            'num_children' => 0,
-            'num_vehicles' => 1,
-            'source'      => ReservationSource::Employee->value,
-            'status'      => ReservationStatus::Confirmed->value,
-        ])
-        ->call('create')
-        ->assertHasNoFormErrors();
-
-    $this->assertDatabaseHas(Reservation::class, [
-        'customer_id' => $customer->id,
-        'campsite_id' => $campsite->id,
-    ]);
-});
-
-it('validates required fields on reservation create', function () {
-    Livewire::test(CreateReservation::class)
-        ->fillForm([
-            'customer_id'  => null,
-            'campsite_id'  => null,
-            'check_in'     => null,
-            'check_out'    => null,
-            'num_adults'   => null,
-            'num_children' => null,
-            'num_vehicles' => null,
-            'source'       => null,
-            'status'       => null,
-        ])
-        ->call('create')
-        ->assertHasFormErrors([
-            'customer_id'  => 'required',
-            'campsite_id'  => 'required',
-            'check_in'     => 'required',
-            'check_out'    => 'required',
-            'num_adults'   => 'required',
-            'num_children' => 'required',
-            'num_vehicles' => 'required',
-            'source'       => 'required',
-            'status'       => 'required',
-        ]);
 });
 
 // View page
@@ -210,7 +157,6 @@ it('can retrieve reservation data on the edit page', function () {
             'num_adults'   => 2,
             'num_children' => 1,
             'status'       => ReservationStatus::Confirmed,
-            'source'       => ReservationSource::Online,
         ]);
 });
 
@@ -308,8 +254,8 @@ it('admin can load reservations index via HTTP', function () {
     $this->get(ReservationResource::getUrl('index'))->assertOk();
 });
 
-it('admin can load create reservation page via HTTP', function () {
-    $this->get(ReservationResource::getUrl('create'))->assertOk();
+it('admin can load new booking page via HTTP', function () {
+    $this->get(NewBooking::getUrl())->assertOk();
 });
 
 it('admin can load view reservation page via HTTP', function () {
