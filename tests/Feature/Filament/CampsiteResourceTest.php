@@ -50,7 +50,8 @@ it('can render campsite table columns', function () {
         ->assertCanRenderTableColumn('type')
         ->assertCanRenderTableColumn('has_electricity')
         ->assertCanRenderTableColumn('max_people')
-        ->assertCanRenderTableColumn('max_vehicles');
+        ->assertCanRenderTableColumn('max_vehicles')
+        ->assertCanRenderTableColumn('notes');
 });
 
 it('can search campsites by name', function () {

@@ -40,7 +40,7 @@ class PaymentsTable
                     ->copyable()
                     ->limit(20)
                     ->fontFamily(FontFamily::Mono)
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggledHiddenByDefault(),
             ])
             ->filters([
                 StatusFilter::make(),

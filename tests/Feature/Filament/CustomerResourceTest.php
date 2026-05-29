@@ -53,7 +53,8 @@ it('can render customer table columns', function () {
         ->assertCanRenderTableColumn('first_name')
         ->assertCanRenderTableColumn('email')
         ->assertCanRenderTableColumn('phone')
-        ->assertCanRenderTableColumn('email_verified_at');
+        ->assertCanRenderTableColumn('email_verified_at')
+        ->assertCanRenderTableColumn('purged_at');
 });
 
 it('can search customers by name', function () {

@@ -43,6 +43,7 @@ it('can render extra table columns', function () {
 
     Livewire::test(ListExtras::class)
         ->assertCanRenderTableColumn('name')
+        ->assertCanRenderTableColumn('description')
         ->assertCanRenderTableColumn('billing_type')
         ->assertCanRenderTableColumn('price')
         ->assertCanRenderTableColumn('stock_type')

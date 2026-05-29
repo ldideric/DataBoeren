@@ -52,8 +52,10 @@ it('can render reservation table columns', function () {
         ->assertCanRenderTableColumn('campsite.name')
         ->assertCanRenderTableColumn('check_in')
         ->assertCanRenderTableColumn('check_out')
+        ->assertCanRenderTableColumn('num_adults')
         ->assertCanRenderTableColumn('status')
-        ->assertCanRenderTableColumn('source');
+        ->assertCanRenderTableColumn('source')
+        ->assertCanRenderTableColumn('orderSummary.total');
 });
 
 it('can search reservations by customer name', function () {

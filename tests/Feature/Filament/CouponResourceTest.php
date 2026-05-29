@@ -48,9 +48,9 @@ it('can render coupon table columns', function () {
         ->assertCanRenderTableColumn('title')
         ->assertCanRenderTableColumn('code')
         ->assertCanRenderTableColumn('scope')
-        ->assertCanRenderTableColumn('discount_type')
-        ->assertCanRenderTableColumn('discount_value')
-        ->assertCanRenderTableColumn('expires_at');
+        ->assertCanRenderTableColumn('formatted_discount')
+        ->assertCanRenderTableColumn('expires_at')
+        ->assertCanRenderTableColumn('uses_count');
 });
 
 it('can search coupons by title', function () {
@@ -261,6 +261,7 @@ it('can create a coupon scoped to a specific extra', function () {
             'title'          => 'Extra Korting',
             'code'           => 'EXTRA10',
             'scope'          => CouponScope::Extra->value,
+            'extra_id'       => $extra->id,
             'discount_type'  => DiscountType::Percent->value,
             'discount_value' => 10,
         ])

@@ -45,7 +45,8 @@ it('can render season table columns', function () {
     Season::factory()->create();
 
     Livewire::test(ListSeasons::class)
-        ->assertCanRenderTableColumn('name');
+        ->assertCanRenderTableColumn('name')
+        ->assertCanRenderTableColumn('periods_count');
 });
 
 it('can search seasons by name', function () {
