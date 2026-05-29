@@ -187,11 +187,11 @@
     </div>
 
     <div id="modal" class="hidden fixed inset-0 bg-black/50 items-center justify-center ">
-        <div class="bg-tan rounded-2xl w-11/12 max-w-lg overflow-hidden">
-            <div class="bg-olivegreen p-6">
+        <div class="bg-tan-300 rounded-2xl w-11/12 max-w-lg overflow-hidden">
+            <div class="bg-olivegreen-500 p-6">
                 <div class="flex items-start justify-between">
                     <h2 id="modal-title" class="text-3xl font-semibold text-gray-900"></h2>
-                    <button onclick="closeModal()" class="ml-4 text-gray-400 hover:text-gray-700 text-xl leading-none">✕</button>
+                    <button onclick="closeModal()" class="ml-4 text-gray-300 hover:text-gray-900 text-xl leading-none">✕</button>
                 </div>
                 <p id="modal-type" class="text-lg font-medium text-gray-800"></p>
             </div>
@@ -207,7 +207,7 @@
             </div>
 
             <div class="m-4 flex justify-end">
-                <a id="modal-book-btn" class="bg-cerulean hover:bg-cerulean2 rounded-lg px-6 py-2 text-sm font-semibold text-white">Boek</a>
+                <a id="modal-book-btn" class="bg-cerulean-400 hover:bg-cerulean-600 rounded-lg px-6 py-2 text-sm font-semibold text-white">Boek</a>
             </div>
         </div>
     </div>

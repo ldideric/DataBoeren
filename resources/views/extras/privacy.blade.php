@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-tan2 px-8 py-8">
-        <div class="bg-tan px-10 py-4 rounded-2xl m-5">
+    <div class="bg-tan-500 px-15 py-10">
+        <div class="bg-tan-200 px-15 py-8 rounded-2xl m-5">
             <div>
                 <h1 class="mb-4 font-bold text-3xl">Onze privacyverklaring</h1>
 
@@ -46,6 +46,24 @@
             <div>
                 <h2 class="mt-5 mb-2 font-semibold text-lg">Delen van persoonsgegevens met derden</h2>
                 <p>Voor het verwerken van betalingen maken wij gebruik van Stripe. Stripe verwerkt uw betalingsgegevens namens ons en handelt daarbij als verwerker in de zin van de AVG. Stripe heeft passende technische en organisatorische maatregelen getroffen om uw gegevens te beschermen. Wij sluiten met Stripe een verwerkersovereenkomst af conform de AVG-vereisten.</p>
+            </div>
+
+            <div>
+                <h2 class="mt-5 mb-2 font-semibold text-lg">Cookies, of vergelijkbare technieken, die wij gebruiken</h2>
+                <p>Camping De Groene Weide gebruikt alleen technische en functionele cookies. En analytische cookies die geen inbreuk maken op uw privacy. Een cookie is een klein tekstbestand dat bij het eerste bezoek aan deze website wordt opgeslagen op uw computer, tablet of smartphone. De cookies die wij gebruiken zijn noodzakelijk voor de technische werking van de website en uw gebruiksgemak. Ze zorgen ervoor dat de website naar behoren werkt en onthouden bijvoorbeeld uw voorkeursinstellingen. Ook kunnen wij hiermee onze website optimaliseren. U kunt zich afmelden voor cookies door uw internetbrowser zo in te stellen dat deze geen cookies meer opslaat. Daarnaast kunt u ook alle informatie die eerder is opgeslagen via de instellingen van uw browser verwijderen.</p>
+            </div>
+
+            <div>
+                <h2 class="mt-5 mb-2 font-semibold text-lg">Gegevens inzien, aanpassen of verwijderen</h2>
+                <p class="mb-4">U heeft het recht om uw persoonsgegevens in te zien, te corrigeren of te verwijderen. Daarnaast heeft u het recht om uw eventuele toestemming voor de gegevensverwerking in te trekken of bezwaar te maken tegen de verwerking van uw persoonsgegevens door Camping De Groene Weide en heeft u het recht op gegevensoverdraagbaarheid. Dat betekent dat u bij ons een verzoek kunt indienen om de persoonsgegevens die wij van u beschikken in een computerbestand naar u of een ander, door u genoemde organisatie, te sturen.</p>
+                <p class="mb-4">U kunt een verzoek tot inzage, correctie, verwijdering, gegevensoverdraging van uw persoonsgegevens of verzoek tot intrekking van uw toestemming of bezwaar op de verwerking van uw persoonsgegevens sturen naar boerbert@campingdgw.nl.</p>
+                <p class="mb-4">Om er zeker van te zijn dat het verzoek tot inzage door u is gedaan, vragen wij u een kopie van uw identiteitsbewijs met het verzoek mee te sturen. Maak in deze kopie uw pasfoto, MRZ (machine readable zone, de strook met nummers onderaan het paspoort), paspoortnummer en Burgerservicenummer (BSN) zwart. Dit ter bescherming van uw privacy. We reageren zo snel mogelijk, maar binnen vier weken, op uw verzoek.</p>
+                <p class="mb-4">Camping De Groene Weide wil u er tevens op wijzen dat u de mogelijkheid heeft om een klacht in te dienen bij de nationale toezichthouder, de Autoriteit Persoonsgegevens. Dat kan via de volgende link: <a href="https://autoriteitpersoonsgegevens.nl/nl/contact-met-de-autoriteit-persoonsgegevens/tip-ons" class="hover:underline hover:decoration-cerulean">https://autoriteitpersoonsgegevens.nl/nl/contact-met-de-autoriteit-persoonsgegevens/tip-ons</a>.</p>
+            </div>
+
+            <div>
+                <h2 class="mt-5 mb-2 font-semibold text-lg">Hoe wij persoonsgegevens beveiligen</h2>
+                <p>Camping De Groene Weide neemt de bescherming van uw gegevens serieus en neemt passende maatregelen om misbruik, verlies, onbevoegde toegang, ongewenste openbaarmaking en ongeoorloofde wijziging tegen te gaan. Als u de indruk heeft dat uw gegevens niet goed beveiligd zijn of er aanwijzingen zijn van misbruik, neem dan contact op met onze klantenservice of via <a href="mailto:boerbert@campingdgw.nl" class="hover:underline hover:decoration-cerulean">boerbert@campingdgw.nl</a>.</p>
             </div>
 
         </div>
