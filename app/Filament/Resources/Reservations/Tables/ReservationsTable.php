@@ -50,6 +50,7 @@ class ReservationsTable
                     ->formatStateUsing(fn ($state) => $state !== null ? '€ '.number_format($state / 100, 2, ',', '.') : '—')
                     ->label('Total'),
             ])
+            ->filtersFormColumns(2)
             ->filters([
                 StatusFilter::make(),
                 SourceFilter::make(),

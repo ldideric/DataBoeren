@@ -20,7 +20,8 @@ class OnSiteFilter extends Filter
         $this
             ->label('Currently on site')
             ->toggle()
-            ->query(fn (Builder $query) => $query
+            ->query(
+                fn (Builder $query) => $query
                 ->where('check_in', '<=', today())
                 ->where('check_out', '>=', today())
                 ->where('status', ReservationStatus::Confirmed)

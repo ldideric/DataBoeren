@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Reservations\Filters;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Schemas\Components\Section;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -19,9 +20,14 @@ class ArrivalPeriodFilter extends Filter
 
         $this
             ->label('Arrival period')
+            ->columnSpanFull()
             ->schema([
-                DatePicker::make('from')->label('From'),
-                DatePicker::make('until')->label('Until'),
+                Section::make()
+                    ->schema([
+                        DatePicker::make('from')->label('From'),
+                        DatePicker::make('until')->label('Until'),
+                    ])
+                    ->columns(2),
             ])
             ->query(
                 fn (Builder $query, array $data) => $query

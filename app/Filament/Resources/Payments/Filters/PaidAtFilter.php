@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Payments\Filters;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Schemas\Components\Section;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -19,9 +20,14 @@ class PaidAtFilter extends Filter
 
         $this
             ->label('Payment date')
+            ->columnSpanFull()
             ->schema([
-                DatePicker::make('from')->label('From'),
-                DatePicker::make('until')->label('Until'),
+                Section::make()
+                    ->schema([
+                        DatePicker::make('from')->label('From'),
+                        DatePicker::make('until')->label('Until'),
+                    ])
+                    ->columns(2),
             ])
             ->query(
                 fn (Builder $query, array $data) => $query

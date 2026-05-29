@@ -42,6 +42,7 @@ class PaymentsTable
                     ->fontFamily(FontFamily::Mono)
                     ->toggledHiddenByDefault(),
             ])
+            ->filtersFormColumns(2)
             ->filters([
                 StatusFilter::make(),
                 MethodFilter::make(),
