@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Customers\RelationManagers;
 
+use App\Filament\Resources\Reservations\ReservationResource;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -20,6 +21,7 @@ class ReservationsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('check_in')
+            ->recordUrl(fn ($record) => ReservationResource::getUrl('view', ['record' => $record]))
             ->columns([
                 TextColumn::make('campsite.name')
                     ->label('Campsite'),

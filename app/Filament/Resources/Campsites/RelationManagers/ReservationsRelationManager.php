@@ -2,10 +2,9 @@
 
 namespace App\Filament\Resources\Campsites\RelationManagers;
 
+use App\Filament\Resources\Reservations\ReservationResource;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -24,6 +23,7 @@ class ReservationsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('check_in')
+            ->recordUrl(fn ($record) => ReservationResource::getUrl('view', ['record' => $record]))
             ->columns([
                 TextColumn::make('customer.first_name')
                     ->formatStateUsing(fn ($state, $record) => $record->customer?->first_name . ' ' . $record->customer?->last_name)
@@ -44,9 +44,7 @@ class ReservationsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([])
-            ->recordActions([
-                ViewAction::make(),
-            ])
+            ->recordActions([])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

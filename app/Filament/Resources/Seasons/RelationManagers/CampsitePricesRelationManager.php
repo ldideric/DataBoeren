@@ -9,6 +9,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use App\Filament\Resources\Campsites\CampsiteResource;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -46,7 +47,8 @@ class CampsitePricesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                TextColumn::make('campsite.name'),
+                TextColumn::make('campsite.name')
+                    ->url(fn ($record) => CampsiteResource::getUrl('view', ['record' => $record->campsite_id])),
                 TextColumn::make('nightly_rate')
                     ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
                 TextColumn::make('per_adult_rate')

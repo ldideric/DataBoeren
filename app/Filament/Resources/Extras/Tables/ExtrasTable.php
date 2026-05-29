@@ -21,7 +21,8 @@ class ExtrasTable
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('description')
-                    ->limit(60)
+                    ->limit(20)
+                    ->placeholder('None')
                     ->tooltip(fn ($record) => $record->description),
                 TextColumn::make('billing_type')
                     ->badge(),
@@ -31,18 +32,21 @@ class ExtrasTable
                 TextColumn::make('stock_type')
                     ->badge(),
                 TextColumn::make('stock')
-                    ->formatStateUsing(fn ($state) => $state ?? '—')
+                    ->placeholder('Unlimited')
                     ->sortable(),
                 TextColumn::make('max_per_booking')
-                    ->formatStateUsing(fn ($state) => $state ?? '—')
+                    ->placeholder('Unlimited')
                     ->sortable(),
             ])
             ->filters([
                 TrashedFilter::make(),
+                // @todo SelectFilter for billing_type — separate per-night, per-stay, and per-person extras
+                // @todo SelectFilter for stock_type — separate rentals (returned) from consumables
+                // @todo Filter for low stock (stock is not null AND stock <= 3) — quick reorder check
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->iconButton(),
+                EditAction::make()->iconButton(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

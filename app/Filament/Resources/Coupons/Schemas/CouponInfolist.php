@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Coupons\Schemas;
 
 use App\Models\Coupon;
+use App\Filament\Resources\Extras\ExtraResource;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -20,7 +21,10 @@ class CouponInfolist
                     ->badge(),
                 TextEntry::make('extra.name')
                     ->label('Extra')
-                    ->placeholder('-'),
+                    ->placeholder('-')
+                    ->url(fn ($record) => $record->extra_id
+                        ? ExtraResource::getUrl('view', ['record' => $record->extra_id])
+                        : null),
                 TextEntry::make('discount_type')
                     ->badge(),
                 TextEntry::make('discount_value')

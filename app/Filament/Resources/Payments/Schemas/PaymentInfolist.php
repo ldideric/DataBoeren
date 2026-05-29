@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Payments\Schemas;
 
+use App\Filament\Resources\Reservations\ReservationResource;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -14,7 +15,8 @@ class PaymentInfolist
                 TextEntry::make('id')
                     ->label('ID'),
                 TextEntry::make('reservation.id')
-                    ->label('Reservation'),
+                    ->label('Reservation')
+                    ->url(fn ($record) => ReservationResource::getUrl('view', ['record' => $record->reservation_id])),
                 TextEntry::make('amount')
                     ->numeric(),
                 TextEntry::make('status')

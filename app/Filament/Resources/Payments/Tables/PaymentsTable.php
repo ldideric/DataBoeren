@@ -43,10 +43,12 @@ class PaymentsTable
             ->filters([
                 SelectFilter::make('status')
                     ->options(PaymentStatus::class),
+                // @todo SelectFilter for method (ideal/card/cash) — useful for end-of-day cash reconciliation
+                // @todo Filter for paid_at date range — scope payments to a billing or reporting period
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->iconButton(),
+                EditAction::make()->iconButton(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

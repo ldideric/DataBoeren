@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Reservations\RelationManagers;
 
+use App\Filament\Resources\Extras\ExtraResource;
 use App\Models\Extra;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -38,8 +39,11 @@ class ExtrasRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('id')
+            ->recordUrl(fn ($record) =>  dd($record))
+            ->recordUrl(fn ($record) =>  ExtraResource::getUrl('view', ['record' => $record->extra]))
             ->columns([
                 TextColumn::make('extra.name'),
+                    // ->url(fn ($record) => ExtraResource::getUrl('view', ['record' => $record->extra_id])),
                 TextColumn::make('quantity')
                     ->numeric(),
                 TextColumn::make('unit_price')
@@ -53,7 +57,7 @@ class ExtrasRelationManager extends RelationManager
             ])
             ->headerActions([
                 CreateAction::make()
-                    ->mutateFormDataUsing(function (array $data): array {
+                    ->mutateDataUsing(function (array $data): array {
                         $extra = Extra::findOrFail($data['extra_id']);
                         $data['unit_price'] = $extra->price;
                         $data['subtotal']   = $extra->price * $data['quantity'];

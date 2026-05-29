@@ -33,15 +33,18 @@ class CampsitesTable
                     ->suffix(' voertuig(en)')
                     ->sortable(),
                 TextColumn::make('notes')
-                    ->limit(60)
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->limit(40)
+                    ->toggledHiddenByDefault(),
             ])
             ->filters([
                 TrashedFilter::make(),
+                // @todo SelectFilter for type — show only tent/caravan/glamping pitches
+                // @todo TernaryFilter for has_electricity — staff often need electric pitches quickly
+                // @todo Filter for max_people (min value) — find pitches that fit large groups
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->iconButton(),
+                EditAction::make()->iconButton(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

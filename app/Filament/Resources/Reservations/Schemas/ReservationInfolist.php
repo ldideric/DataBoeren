@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\Reservations\Schemas;
 
+use App\Filament\Resources\Campsites\CampsiteResource;
+use App\Filament\Resources\Coupons\CouponResource;
+use App\Filament\Resources\Customers\CustomerResource;
 use App\Models\Reservation;
 use Filament\Schemas\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -17,9 +20,11 @@ class ReservationInfolist
                 Section::make('Reservation')
                     ->schema([
                         TextEntry::make('customer.email')
-                            ->label('Customer'),
+                            ->label('Customer')
+                            ->url(fn (Reservation $record) => CustomerResource::getUrl('view', ['record' => $record->customer_id])),
                         TextEntry::make('campsite.name')
-                            ->label('Campsite'),
+                            ->label('Campsite')
+                            ->url(fn (Reservation $record) => CampsiteResource::getUrl('view', ['record' => $record->campsite_id])),
                         TextEntry::make('check_in')
                             ->date('d/m/Y'),
                         TextEntry::make('check_out')
@@ -36,7 +41,10 @@ class ReservationInfolist
                             ->badge(),
                         TextEntry::make('coupon.code')
                             ->label('Coupon')
-                            ->placeholder('-'),
+                            ->placeholder('-')
+                            ->url(fn (Reservation $record) => $record->coupon_id
+                                ? CouponResource::getUrl('view', ['record' => $record->coupon_id])
+                                : null),
                         TextEntry::make('cancellation_reason')
                             ->placeholder('-')
                             ->columnSpanFull()

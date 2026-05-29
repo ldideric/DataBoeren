@@ -51,10 +51,14 @@ class ReservationsTable
                 SelectFilter::make('source')
                     ->options(ReservationSource::class),
                 TrashedFilter::make(),
+                // @todo SelectFilter for campsite_id (relationship) — show all bookings for a specific pitch
+                // @todo Filter for check_in date range — find arrivals within a given week or month
+                // @todo TernaryFilter for coupon_id (has coupon / no coupon) — measure promotional uptake
+                // @todo Filter for has_booked_by_user_id (staff-created vs. self-service) — overlap with source but useful standalone
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->iconButton(),
+                EditAction::make()->iconButton(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

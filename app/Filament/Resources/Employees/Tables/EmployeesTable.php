@@ -30,10 +30,11 @@ class EmployeesTable
             ])
             ->filters([
                 TrashedFilter::make(),
+                // @todo SelectFilter for role — separate admins from regular employees
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->iconButton(),
+                EditAction::make()->iconButton(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

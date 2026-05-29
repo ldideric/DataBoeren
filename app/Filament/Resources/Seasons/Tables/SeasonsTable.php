@@ -22,11 +22,12 @@ class SeasonsTable
                     ->label('Periods'),
             ])
             ->filters([
-                //
+                // @todo Filter for seasons that have at least one active period (starts_at <= today <= ends_at) — quickly spot the current season
+                // @todo Filter for seasons with no campsite prices configured — catch incomplete setup
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->iconButton(),
+                EditAction::make()->iconButton(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Coupons\Tables;
 
-use App\Enums\DiscountType;
+use App\Models\Coupon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -27,29 +27,29 @@ class CouponsTable
                     ->fontFamily(FontFamily::Mono)
                     ->searchable(),
                 TextColumn::make('scope')
-                    ->badge(),
-                TextColumn::make('discount_type')
-                    ->badge(),
-                TextColumn::make('discount_value')
-                    ->formatStateUsing(fn ($state, $record) =>
-                        $record->discount_type === DiscountType::Percent
-                            ? $state . '%'
-                            : '€ ' . number_format($state / 100, 2, ',', '.')
-                    ),
+                    ->badge()
+                    ->sortable(),
+                TextColumn::make('formatted_discount')
+                    ->label('Discount'),
                 TextColumn::make('expires_at')
                     ->date('d/m/Y')
                     ->color(fn ($record) => $record->expires_at?->isPast() ? 'danger' : null)
+                    ->placeholder('No expiry')
                     ->sortable(),
                 TextColumn::make('uses_count')
-                    ->formatStateUsing(fn ($state, $record) => $state . ' / ' . ($record->max_uses ?? '∞'))
+                    ->formatStateUsing(fn ($state, Coupon $record) => $state . ($record->max_uses ? ' / ' . $record->max_uses : null))
                     ->label('Uses'),
             ])
             ->filters([
                 TrashedFilter::make(),
+                // @todo add filter for expired / not expired
+                // @todo add filter for scope
+                // @todo add filter for discount type
+                // @todo add filter for coupons with usage limits
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->iconButton(),
+                EditAction::make()->iconButton(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

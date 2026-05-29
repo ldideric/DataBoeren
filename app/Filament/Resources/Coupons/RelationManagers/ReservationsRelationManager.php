@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Coupons\RelationManagers;
 
+use App\Filament\Resources\Reservations\ReservationResource;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -20,9 +21,10 @@ class ReservationsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('check_in')
+            ->recordUrl(fn ($record) => ReservationResource::getUrl('view', ['record' => $record]))
             ->columns([
                 TextColumn::make('customer.first_name')
-                    ->formatStateUsing(fn ($state, $record) => $record->customer?->first_name . ' ' . $record->customer?->last_name)
+                    ->formatStateUsing(fn ($state, $record) => $record->customer?->first_name.' '.$record->customer?->last_name)
                     ->label('Customer'),
                 TextColumn::make('check_in')
                     ->date('d/m/Y')

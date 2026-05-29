@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Reservations\RelationManagers;
 
+use App\Filament\Resources\Payments\PaymentResource;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\FontFamily;
@@ -21,6 +22,7 @@ class PaymentsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('id')
+            ->recordUrl(fn ($record) => PaymentResource::getUrl('view', ['record' => $record]))
             ->columns([
                 TextColumn::make('amount')
                     ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
