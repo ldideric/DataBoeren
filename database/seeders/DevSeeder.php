@@ -2,10 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ReservationStatus;
 use App\Enums\UserRole;
 use App\Models\Campsite;
 use App\Models\Coupon;
 use App\Models\Extra;
+use App\Models\OrderSummary;
+use App\Models\Payment;
 use App\Models\Reservation;
 use App\Models\User;
 use App\Pricing\Actions\CalculatePrice;
@@ -34,6 +37,7 @@ class DevSeeder extends Seeder
 
         $this->seedReservations($customers, $campsites, $employee, $active);
         $this->priceReservations();
+        $this->seedPayments();
     }
 
     private function priceReservations(): void
@@ -55,10 +59,6 @@ class DevSeeder extends Seeder
         });
     }
 
-    /**
-     * @param  Collection<int, Extra>  $extras
-     * @return array<array{extra: Extra, quantity: int}>
-     */
     private function randomExtras(Collection $extras): array
     {
         if ($extras->isEmpty() || fake()->boolean(60)) {
@@ -73,9 +73,6 @@ class DevSeeder extends Seeder
         ]];
     }
 
-    /**
-     * @param  array<array{extra: Extra, quantity: int}>  $selections
-     */
     private function persistExtras(Reservation $reservation, array $selections): void
     {
         $nights = (int) $reservation->check_in->diffInDays($reservation->check_out);
@@ -88,6 +85,33 @@ class DevSeeder extends Seeder
                 'subtotal' => CalculatePrice::lineSubtotal($line['extra'], $line['quantity'], $nights),
             ]);
         }
+    }
+
+    private function seedPayments(): void
+    {
+        OrderSummary::with('reservation')->each(function (OrderSummary $summary): void {
+            $reservation = $summary->reservation;
+
+            if ($reservation->status === ReservationStatus::Cancelled) {
+                return;
+            }
+
+            $monthsAgo = fake()->numberBetween(0, 5);
+            $paidAt = now()->subMonths($monthsAgo)->subDays(fake()->numberBetween(0, 27));
+
+            if ($reservation->status === ReservationStatus::Pending) {
+                Payment::factory()->pending()->create([
+                    'reservation_id' => $reservation->id,
+                    'amount' => $summary->total,
+                ]);
+            } else {
+                Payment::factory()->create([
+                    'reservation_id' => $reservation->id,
+                    'amount' => $summary->total,
+                    'paid_at' => $paidAt,
+                ]);
+            }
+        });
     }
 
     private function seedReservations(Collection $customers, Collection $campsites, User $employee, Coupon $activeCoupon): void
