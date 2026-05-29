@@ -3,17 +3,21 @@
 namespace App\Filament\Widgets;
 
 use App\Enums\PaymentStatus;
+use App\Filament\Resources\Payments\PaymentResource;
 use App\Models\Payment;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Facades\Auth;
 
 class FinancialStatsWidget extends BaseWidget
 {
     protected static ?int $sort = 2;
 
+    protected int | array | null $columns = 2;
+
     public static function canView(): bool
     {
-        return auth()->user()?->isAdmin() ?? false;
+        return Auth::user()?->isAdmin() ?? false;
     }
 
     protected function getStats(): array
@@ -29,12 +33,24 @@ class FinancialStatsWidget extends BaseWidget
             Stat::make('Revenue this month', '€ '.number_format($monthlyRevenueCents / 100, 2, ',', '.'))
                 ->description('From paid payments')
                 ->icon('heroicon-o-banknotes')
-                ->color('success'),
+                ->color('success')
+                ->url(PaymentResource::getUrl(parameters: [
+                    'filters' => [
+                        'status' => ['value' => PaymentStatus::Paid->value],
+                        'paid_at' => [
+                            'from' => now()->startOfMonth()->toDateString(),
+                            'until' => now()->endOfMonth()->toDateString(),
+                        ],
+                    ],
+                ])),
 
             Stat::make('Pending payments', $pendingPayments)
                 ->description('Awaiting payment')
                 ->icon('heroicon-o-credit-card')
-                ->color($pendingPayments > 0 ? 'danger' : 'gray'),
+                ->color($pendingPayments > 0 ? 'danger' : 'gray')
+                ->url(PaymentResource::getUrl(parameters: [
+                    'filters' => ['status' => ['value' => PaymentStatus::Pending->value]],
+                ])),
         ];
     }
 }

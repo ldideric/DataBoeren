@@ -5,14 +5,18 @@ namespace App\Filament\Widgets;
 use App\Enums\ReservationStatus;
 use App\Models\Reservation;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\Auth;
 
 class ReservationsByStatusWidget extends ChartWidget
 {
-    protected static ?int $sort = 2;
-
     protected ?string $heading = 'Reservations by status';
 
     protected int | string | array $columnSpan = 1;
+
+    public static function getSort(): int
+    {
+        return Auth::user()?->isAdmin() ? 2 : 3;
+    }
 
     protected function getType(): string
     {

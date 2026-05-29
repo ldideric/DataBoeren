@@ -20,7 +20,9 @@ class DevSeeder extends Seeder
 {
     public function run(): void
     {
-        $employee = User::factory()->withRole(UserRole::Employee)->create([
+        $employee = User::factory()
+        ->withRole(UserRole::Employee)
+        ->create([
             'first_name' => 'Jan',
             'last_name' => 'Medewerker',
             'email' => 'employee@degroeneweide.nl',
@@ -36,6 +38,7 @@ class DevSeeder extends Seeder
         Coupon::factory()->freeExtra($firepit)->create(['title' => 'Gratis vuurkorf']);
 
         $this->seedReservations($customers, $campsites, $employee, $active);
+        $this->seedLowStockExtras();
         $this->priceReservations();
         $this->seedPayments();
     }
@@ -123,5 +126,15 @@ class DevSeeder extends Seeder
         $base()->count(3)->withCoupon($activeCoupon)->create();
         $base()->count(4)->pending()->create();
         $base()->count(3)->cancelled()->create();
+
+        // Today's arrivals for the dashboard widget
+        $base()->count(3)->create(['check_in' => today(), 'check_out' => today()->addDays(4)]);
+        $base()->count(1)->pending()->create(['check_in' => today(), 'check_out' => today()->addDays(2)]);
+    }
+
+    private function seedLowStockExtras(): void
+    {
+        Extra::where('name', 'Vuurkorf')->update(['stock' => 1]);
+        Extra::where('name', 'BBQ')->update(['stock' => 2]);
     }
 }

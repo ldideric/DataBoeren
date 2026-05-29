@@ -90,19 +90,23 @@ it('can filter reservations by source', function () {
 });
 
 it('can sort reservations by check_in ascending', function () {
-    $reservations = Reservation::factory()->count(3)->create();
+    $r1 = Reservation::factory()->create(['check_in' => '2026-07-01', 'check_out' => '2026-07-07']);
+    $r2 = Reservation::factory()->create(['check_in' => '2026-08-01', 'check_out' => '2026-08-07']);
+    $r3 = Reservation::factory()->create(['check_in' => '2026-09-01', 'check_out' => '2026-09-07']);
 
     Livewire::test(ListReservations::class)
         ->sortTable('check_in')
-        ->assertCanSeeTableRecords($reservations->sortBy('check_in'), inOrder: true);
+        ->assertCanSeeTableRecords([$r1, $r2, $r3], inOrder: true);
 });
 
 it('can sort reservations by check_in descending', function () {
-    $reservations = Reservation::factory()->count(3)->create();
+    $r1 = Reservation::factory()->create(['check_in' => '2026-07-01', 'check_out' => '2026-07-07']);
+    $r2 = Reservation::factory()->create(['check_in' => '2026-08-01', 'check_out' => '2026-08-07']);
+    $r3 = Reservation::factory()->create(['check_in' => '2026-09-01', 'check_out' => '2026-09-07']);
 
     Livewire::test(ListReservations::class)
         ->sortTable('check_in', 'desc')
-        ->assertCanSeeTableRecords($reservations->sortByDesc('check_in'), inOrder: true);
+        ->assertCanSeeTableRecords([$r3, $r2, $r1], inOrder: true);
 });
 
 it('can bulk delete reservations', function () {

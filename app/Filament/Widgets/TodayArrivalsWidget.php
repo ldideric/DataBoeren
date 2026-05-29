@@ -7,12 +7,16 @@ use App\Models\Reservation;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Support\Facades\Auth;
 
 class TodayArrivalsWidget extends BaseWidget
 {
-    protected static ?int $sort = 4;
-
     protected int | string | array $columnSpan = 'full';
+
+    public static function getSort(): int
+    {
+        return Auth::user()?->isAdmin() ? 4 : 2;
+    }
 
     public function table(Table $table): Table
     {

@@ -6,6 +6,7 @@ use App\Enums\PaymentStatus;
 use App\Models\Payment;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class MonthlyRevenueWidget extends ChartWidget
 {
@@ -17,7 +18,7 @@ class MonthlyRevenueWidget extends ChartWidget
 
     public static function canView(): bool
     {
-        return auth()->user()?->isAdmin() ?? false;
+        return Auth::user()?->isAdmin() ?? false;
     }
 
     protected function getType(): string

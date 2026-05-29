@@ -5,7 +5,9 @@ namespace App\Filament\Resources\Reservations\Tables;
 use App\Filament\Resources\Reservations\Filters\ArrivalPeriodFilter;
 use App\Filament\Resources\Reservations\Filters\BookedByStaffFilter;
 use App\Filament\Resources\Reservations\Filters\CampsiteFilter;
+use App\Filament\Resources\Reservations\Filters\DeparturePeriodFilter;
 use App\Filament\Resources\Reservations\Filters\HasCouponFilter;
+use App\Filament\Resources\Reservations\Filters\OnSiteFilter;
 use App\Filament\Resources\Reservations\Filters\SourceFilter;
 use App\Filament\Resources\Reservations\Filters\StatusFilter;
 use Filament\Actions\BulkActionGroup;
@@ -54,6 +56,8 @@ class ReservationsTable
                 TrashedFilter::make(),
                 CampsiteFilter::make(),
                 ArrivalPeriodFilter::make(),
+                DeparturePeriodFilter::make(),
+                OnSiteFilter::make(),
                 HasCouponFilter::make(),
                 BookedByStaffFilter::make(),
             ])
