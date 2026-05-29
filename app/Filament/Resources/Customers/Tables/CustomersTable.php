@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\Customers\Tables;
 
+use App\Filament\Resources\Customers\Filters\EmailVerifiedFilter;
+use App\Filament\Resources\Customers\Filters\PurgedFilter;
+use App\Filament\Resources\Customers\Filters\RegistrationDateFilter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -20,7 +23,7 @@ class CustomersTable
         return $table
             ->columns([
                 TextColumn::make('first_name')
-                    ->formatStateUsing(fn ($state, $record) => $record->first_name . ' ' . $record->last_name)
+                    ->formatStateUsing(fn ($_, $record) => $record->first_name.' '.$record->last_name)
                     ->label('Name')
                     ->searchable(['first_name', 'last_name']),
                 TextColumn::make('email')
@@ -40,9 +43,9 @@ class CustomersTable
             ])
             ->filters([
                 TrashedFilter::make(),
-                // @todo TernaryFilter for email_verified_at — distinguish fully registered vs. guest-checkout customers
-                // @todo TernaryFilter for purged_at — hide or isolate GDPR-purged accounts
-                // @todo Filter for created_at date range — find customers who registered in a specific period
+                EmailVerifiedFilter::make(),
+                PurgedFilter::make(),
+                RegistrationDateFilter::make(),
             ])
             ->recordActions([
                 ViewAction::make()->iconButton(),

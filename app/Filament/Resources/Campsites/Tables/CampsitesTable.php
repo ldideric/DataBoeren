@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\Campsites\Tables;
 
+use App\Filament\Resources\Campsites\Filters\CampsiteTypeFilter;
+use App\Filament\Resources\Campsites\Filters\ElectricityFilter;
+use App\Filament\Resources\Campsites\Filters\MinCapacityFilter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -38,9 +41,9 @@ class CampsitesTable
             ])
             ->filters([
                 TrashedFilter::make(),
-                // @todo SelectFilter for type — show only tent/caravan/glamping pitches
-                // @todo TernaryFilter for has_electricity — staff often need electric pitches quickly
-                // @todo Filter for max_people (min value) — find pitches that fit large groups
+                CampsiteTypeFilter::make(),
+                ElectricityFilter::make(),
+                MinCapacityFilter::make(),
             ])
             ->recordActions([
                 ViewAction::make()->iconButton(),

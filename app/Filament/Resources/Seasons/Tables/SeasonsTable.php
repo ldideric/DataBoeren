@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Seasons\Tables;
 
+use App\Filament\Resources\Seasons\Filters\ActiveNowFilter;
+use App\Filament\Resources\Seasons\Filters\MissingPricesFilter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -22,8 +24,8 @@ class SeasonsTable
                     ->label('Periods'),
             ])
             ->filters([
-                // @todo Filter for seasons that have at least one active period (starts_at <= today <= ends_at) — quickly spot the current season
-                // @todo Filter for seasons with no campsite prices configured — catch incomplete setup
+                ActiveNowFilter::make(),
+                MissingPricesFilter::make(),
             ])
             ->recordActions([
                 ViewAction::make()->iconButton(),

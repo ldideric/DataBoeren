@@ -2,14 +2,15 @@
 
 namespace App\Filament\Resources\Payments\Tables;
 
-use App\Enums\PaymentStatus;
+use App\Filament\Resources\Payments\Filters\MethodFilter;
+use App\Filament\Resources\Payments\Filters\PaidAtFilter;
+use App\Filament\Resources\Payments\Filters\StatusFilter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Support\Enums\FontFamily;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class PaymentsTable
@@ -25,11 +26,12 @@ class PaymentsTable
                     ->date('d/m/Y')
                     ->label('Check-in'),
                 TextColumn::make('amount')
-                    ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.'))
+                    ->formatStateUsing(fn ($state) => '€ '.number_format($state / 100, 2, ',', '.'))
                     ->sortable(),
                 TextColumn::make('status')
                     ->badge(),
                 TextColumn::make('method')
+                    ->badge()
                     ->searchable(),
                 TextColumn::make('paid_at')
                     ->dateTime('d/m/Y H:i')
@@ -41,10 +43,9 @@ class PaymentsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('status')
-                    ->options(PaymentStatus::class),
-                // @todo SelectFilter for method (ideal/card/cash) — useful for end-of-day cash reconciliation
-                // @todo Filter for paid_at date range — scope payments to a billing or reporting period
+                StatusFilter::make(),
+                MethodFilter::make(),
+                PaidAtFilter::make(),
             ])
             ->recordActions([
                 ViewAction::make()->iconButton(),

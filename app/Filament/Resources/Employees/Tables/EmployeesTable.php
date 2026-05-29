@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Employees\Tables;
 
+use App\Filament\Resources\Employees\Filters\RoleFilter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -19,7 +20,7 @@ class EmployeesTable
         return $table
             ->columns([
                 TextColumn::make('first_name')
-                    ->formatStateUsing(fn ($state, $record) => $record->first_name . ' ' . $record->last_name)
+                    ->formatStateUsing(fn ($_, $record) => $record->first_name.' '.$record->last_name)
                     ->label('Name')
                     ->searchable(['first_name', 'last_name']),
                 TextColumn::make('email')
@@ -30,7 +31,7 @@ class EmployeesTable
             ])
             ->filters([
                 TrashedFilter::make(),
-                // @todo SelectFilter for role — separate admins from regular employees
+                RoleFilter::make(),
             ])
             ->recordActions([
                 ViewAction::make()->iconButton(),

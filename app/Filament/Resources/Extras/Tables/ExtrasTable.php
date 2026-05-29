@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\Extras\Tables;
 
+use App\Filament\Resources\Extras\Filters\BillingTypeFilter;
+use App\Filament\Resources\Extras\Filters\LowStockFilter;
+use App\Filament\Resources\Extras\Filters\StockTypeFilter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -27,7 +30,7 @@ class ExtrasTable
                 TextColumn::make('billing_type')
                     ->badge(),
                 TextColumn::make('price')
-                    ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.'))
+                    ->formatStateUsing(fn ($state) => '€ '.number_format($state / 100, 2, ',', '.'))
                     ->sortable(),
                 TextColumn::make('stock_type')
                     ->badge(),
@@ -40,9 +43,9 @@ class ExtrasTable
             ])
             ->filters([
                 TrashedFilter::make(),
-                // @todo SelectFilter for billing_type — separate per-night, per-stay, and per-person extras
-                // @todo SelectFilter for stock_type — separate rentals (returned) from consumables
-                // @todo Filter for low stock (stock is not null AND stock <= 3) — quick reorder check
+                BillingTypeFilter::make(),
+                StockTypeFilter::make(),
+                LowStockFilter::make(),
             ])
             ->recordActions([
                 ViewAction::make()->iconButton(),

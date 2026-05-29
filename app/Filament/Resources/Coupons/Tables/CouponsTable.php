@@ -2,6 +2,10 @@
 
 namespace App\Filament\Resources\Coupons\Tables;
 
+use App\Filament\Resources\Coupons\Filters\DiscountTypeFilter;
+use App\Filament\Resources\Coupons\Filters\ExpiredFilter;
+use App\Filament\Resources\Coupons\Filters\ScopeFilter;
+use App\Filament\Resources\Coupons\Filters\UsageLimitFilter;
 use App\Models\Coupon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -37,15 +41,15 @@ class CouponsTable
                     ->placeholder('No expiry')
                     ->sortable(),
                 TextColumn::make('uses_count')
-                    ->formatStateUsing(fn ($state, Coupon $record) => $state . ($record->max_uses ? ' / ' . $record->max_uses : null))
+                    ->formatStateUsing(fn ($state, Coupon $record) => $state.($record->max_uses ? ' / '.$record->max_uses : null))
                     ->label('Uses'),
             ])
             ->filters([
                 TrashedFilter::make(),
-                // @todo add filter for expired / not expired
-                // @todo add filter for scope
-                // @todo add filter for discount type
-                // @todo add filter for coupons with usage limits
+                ExpiredFilter::make(),
+                ScopeFilter::make(),
+                DiscountTypeFilter::make(),
+                UsageLimitFilter::make(),
             ])
             ->recordActions([
                 ViewAction::make()->iconButton(),

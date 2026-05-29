@@ -2,8 +2,12 @@
 
 namespace App\Filament\Resources\Reservations\Tables;
 
-use App\Enums\ReservationSource;
-use App\Enums\ReservationStatus;
+use App\Filament\Resources\Reservations\Filters\ArrivalPeriodFilter;
+use App\Filament\Resources\Reservations\Filters\BookedByStaffFilter;
+use App\Filament\Resources\Reservations\Filters\CampsiteFilter;
+use App\Filament\Resources\Reservations\Filters\HasCouponFilter;
+use App\Filament\Resources\Reservations\Filters\SourceFilter;
+use App\Filament\Resources\Reservations\Filters\StatusFilter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -11,10 +15,9 @@ use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
-use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ReservationsTable
 {
@@ -23,7 +26,7 @@ class ReservationsTable
         return $table
             ->columns([
                 TextColumn::make('customer.first_name')
-                    ->formatStateUsing(fn ($state, $record) => $record->customer?->first_name . ' ' . $record->customer?->last_name)
+                    ->formatStateUsing(fn ($_, $record) => $record->customer?->first_name.' '.$record->customer?->last_name)
                     ->label('Customer')
                     ->searchable(query: fn (Builder $query, string $search) => $query->whereHas('customer', fn ($q) => $q->where('first_name', 'like', "%{$search}%")->orWhere('last_name', 'like', "%{$search}%"))),
                 TextColumn::make('campsite.name')
@@ -35,26 +38,24 @@ class ReservationsTable
                     ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('num_adults')
-                    ->formatStateUsing(fn ($state, $record) => $state . ' adult(s), ' . $record->num_children . ' child(ren)')
+                    ->formatStateUsing(fn ($state, $record) => $state.' adult(s), '.$record->num_children.' child(ren)')
                     ->label('Guests'),
                 TextColumn::make('status')
                     ->badge(),
                 TextColumn::make('source')
                     ->badge(),
                 TextColumn::make('orderSummary.total')
-                    ->formatStateUsing(fn ($state) => $state !== null ? '€ ' . number_format($state / 100, 2, ',', '.') : '—')
+                    ->formatStateUsing(fn ($state) => $state !== null ? '€ '.number_format($state / 100, 2, ',', '.') : '—')
                     ->label('Total'),
             ])
             ->filters([
-                SelectFilter::make('status')
-                    ->options(ReservationStatus::class),
-                SelectFilter::make('source')
-                    ->options(ReservationSource::class),
+                StatusFilter::make(),
+                SourceFilter::make(),
                 TrashedFilter::make(),
-                // @todo SelectFilter for campsite_id (relationship) — show all bookings for a specific pitch
-                // @todo Filter for check_in date range — find arrivals within a given week or month
-                // @todo TernaryFilter for coupon_id (has coupon / no coupon) — measure promotional uptake
-                // @todo Filter for has_booked_by_user_id (staff-created vs. self-service) — overlap with source but useful standalone
+                CampsiteFilter::make(),
+                ArrivalPeriodFilter::make(),
+                HasCouponFilter::make(),
+                BookedByStaffFilter::make(),
             ])
             ->recordActions([
                 ViewAction::make()->iconButton(),
