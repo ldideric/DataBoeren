@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-tan2">
+    <div class="bg-tan-600">
         <div class="mx-auto max-w-2xl px-6 py-8">
-            <div class="rounded-2xl bg-tan p-6 shadow-sm ring-1 ring-black/5">
+            <div class="rounded-2xl bg-tan-400 p-6 shadow-sm ring-1 ring-black/5">
                 <h1 class="text-xl font-bold text-black">Reservering betalen</h1>
 
-                <div class="mt-4 rounded-lg border border-cerulean bg-cerulean px-4 py-3 text-sm text-white space-y-1">
+                <div class="mt-4 rounded-lg border border-cerulean-400 bg-cerulean-400 px-4 py-3 text-sm text-white space-y-1">
                     <p>Plek: <span class="font-medium text-white">{{ $reservation->campsite->name }}</span></p>
                     <p>Aankomst: <span class="font-medium text-white">{{ $reservation->check_in->format('d M Y') }}</span></p>
                     <p>Vertrek: <span class="font-medium text-white">{{ $reservation->check_out->format('d M Y') }}</span></p>
@@ -27,12 +27,12 @@
 
                 <form method="POST" action="{{ $checkoutUrl }}" class="mt-6">
                     @csrf
-                    <button type="submit" class="w-full rounded-lg bg-cerulean py-2 text-sm font-semibold text-white transition hover:bg-cerulean2">
+                    <button type="submit" class="w-full rounded-lg bg-cerulean-400 py-2 text-sm font-semibold text-white transition hover:bg-cerulean-600">
                         Betalen met Stripe
                     </button>
                 </form>
 
-                <a href="{{ $bookingsUrl }}" class="mt-3 block text-center text-sm text-olivegreen2 hover:underline">
+                <a href="{{ $bookingsUrl }}" class="mt-3 block text-center text-sm text-olivegreen-800 hover:underline">
                     Terug naar boekingen
                 </a>
             </div>

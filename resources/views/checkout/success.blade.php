@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-tan2">
+    <div class="bg-tan-600">
         <div class="mx-auto max-w-2xl px-6 py-8">
-            <div class="rounded-2xl bg-tan p-6 shadow-sm ring-1 ring-black/5 text-center">
+            <div class="rounded-2xl bg-tan-400 p-6 shadow-sm ring-1 ring-black/5 text-center">
                 <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-50 text-green-700 text-2xl">
                     ✓
                 </div>
@@ -12,13 +12,13 @@
                     Bedankt voor uw betaling. Uw reservering is bevestigd.
                 </p>
 
-                <div class="mt-4 rounded-lg bg-cerulean p-4 text-left text-sm text-white">
+                <div class="mt-4 rounded-lg bg-cerulean-400 p-4 text-left text-sm text-white">
                     <p><span class="font-medium">Standplaats:</span> {{ $reservation->campsite->name }}</p>
                     <p class="mt-1"><span class="font-medium">Incheck:</span> {{ $reservation->check_in->format('d M Y') }}</p>
                     <p class="mt-1"><span class="font-medium">Uitcheck:</span> {{ $reservation->check_out->format('d M Y') }}</p>
                 </div>
 
-                <a href="{{ route('login') }}" class="mt-6 inline-block rounded-lg border  bg-cerulean border-cerulean px-6 py-2 text-sm font-semibold text-white transition hover:bg-cerulean2 hover:border-cerulean2">
+                <a href="{{ route('login') }}" class="mt-6 inline-block rounded-lg border  bg-cerulean-400 border-cerulean-400 px-6 py-2 text-sm font-semibold text-white transition hover:bg-cerulean-600 hover:border-cerulean-600">
                     Naar mijn boekingen
                 </a>
             </div>
