@@ -25,7 +25,9 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Generate app key
-        run: php artisan key:generate --env=testing
+        run: |
+          cp .env.example .env
+          php artisan key:generate
 
       - name: Run tests
         run: ./vendor/bin/pest --ci
