@@ -2,10 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ReservationStatus;
 use App\Enums\UserRole;
 use App\Models\Campsite;
 use App\Models\Coupon;
 use App\Models\Extra;
+use App\Models\OrderSummary;
+use App\Models\Payment;
 use App\Models\Reservation;
 use App\Models\User;
 use App\Pricing\Actions\CalculatePrice;
@@ -17,7 +20,9 @@ class DevSeeder extends Seeder
 {
     public function run(): void
     {
-        $employee = User::factory()->withRole(UserRole::Employee)->create([
+        $employee = User::factory()
+        ->withRole(UserRole::Employee)
+        ->create([
             'first_name' => 'Jan',
             'last_name' => 'Medewerker',
             'email' => 'employee@degroeneweide.nl',
@@ -33,7 +38,9 @@ class DevSeeder extends Seeder
         Coupon::factory()->freeExtra($firepit)->create(['title' => 'Gratis vuurkorf']);
 
         $this->seedReservations($customers, $campsites, $employee, $active);
+        $this->seedLowStockExtras();
         $this->priceReservations();
+        $this->seedPayments();
     }
 
     private function priceReservations(): void
@@ -55,10 +62,6 @@ class DevSeeder extends Seeder
         });
     }
 
-    /**
-     * @param  Collection<int, Extra>  $extras
-     * @return array<array{extra: Extra, quantity: int}>
-     */
     private function randomExtras(Collection $extras): array
     {
         if ($extras->isEmpty() || fake()->boolean(60)) {
@@ -73,9 +76,6 @@ class DevSeeder extends Seeder
         ]];
     }
 
-    /**
-     * @param  array<array{extra: Extra, quantity: int}>  $selections
-     */
     private function persistExtras(Reservation $reservation, array $selections): void
     {
         $nights = (int) $reservation->check_in->diffInDays($reservation->check_out);
@@ -90,6 +90,33 @@ class DevSeeder extends Seeder
         }
     }
 
+    private function seedPayments(): void
+    {
+        OrderSummary::with('reservation')->each(function (OrderSummary $summary): void {
+            $reservation = $summary->reservation;
+
+            if ($reservation->status === ReservationStatus::Cancelled) {
+                return;
+            }
+
+            $monthsAgo = fake()->numberBetween(0, 5);
+            $paidAt = now()->subMonths($monthsAgo)->subDays(fake()->numberBetween(0, 27));
+
+            if ($reservation->status === ReservationStatus::Pending) {
+                Payment::factory()->pending()->create([
+                    'reservation_id' => $reservation->id,
+                    'amount' => $summary->total,
+                ]);
+            } else {
+                Payment::factory()->create([
+                    'reservation_id' => $reservation->id,
+                    'amount' => $summary->total,
+                    'paid_at' => $paidAt,
+                ]);
+            }
+        });
+    }
+
     private function seedReservations(Collection $customers, Collection $campsites, User $employee, Coupon $activeCoupon): void
     {
         $base = fn () => Reservation::factory()->recycle($customers)->recycle($campsites);
@@ -99,5 +126,15 @@ class DevSeeder extends Seeder
         $base()->count(3)->withCoupon($activeCoupon)->create();
         $base()->count(4)->pending()->create();
         $base()->count(3)->cancelled()->create();
+
+        // Today's arrivals for the dashboard widget
+        $base()->count(3)->create(['check_in' => today(), 'check_out' => today()->addDays(4)]);
+        $base()->count(1)->pending()->create(['check_in' => today(), 'check_out' => today()->addDays(2)]);
+    }
+
+    private function seedLowStockExtras(): void
+    {
+        Extra::where('name', 'Vuurkorf')->update(['stock' => 1]);
+        Extra::where('name', 'BBQ')->update(['stock' => 2]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Models\Payment;
 use App\Models\Reservation;
@@ -18,7 +19,7 @@ class PaymentFactory extends Factory
             'reservation_id' => Reservation::factory(),
             'amount' => fake()->numberBetween(5000, 50000),
             'status' => PaymentStatus::Paid,
-            'method' => fake()->randomElement(['ideal', 'card', 'cash']),
+            'method' => fake()->randomElement([PaymentMethod::Stripe, PaymentMethod::Cash]),
             'paid_at' => now(),
         ];
     }
