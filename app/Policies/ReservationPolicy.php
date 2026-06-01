@@ -7,6 +7,11 @@ use App\Models\User;
 
 class ReservationPolicy
 {
+    public function cancel(User $user, Reservation $model): bool
+    {
+        return $user->id === $model->customer_id;
+    }
+
     public function viewAny(User $user): bool
     {
         return $user->isAdmin() || $user->isEmployee();

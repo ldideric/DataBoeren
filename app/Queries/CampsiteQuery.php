@@ -16,10 +16,12 @@ class CampsiteQuery extends Builder
 
     public function whereAvailableBetween(Carbon $checkIn, Carbon $checkOut): self
     {
-        return $this->whereDoesntHave('reservations', fn (Builder $query) => $query
-            ->whereIn('status', [ReservationStatus::Pending, ReservationStatus::Confirmed])
-            ->where('check_in', '<', $checkOut)
-            ->where('check_out', '>', $checkIn)
+        return $this->whereDoesntHave(
+            'reservations',
+            fn (Builder $query) => $query
+                ->whereIn('status', [ReservationStatus::Pending, ReservationStatus::Confirmed])
+                ->where('check_in', '<', $checkOut)
+                ->where('check_out', '>', $checkIn)
         );
     }
 }

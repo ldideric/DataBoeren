@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Customers\Schemas;
 
+use App\Models\User;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -13,10 +14,13 @@ class CustomerInfolist
             ->components([
                 TextEntry::make('id')
                     ->label('ID'),
-                TextEntry::make('first_name'),
-                TextEntry::make('last_name'),
+                TextEntry::make('first_name')
+                    ->placeholder('-'),
+                TextEntry::make('last_name')
+                    ->placeholder('-'),
                 TextEntry::make('email')
-                    ->label('Email address'),
+                    ->label('Email address')
+                    ->placeholder('-'),
                 TextEntry::make('phone')
                     ->placeholder('-'),
                 TextEntry::make('email_verified_at')
@@ -30,7 +34,19 @@ class CustomerInfolist
                 TextEntry::make('updated_at')
                     ->dateTime()
                     ->placeholder('-'),
+                TextEntry::make('purged_at')
+                    ->dateTime()
+                    ->placeholder('-'),
                 TextEntry::make('deleted_at')
+                    ->dateTime()
+                    ->visible(fn (User $record): bool => $record->trashed()),
+                TextEntry::make('stripe_id')
+                    ->placeholder('-'),
+                TextEntry::make('pm_type')
+                    ->placeholder('-'),
+                TextEntry::make('pm_last_four')
+                    ->placeholder('-'),
+                TextEntry::make('trial_ends_at')
                     ->dateTime()
                     ->placeholder('-'),
             ]);

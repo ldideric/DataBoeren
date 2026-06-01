@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-tan" data-filter-root>
+    <div class="bg-tan-600" data-filter-root>
         <div class="mx-auto max-w-6xl px-6 py-8">
             <div class="flex flex-col gap-6 lg:flex-row">
                 <aside class="w-full lg:w-80">
                     <div class="space-y-5">
-                        <form method="GET" action="{{ route('campsites.index') }}" class="rounded-2xl bg-tan2 p-5 shadow-sm ring-1 ring-black/5 space-y-4">
-                            <h2 class="text-lg font-bold text-olivegreen2">Verblijfsgegevens</h2>
+                        <form method="GET" action="{{ route('campsites.index') }}" class="rounded-2xl bg-tan-400 p-5 shadow-sm ring-1 ring-black/5 space-y-4">
+                            <h2 class="text-lg font-bold text-olivegreen-800">Verblijfsgegevens</h2>
                             <p class="text-sm text-black">Vul alle velden in om beschikbare plekken te zien.</p>
 
                             <div>
@@ -19,7 +19,7 @@
                                     value="{{ $checkIn?->format('Y-m-d') }}"
                                     min="{{ now()->format('Y-m-d') }}"
                                     required
-                                    class="mt-2 w-full rounded-lg border border-white px-3 py-2 text-base focus:border-olivegreen2 focus:outline-none focus:ring-2 focus:ring-olivegreen2"
+                                    class="mt-2 w-full rounded-lg border border-olivegreen-800 px-3 py-2 text-base focus:border-olivegreen-600 focus:outline-none focus:ring-2 focus:ring-olivegreen-600"
                                 >
                             </div>
                             <div>
@@ -31,7 +31,7 @@
                                     value="{{ $checkOut?->format('Y-m-d') }}"
                                     min="{{ now()->addDay()->format('Y-m-d') }}"
                                     required
-                                    class="mt-2 w-full rounded-lg border border-white px-3 py-2 text-base focus:border-olivegreen2 focus:outline-none focus:ring-2 focus:ring-olivegreen2"
+                                    class="mt-2 w-full rounded-lg border border-olivegreen-800 px-3 py-2 text-base focus:border-olivegreen-600 focus:outline-none focus:ring-2 focus:ring-olivegreen-600"
                                 >
                             </div>
                             <div class="grid grid-cols-2 gap-3">
@@ -44,7 +44,7 @@
                                         value="{{ $adults ?? 1}}"
                                         min="1"
                                         required
-                                        class="mt-2 w-full rounded-lg border border-white px-3 py-2 text-base focus:border-olivegreen2 focus:outline-none focus:ring-2 focus:ring-olivegreen2"
+                                        class="mt-2 w-full rounded-lg border border-olivegreen-800 px-3 py-2 text-base focus:border-olivegreen-600 focus:outline-none focus:ring-2 focus:ring-olivegreen-600"
                                     >
                                 </div>
                                 <div>
@@ -56,7 +56,7 @@
                                         value="{{ $children ?? 0 }}"
                                         min="0"
                                         required
-                                        class="mt-2 w-full rounded-lg border border-white px-3 py-2 text-base focus:border-olivegreen2 focus:outline-none focus:ring-2 focus:ring-olivegreen2"
+                                        class="mt-2 w-full rounded-lg border border-olivegreen-800 px-3 py-2 text-base focus:border-olivegreen-600 focus:outline-none focus:ring-2 focus:ring-olivegreen-600"
                                     >
                                 </div>
                             </div>
@@ -69,33 +69,33 @@
                                     value="{{ $vehicles ?? 0 }}"
                                     min="0"
                                     required
-                                    class="mt-2 w-full rounded-lg border border-white px-3 py-2 text-base focus:border-olivegreen2 focus:outline-none focus:ring-2 focus:ring-olivegreen2"
+                                    class="mt-2 w-full rounded-lg border border-olivegreen-800 px-3 py-2 text-base focus:border-olivegreen-600 focus:outline-none focus:ring-2 focus:ring-olivegreen-600"
                                 >
                             </div>
                             <button
                                 type="submit"
-                                class="w-full rounded-lg bg-cerulean py-3 text-base font-medium text-white transition hover:bg-cerulean2"
+                                class="w-full rounded-lg bg-cerulean-400 py-3 text-base font-medium text-white transition hover:bg-cerulean-600"
                             >
                                 Zoek beschikbare plekken
                             </button>
                         </form>
 
                         @if ($hasAllCriteria && $campsites->isNotEmpty())
-                            <div class="rounded-xl border border-tan2 bg-tan2 p-5">
+                            <div class="rounded-xl border border-tan-400 bg-tan-400 p-5">
                                 <h2 class="text-lg font-semibold text-black">Accommodatie type</h2>
                                 <p class="mt-2 text-sm text-black">Selecteer een type om de resultaten te filteren.</p>
 
                                 <div class="mt-4 space-y-2">
-                                    <label class="group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-olivegreen">
-                                        <input type="radio" name="type" value="" checked data-filter-input class="h-4 w-4 accent-olivegreen">
+                                    <label class="group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 transition font-bold hover:bg-olivegreen-600 hover:text-white">
+                                        <input type="radio" name="type" value="" checked data-filter-input class="h-4 w-4 accent-olivegreen-600">
                                         <span>Alle</span>
                                     </label>
                                     @foreach (\App\Enums\CampsiteType::cases() as $type)
-                                        <label class="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-olivegreen">
-                                            <input type="radio" name="type" value="{{ $type->value }}" data-filter-input class="h-4 w-4 accent-olivegreen">
+                                        <label class="group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-olivegreen-600 hover:text-white">
+                                            <input type="radio" name="type" value="{{ $type->value }}" data-filter-input class="h-4 w-4 accent-olivegreen-600">
                                             <div class="flex flex-col">
-                                                <span class="text-base font-normal text-gray-900">{{ $type->getHeadline() }}</span>
-                                                <span class="text-sm text-gray-500">{{ $type->getDescription() }}</span>
+                                                <span class="text-base font-bold text-black group-hover:text-white">{{ $type->getHeadline() }}</span>
+                                                <span class="text-sm text-black group-hover:text-white">{{ $type->getDescription() }}</span>
                                             </div>
                                         </label>
                                     @endforeach
@@ -106,13 +106,13 @@
                 </aside>
 
                 <main class="flex-1">
-                    <h2 class="text-3xl font-semibold text-olivegreen2">Camping Boekingspagina</h2>
+                    <h2 class="text-3xl font-semibold text-black">Camping Boekingspagina</h2>
 
                     @if (! $hasAllCriteria)
                         <p class="mt-2 text-base text-black">Vul je verblijfsgegevens in om beschikbare plekken te zien.</p>
 
-                        <div class="mt-6 rounded-xl border border-dashed border-tan2 bg-tan2 p-10 text-center">
-                            <p class="text-base font-medium text-olivegreen2">Nog geen zoekopdracht</p>
+                        <div class="mt-6 rounded-xl border border-dashed border-tan-400 bg-tan-400 p-10 text-center">
+                            <p class="text-base font-medium text-olivegreen-800">Nog geen zoekopdracht</p>
                             <p class="mt-2 text-sm text-black">Vul links je aankomst- en vertrekdatum, aantal personen en voertuigen in om beschikbare plekken te zien.</p>
                         </div>
                     @elseif ($campsites->isEmpty())
@@ -121,8 +121,8 @@
                             voor {{ $adults + $children }} {{ $adults + $children === 1 ? 'persoon' : 'personen' }}.
                         </p>
 
-                        <div class="mt-6 rounded-xl border border-dashed border-tan2 bg-tan2 p-10 text-center">
-                            <p class="text-base font-medium text-olivegreen2">Geen beschikbare plekken voor deze gegevens</p>
+                        <div class="mt-6 rounded-xl border border-dashed border-tan-400 bg-tan-400 p-10 text-center">
+                            <p class="text-base font-medium text-olivegreen-800">Geen beschikbare plekken voor deze gegevens</p>
                             <p class="mt-2 text-sm text-black">Probeer andere data, een kleinere groep of minder voertuigen.</p>
                         </div>
                     @else
@@ -132,7 +132,7 @@
                             ({{ $vehicles }} {{ $vehicles === 1 ? 'voertuig' : 'voertuigen' }}).
                         </p>
 
-                        <div class="mt-4 rounded-lg border border-tan2 bg-tan2 px-4 py-3 font-semibold text-black">
+                        <div class="mt-4 rounded-lg border border-tan-400 bg-tan-400 px-4 py-3 font-semibold text-black">
                             <span data-filter-count>{{ $campsites->count() }}</span> beschikbaarheden gevonden
                         </div>
 
@@ -159,7 +159,7 @@
                                     ]) }}"
                                     data-filter-item
                                     data-type="{{ $campsite->type->value }}"
-                                    class="flex flex-col gap-4 rounded-xl border border-tan2 bg-tan2 p-4 transition hover:scale-[1.01] hover:shadow-md sm:flex-row sm:items-center"
+                                    class="flex flex-col gap-4 rounded-xl border border-tan-400 bg-tan-400 p-4 transition hover:scale-[1.01] hover:shadow-md sm:flex-row sm:items-center"
                                 >
                                     <div class="flex-1 sm:px-4">
                                         <h3 class="text-lg font-semibold text-black">{{ $campsite->name }}</h3>
@@ -176,7 +176,7 @@
                                 </a>
                             @endforeach
 
-                            <div data-filter-empty hidden class="rounded-lg border border-dashed border-tan2 bg-tan2 p-6 text-center text-sm text-black">
+                            <div data-filter-empty hidden class="rounded-lg border border-dashed border-tan-400 bg-tan-400 p-6 text-center text-sm text-black">
                                 Geen accommodaties van dit type gevonden.
                             </div>
                         </div>
@@ -187,16 +187,18 @@
     </div>
 
     <div id="modal" class="hidden fixed inset-0 bg-black/50 items-center justify-center ">
-        <div class="bg-white rounded-2xl p-6 w-11/12 max-w-lg">
-            <div class="flex items-start justify-between">
-                <h2 id="modal-title" class="text-3xl font-semibold text-gray-900"></h2>
-                <button onclick="closeModal()" class="ml-4 text-gray-400 hover:text-gray-700 text-xl leading-none">✕</button>
+        <div class="bg-tan-300 rounded-2xl w-11/12 max-w-lg overflow-hidden">
+            <div class="bg-olivegreen-500 p-6">
+                <div class="flex items-start justify-between">
+                    <h2 id="modal-title" class="text-3xl font-semibold text-gray-900"></h2>
+                    <button onclick="closeModal()" class="ml-4 text-gray-300 hover:text-gray-900 text-xl leading-none">✕</button>
+                </div>
+                <p id="modal-type" class="text-lg font-medium text-gray-800"></p>
             </div>
-            <p id="modal-type" class="text-lg font-medium text-gray-600"></p>
-            <div class="mt-4 aspect-3/2 bg-gray-100 rounded-lg"></div>
+            <div class="mt-4 aspect-3/2 bg-gray-100 rounded-lg mx-6"></div>
 
-            <div class="mt-4 flex gap-5">
-                <ul id="modal-details" class="space-y-2 text-sm text-gray-500 flex-1">
+            <div class="mt-4 flex gap-5 p-6">
+                <ul id="modal-details" class="space-y-2 text-sm text-cerulean2 flex-1">
                     <li id="modal-people"></li>
                     <li id="modal-vehicles"></li>
                     <li id="modal-electricity"></li>
@@ -205,7 +207,7 @@
             </div>
 
             <div class="mt-4 flex justify-end">
-                <a id="modal-book-btn" class="rounded-lg px-6 py-2 text-sm font-semibold text-white" style="background: #265513;">Boek</a>
+                <a id="modal-book-btn" class="rounded-lg px-6 py-2 text-sm font-semibold text-white bg-cerulean-400 hover:bg-cerulean-600 transition">Boek</a>
             </div>
         </div>
     </div>

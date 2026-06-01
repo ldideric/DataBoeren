@@ -23,7 +23,8 @@ use Illuminate\Support\Carbon;
 class SeasonPeriod extends Model
 {
     /** @use HasFactory<SeasonPeriodFactory> */
-    use HasFactory, HasUuids;
+    use HasFactory;
+    use HasUuids;
 
     protected function casts(): array
     {

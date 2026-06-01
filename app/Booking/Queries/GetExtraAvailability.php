@@ -23,7 +23,9 @@ final readonly class GetExtraAvailability
 {
     private const ACTIVE_STATUSES = [ReservationStatus::Pending, ReservationStatus::Confirmed];
 
-    public function __construct(private Extra $extra) {}
+    public function __construct(private Extra $extra)
+    {
+    }
 
     public static function for(Extra $extra): self
     {
