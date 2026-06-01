@@ -11,14 +11,6 @@
 }
 
 @theme {
-    /* @deprecated */
-    --color-tan: #cbac88;
-    --color-tan2: #9e8365;
-    --color-olivegreen: #265513;
-    --color-olivegreen2: #17330c;
-    --color-cerulean: #40798c;
-    --color-cerulean2: #294d59;
-
     /* Tan */
     --color-tan-50:  #fdf8f3;
     --color-tan-100: #f5eddf;
