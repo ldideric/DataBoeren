@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-tan-600">
+    <div class="bg-tan-200">
         <div class="mx-auto max-w-2xl px-6 py-8">
-            <div class="rounded-2xl bg-tan-400 p-6 shadow-sm ring-1 ring-black/5">
-                <h1 class="text-xl font-bold text-olivegreen-800">Invulformulier</h1>
+            <div class="rounded-2xl bg-tan-300 p-6 shadow-sm ring-1 ring-black/5">
+                <h1 class="text-xl font-bold text-olivegreen-400">Invulformulier</h1>
 
                 @if ($errors->any())
                     <div class="mt-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
@@ -27,7 +27,7 @@
                     <input type="hidden" name="num_children" value="{{ $children }}">
                     <input type="hidden" name="num_vehicles" value="{{ $vehicles }}">
 
-                    <div class="space-y-2 rounded-lg border border-white bg-cerulean-400 px-4 py-3 text-sm text-white">
+                    <div class="space-y-2 rounded-lg border border-olivegreen-600 bg-olivegreen-300 px-4 py-3 text-sm text-black">
                         <div>
                             Gekozen plek: <strong>{{ $campsite->name }}</strong>
                             ({{ \Illuminate\Support\Str::headline($campsite->type->value) }})
@@ -79,7 +79,7 @@
                                         <input type="number" name="extras[{{ $extra->id }}]" value="{{ old('extras.'.$extra->id, 0) }}"
                                             min="0" @if ($cap !== null) max="{{ $cap }}" @endif @disabled($cap === 0)
                                             data-extra-price="{{ $extra->price }}" data-extra-per-night="{{ $perNight ? '1' : '0' }}"
-                                            class="w-20 rounded-lg border border-olivegreen-800  px-3 py-2 text-sm focus:border-olivegreen-600 focus:outline-none focus:ring-2 focus:ring-olivegreen-600">
+                                            class="w-20 rounded-lg border border-olivegreen-500  px-3 py-2 text-sm focus:border-olivegreen-400 focus:outline-none focus:ring-2 focus:ring-olivegreen-400">
                                     </div>
                                 @endforeach
                             </div>
@@ -87,8 +87,8 @@
                     @endif
 
                     @isset($order)
-                        <div class="rounded-lg border border-white bg-cerulean-400 px-4 py-3">
-                            <h2 class="text-sm font-semibold text-white">Prijsoverzicht</h2>
+                        <div class="rounded-lg border border-olivegreen-600 bg-olivegreen-300 px-4 py-3">
+                            <h2 class="text-sm font-semibold text-black">Prijsoverzicht</h2>
                             <div class="mt-2">
                                 @include('partials.price-breakdown', [
                                     'order' => $order,
@@ -105,22 +105,22 @@
                         <div class="mt-4 grid gap-4 sm:grid-cols-2">
                             <div>
                                 <label for="first_name" class="block text-sm text-black">Voornaam*</label>
-                                <input type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" required class="mt-1 w-full rounded-lg border border-olivegreen-800 px-3 py-2 text-sm focus:border-olivegreen-600 focus:outline-none focus:ring-2 focus:ring-olivegreen-600">
+                                <input type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" required class="mt-1 w-full rounded-lg border border-olivegreen-500 px-3 py-2 text-sm focus:border-olivegreen-400 focus:outline-none focus:ring-2 focus:ring-olivegreen-400">
                             </div>
                             <div>
                                 <label for="last_name" class="block text-sm text-black">Achternaam*</label>
-                                <input type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" required class="mt-1 w-full rounded-lg border border-olivegreen-800 px-3 py-2 text-sm focus:border-olivegreen-600 focus:outline-none focus:ring-2 focus:ring-olivegreen-600">
+                                <input type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" required class="mt-1 w-full rounded-lg border border-olivegreen-500 px-3 py-2 text-sm focus:border-olivegreen-400 focus:outline-none focus:ring-2 focus:ring-olivegreen-400">
                             </div>
                         </div>
 
                         <div class="mt-4 grid gap-4 sm:grid-cols-2">
                             <div>
                                 <label for="phone" class="block text-sm text-black">Telefoonnummer*</label>
-                                <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" required class="mt-1 w-full rounded-lg border border-olivegreen-800 px-3 py-2 text-sm focus:border-olivegreen-600 focus:outline-none focus:ring-2 focus:ring-olivegreen-600">
+                                <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" required class="mt-1 w-full rounded-lg border border-olivegreen-500 px-3 py-2 text-sm focus:border-olivegreen-400 focus:outline-none focus:ring-2 focus:ring-olivegreen-400">
                             </div>
                             <div>
                                 <label for="email" class="block text-sm text-black">E-mailadres*</label>
-                                <input type="email" id="email" name="email" value="{{ old('email') }}" required class="mt-1 w-full rounded-lg border border-olivegreen-800 px-3 py-2 text-sm focus:border-olivegreen-600 focus:outline-none focus:ring-2 focus:ring-olivegreen-600">
+                                <input type="email" id="email" name="email" value="{{ old('email') }}" required class="mt-1 w-full rounded-lg border border-olivegreen-500 px-3 py-2 text-sm focus:border-olivegreen-400 focus:outline-none focus:ring-2 focus:ring-olivegreen-400">
                             </div>
                         </div>
                     </fieldset>
@@ -130,7 +130,7 @@
 
                         <div class="mt-4">
                             <label for="pay_method" class="block text-sm text-black">Betaalmethode*</label>
-                            <select id="pay_method" name="pay_method" required class="mt-1 w-full rounded-lg border border-olivegreen-800 px-3 py-2 text-sm focus:border-olivegreen-600 focus:outline-none focus:ring-2 focus:ring-olivegreen-600">
+                            <select id="pay_method" name="pay_method" required class="mt-1 w-full rounded-lg border border-olivegreen-500 px-3 py-2 text-sm focus:border-olivegreen-400 focus:outline-none focus:ring-2 focus:ring-olivegreen-400">
                                 <option value="">Selecteer</option>
                                 <option value="online" @selected(old('pay_method') === 'online')>Online betalen (Stripe)</option>
                                 <option value="in_person" @selected(old('pay_method') === 'in_person')>Betalen op locatie</option>
@@ -154,7 +154,7 @@
                         </div>
                     </fieldset>
 
-                    <button type="submit" class="w-full rounded-lg border bg-cerulean-400 border-cerulean-400 py-2 text-sm font-semibold text-white transition hover:border-cerulean-600 hover:bg-cerulean-600">
+                    <button type="submit" class="w-full rounded-lg border-2 bg-cerulean-300 border-cerulean-400 py-2 text-sm font-semibold text-white transition hover:border-cerulean-400 hover:bg-cerulean-400">
                         Reservering indienen
                     </button>
                 </form>
