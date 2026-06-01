@@ -1,58 +1,118 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# De Groene Weide
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A camping reservation management system built for the fictional campsite *De Groene Weide* (The Green Meadow). This project was developed as a school assignment for the **Hogeschool Utrecht (HU)**.
 
-## About Laravel
+The application consists of a public-facing booking site for customers and a full admin panel for staff and administrators.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Customer-facing
 
-## Learning Laravel
+- Browse and filter available campsites
+- Make reservations with optional extras and discount coupons
+- Passwordless authentication via magic links
+- Pay online via Stripe or on arrival
+- Cancel reservations via the self-service portal
+- Confirmation and cancellation emails
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Admin panel
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Dashboard with live stats: revenue, today's arrivals, occupancy, and low-stock alerts
+- Full CRUD for campsites, seasons, pricing, extras, coupons, reservations, customers, and employees
+- Create reservations on behalf of customers (phone, walk-in, email bookings)
+- Role-based access control (Admin / Employee)
+- GDPR-compliant customer data purging commands
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## Tech Stack
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+| Layer | Technology |
+|---|---|
+| Language | PHP 8.4 |
+| Framework | Laravel 13 |
+| Admin panel | FilamentPHP 5 |
+| Frontend | Vite 8 + Tailwind CSS 4 |
+| Payments | Stripe via Laravel Cashier 16 |
+| Database | MySQL (SQLite for tests) |
+| Testing | Pest 4 |
+
+---
+
+## Getting Started
+
+### Requirements
+
+- PHP >= 8.4
+- Composer
+- Node.js >= 20
+- MySQL
+
+### Installation
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone <repository-url>
+cd de-groene-weide
+composer run setup
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+`composer run setup` installs dependencies, generates an app key, runs migrations with seeders, and builds frontend assets.
 
-## Contributing
+### Environment Variables
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Copy `.env.example` to `.env` and fill in the required values:
 
-## Code of Conduct
+```env
+APP_URL=http://localhost
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=de_groene_weide
+DB_USERNAME=root
+DB_PASSWORD=
 
-## Security Vulnerabilities
+# Stripe (required for online payments)
+STRIPE_KEY=
+STRIPE_SECRET=
+STRIPE_WEBHOOK_SECRET=
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Credentials for the seeded admin account
+ADMIN_EMAIL="bertina@degroeneweide.nl"
+ADMIN_PASSWORD=
+```
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Development
+
+```bash
+composer run dev    # starts server, queue worker, log monitor, and Vite concurrently
+composer run test   # run the test suite
+```
+
+The admin panel is available at `/admin`. Log in with the credentials set via `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env`.
+
+---
+
+## Testing
+
+Tests are written with [Pest](https://pestphp.com/) and run against an SQLite in-memory database. Coverage includes the booking flow, pricing logic, extras availability, signed URL generation, Filament admin resources, and GDPR data purging.
+
+```bash
+composer run test
+```
+
+---
+
+## CI/CD
+
+| Workflow | Trigger | Purpose |
+|---|---|---|
+| `run-tests.yml` | Pull request | Run the full test suite |
+| `composer-audit.yml` | PR to `production`/`staging` | Dependency security audit |
+| `check-branch-name.yml` | PR opened | Enforce branch naming conventions |
+| `check-source-branch.yml` | PR opened | Validate source branch rules |
+| `trigger-deploy.yml` | Push to `production`/`staging` | Trigger deployment in the infra repo |
