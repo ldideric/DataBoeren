@@ -6,6 +6,8 @@ use App\Filament\Resources\Campsites\Pages\CreateCampsite;
 use App\Filament\Resources\Campsites\Pages\EditCampsite;
 use App\Filament\Resources\Campsites\Pages\ListCampsites;
 use App\Filament\Resources\Campsites\Pages\ViewCampsite;
+use App\Filament\Resources\Campsites\RelationManagers\PricesRelationManager;
+use App\Filament\Resources\Campsites\RelationManagers\ReservationsRelationManager;
 use App\Filament\Resources\Campsites\Schemas\CampsiteForm;
 use App\Filament\Resources\Campsites\Schemas\CampsiteInfolist;
 use App\Filament\Resources\Campsites\Tables\CampsitesTable;
@@ -15,14 +17,18 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CampsiteResource extends Resource
 {
     protected static ?string $model = Campsite::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedMapPin;
 
-    protected static ?string $recordTitleAttribute = 'name';
+    protected static ?int $navigationSort = 1;
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Campsite';
 
     public static function form(Schema $schema): Schema
     {
@@ -42,7 +48,8 @@ class CampsiteResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PricesRelationManager::class,
+            ReservationsRelationManager::class,
         ];
     }
 
@@ -54,5 +61,13 @@ class CampsiteResource extends Resource
             'view' => ViewCampsite::route('/{record}'),
             'edit' => EditCampsite::route('/{record}/edit'),
         ];
+    }
+
+    public static function getRecordRouteBindingEloquentQuery(): Builder
+    {
+        return parent::getRecordRouteBindingEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 }
