@@ -149,7 +149,7 @@
 
                             <label class="flex items-center gap-2">
                                 <input type="checkbox" id="house_rules" name="house_rules" value="1" @checked(old('house_rules')) required class="h-4 w-4 rounded border-white text-black">
-                                Ik ga akkoord met de huisregels*
+                                <div>Ik ga akkoord met de <a href="{{ route('privacy') }}" class="font-semibold underline hover:decoration-cerulean hover:font-normal">huisregels*</a></div>
                             </label>
                         </div>
                     </fieldset>

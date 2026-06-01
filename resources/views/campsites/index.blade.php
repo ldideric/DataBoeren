@@ -186,20 +186,18 @@
         </div>
     </div>
 
-    <div id="modal" class="hidden fixed inset-0 bg-black/50 items-center justify-center ">
-        <div class="bg-tan-300 rounded-2xl w-11/12 max-w-lg">
-
-            <div class="bg-olivegreen-500 px-6 pt-6 pb-4 rounded-t-2xl">
-                    <div class="flex items-start justify-between">
-                        <h2 id="modal-title" class="text-3xl font-semibold text-white"></h2>
-                        <button onclick="closeModal()" class="ml-4 text-gray-400 hover:text-gray-700 text-4xl leading-none">🗙</button>
-                    </div>
-                    <p id="modal-type" class="text-lg font-medium text-white"></p>
+    <div id="modal" class="hidden fixed inset-0 bg-black/50 items-center justify-center">
+        <div class="bg-tan-300 rounded-2xl w-11/12 max-w-lg overflow-hidden">
+            <div class="bg-olivegreen-500 px-6 pt-6 pb-4">
+                <div class="flex items-start justify-between">
+                    <h2 id="modal-title" class="text-3xl font-semibold text-white"></h2>
+                    <button onclick="closeModal()" class="ml-4 text-white/60 hover:text-white text-4xl leading-none">🗙</button>
+                </div>
+                <p id="modal-type" class="text-lg font-medium text-white"></p>
             </div>
 
-
             <div class="p-6">
-                <div class=" aspect-3/2 bg-gray-100 rounded-lg"></div>
+                <div class="aspect-3/2 bg-tan-200 rounded-lg"></div>
                 <div class="mt-4 flex gap-5">
                     <ul id="modal-details" class="space-y-2 text-sm text-black flex-1">
                         <li id="modal-people"></li>
@@ -211,7 +209,7 @@
             </div>
 
             <div class="pb-6 pr-6 flex justify-end">
-                <a id="modal-book-btn" class="rounded-lg border-2 border-cerulean-400 px-12 py-4 text-xl font-semibold text-white bg-cerulean-300 hover:bg-cerulean-400 transition">Boek</a>
+                <a id="modal-book-btn" class="rounded-lg border-2 border-cerulean-400 px-12 py-4 text-xl font-semibold text-cerulean-900 bg-cerulean-300 hover:bg-cerulean-400 transition">Boek</a>
             </div>
         </div>
     </div>

@@ -10,6 +10,7 @@
                 <div class="hidden sm:flex items-center gap-1 text-sm">
                     <a href="{{ route('home') }}" class="px-3 py-1.5 rounded-md text-white hover:bg-olivegreen-600 transition-colors">Home</a>
                     <a href="{{ route('campsites.index') }}" class="px-3 py-1.5 rounded-md text-white hover:bg-olivegreen-600 transition-colors">Kampeerplaatsen</a>
+                    <a href="{{ route('privacy') }}" class="px-3 py-1.5 rounded-md text-white hover:bg-olivegreen-600 transition-colors">Privacystatement</a>
                 </div>
             </div>
 
