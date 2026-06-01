@@ -1,4 +1,4 @@
-<nav class="bg-olivegreen-500 border-b border-olivegreen-500">
+<nav class="relative bg-olivegreen-500 border-b border-olivegreen-600">
     <div class="max-w-4xl mx-auto px-6">
         <div class="flex justify-between items-center h-14">
 
