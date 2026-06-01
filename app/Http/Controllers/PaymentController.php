@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Auth\Services\SignedUrlGenerator;
+use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Enums\ReservationStatus;
 use App\Models\Payment;
@@ -74,7 +75,7 @@ class PaymentController extends Controller
                 'reservation_id' => $reservation->id,
                 'amount'         => $reservation->orderSummary->total,
                 'status'         => PaymentStatus::Paid,
-                'method'         => 'stripe',
+                'method'         => PaymentMethod::Stripe,
                 'paid_at'        => now(),
             ]
         );
