@@ -165,7 +165,7 @@
                                         <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"/>
                                     </svg>
                                 </div>
-                                <div>Ik ga akkoord met de <a href="{{ route('privacy') }}" target="_blank" class="font-semibold"><span class="underline hover:no-underline">huisregels</span>*</a></div>
+                                <div>Ik ga akkoord met de <a href="{{ route('privacy') }}" target="_blank" class="font-semibold"><span class="underline hover:no-underline">privacyverklaring</span>*</a></div>
                             </label>
                         </div>
                     </fieldset>

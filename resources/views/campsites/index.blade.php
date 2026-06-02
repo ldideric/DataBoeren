@@ -2,8 +2,31 @@
 
 @section('content')
     <div class="mx-auto max-w-6xl px-6 py-8" data-filter-root>
-            <div class="flex flex-col gap-6 lg:flex-row">
-                <aside class="w-full lg:w-80">
+            <div class="space-y-4 lg:grid lg:grid-cols-[20rem_1fr] lg:gap-x-6 lg:gap-y-4 lg:space-y-0">
+                {{-- Header row: title sits only above the results column, leaving the filter column untouched --}}
+                <div class="hidden lg:block" aria-hidden="true"></div>
+                <div class="rounded-2xl border border-tan-400 bg-tan-300 p-5 shadow-sm ring-1 ring-black/5">
+                    <h2 class="text-2xl font-bold text-olivegreen-400">Camping Boekingspagina</h2>
+                    @if (! $hasAllCriteria)
+                        <p class="mt-1 text-sm text-black">Vul je verblijfsgegevens in om beschikbare plekken te zien.</p>
+                    @elseif ($campsites->isEmpty())
+                        <p class="mt-1 text-sm text-black">
+                            Geen resultaten van {{ $checkIn->format('d-m-Y') }} t/m {{ $checkOut->format('d-m-Y') }}
+                            voor {{ $adults + $children }} {{ $adults + $children === 1 ? 'persoon' : 'personen' }}.
+                        </p>
+                    @else
+                        <p class="mt-1 text-sm text-black">
+                            Beschikbaar van {{ $checkIn->format('d-m-Y') }} t/m {{ $checkOut->format('d-m-Y') }}
+                            voor {{ $adults + $children }} {{ $adults + $children === 1 ? 'persoon' : 'personen' }}
+                            ({{ $vehicles }} {{ $vehicles === 1 ? 'voertuig' : 'voertuigen' }}).
+                        </p>
+                        <p class="mt-2 font-semibold text-black" data-total="{{ $campsites->total() }}">
+                            <span data-filter-count>{{ $campsites->total() }}</span> beschikbaarheden gevonden
+                        </p>
+                    @endif
+                </div>
+
+                <aside class="w-full">
                     <div class="space-y-5">
                         <form method="GET" action="{{ route('campsites.index') }}" class="rounded-2xl border border-tan-400 bg-tan-300 p-5 shadow-sm ring-1 ring-black/5 space-y-4">
                             <h2 class="text-lg font-bold text-olivegreen-400">Verblijfsgegevens</h2>
@@ -104,38 +127,19 @@
                     </div>
                 </aside>
 
-                <main class="flex-1">
-                    <h2 class="text-3xl font-semibold text-black">Camping Boekingspagina</h2>
-
+                <main class="w-full">
                     @if (! $hasAllCriteria)
-                        <p class="mt-2 text-base text-black">Vul je verblijfsgegevens in om beschikbare plekken te zien.</p>
-
-                        <div class="mt-6 rounded-xl border border-tan-400 bg-tan-300 p-10 text-center shadow-sm ring-1 ring-black/5">
+                        <div class="rounded-xl border border-tan-400 bg-tan-300 p-10 text-center shadow-sm ring-1 ring-black/5">
                             <p class="text-base font-medium text-olivegreen-400">Nog geen zoekopdracht</p>
                             <p class="mt-2 text-sm text-black">Vul links je aankomst- en vertrekdatum, aantal personen en voertuigen in om beschikbare plekken te zien.</p>
                         </div>
                     @elseif ($campsites->isEmpty())
-                        <p class="mt-2 text-base text-black">
-                            Geen resultaten van {{ $checkIn->format('d-m-Y') }} t/m {{ $checkOut->format('d-m-Y') }}
-                            voor {{ $adults + $children }} {{ $adults + $children === 1 ? 'persoon' : 'personen' }}.
-                        </p>
-
-                        <div class="mt-6 rounded-xl border border-tan-400 bg-tan-300 p-10 text-center shadow-sm ring-1 ring-black/5">
+                        <div class="rounded-xl border border-tan-400 bg-tan-300 p-10 text-center shadow-sm ring-1 ring-black/5">
                             <p class="text-base font-medium text-olivegreen-400">Geen beschikbare plekken voor deze gegevens</p>
                             <p class="mt-2 text-sm text-black">Probeer andere data, een kleinere groep of minder voertuigen.</p>
                         </div>
                     @else
-                        <p class="mt-2 text-base text-black">
-                            Beschikbaar van {{ $checkIn->format('d-m-Y') }} t/m {{ $checkOut->format('d-m-Y') }}
-                            voor {{ $adults + $children }} {{ $adults + $children === 1 ? 'persoon' : 'personen' }}
-                            ({{ $vehicles }} {{ $vehicles === 1 ? 'voertuig' : 'voertuigen' }}).
-                        </p>
-
-                        <div class="mt-4 rounded-lg bg-tan-300 px-4 py-3 font-semibold text-black shadow-sm ring-1 ring-black/5" data-total="{{ $campsites->total() }}">
-                            <span data-filter-count>{{ $campsites->total() }}</span> beschikbaarheden gevonden
-                        </div>
-
-                        <div class="mt-6 space-y-4">
+                        <div class="space-y-4">
                             @foreach ($campsites as $campsite)
                                 <a
                                     href="#"
