@@ -34,6 +34,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $cancelled_at
  * @property string|null $cancellation_reason
  * @property string|null $cancelled_by_user_id
+ * @property Carbon|null $payment_reminder_sent_at
+ * @property Carbon|null $arrival_reminder_sent_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
@@ -45,12 +47,8 @@ use Illuminate\Support\Carbon;
  * @property-read OrderSummary|null $orderSummary
  * @property-read Collection<ReservationExtra> $extras
  * @property-read Collection<Payment> $payments
- *
- * @todo Payment method (`pay_method`) is collected on the form but no Payment
- *       row is created. Wire the fake payment flow before persisting. See
- *       todo.md.
  */
-#[Fillable(['customer_id', 'campsite_id', 'booked_by_user_id', 'coupon_id', 'source', 'check_in', 'check_out', 'num_adults', 'num_children', 'num_vehicles', 'status', 'cancelled_at', 'cancellation_reason', 'cancelled_by_user_id'])]
+#[Fillable(['customer_id', 'campsite_id', 'booked_by_user_id', 'coupon_id', 'source', 'check_in', 'check_out', 'num_adults', 'num_children', 'num_vehicles', 'status', 'cancelled_at', 'cancellation_reason', 'cancelled_by_user_id', 'payment_reminder_sent_at', 'arrival_reminder_sent_at'])]
 #[ObservedBy(ReservationObserver::class)]
 class Reservation extends Model
 {
@@ -67,6 +65,8 @@ class Reservation extends Model
             'check_in' => 'date',
             'check_out' => 'date',
             'cancelled_at' => 'datetime',
+            'payment_reminder_sent_at' => 'datetime',
+            'arrival_reminder_sent_at' => 'datetime',
         ];
     }
 

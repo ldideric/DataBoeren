@@ -1,7 +1,12 @@
 <?php
 
 use App\Booking\Actions\CreateReservation;
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use App\Enums\ReservationStatus;
+use App\Mail\BookingConfirmed;
+use App\Mail\BookingReceived;
+use App\Mail\MagicLink;
 use App\Models\Campsite;
 use App\Models\CampsitePrice;
 use App\Models\Extra;
@@ -123,6 +128,43 @@ it('stores a pending reservation from a valid booking request', function () {
     expect($reservation->orderSummary()->exists())->toBeTrue();
 });
 
+// Pay-on-site: the amount owed is recorded as a pending cash payment and the
+// customer gets a "we received your booking" email carrying the management link.
+it('records a pending cash payment and emails a received notice for pay-on-site bookings', function () {
+    Mail::fake();
+
+    [$campsite, $checkIn, $checkOut] = bookableCampsite();
+
+    $this->post(route('bookings.store'), [
+        'first_name' => 'Jan',
+        'last_name' => 'Jansen',
+        'phone' => '0612345678',
+        'email' => 'jan@example.com',
+        'check_in' => $checkIn->format('Y-m-d'),
+        'check_out' => $checkOut->format('Y-m-d'),
+        'campsite_id' => $campsite->id,
+        'num_adults' => 2,
+        'num_children' => 1,
+        'num_vehicles' => 1,
+        'pay_method' => 'in_person',
+        'adult_confirmation' => '1',
+        'house_rules' => '1',
+    ])->assertRedirect(route('login.sent'));
+
+    $reservation = Reservation::query()->firstOrFail();
+    $payment = $reservation->payments()->firstOrFail();
+
+    expect($payment->method)->toBe(PaymentMethod::Cash)
+        ->and($payment->status)->toBe(PaymentStatus::Pending)
+        ->and($payment->amount)->toBe($reservation->orderSummary->total);
+
+    Mail::assertQueued(
+        BookingReceived::class,
+        fn (BookingReceived $mail) => $mail->reservation->is($reservation) && $mail->hasTo('jan@example.com'),
+    );
+    Mail::assertNotQueued(MagicLink::class);
+});
+
 // destroy() takes a SignedUrlGenerator to build the redirect target. It was missing
 // from the signature, so cancelling any reservation 500'd on an undefined variable.
 it('lets a customer cancel their own reservation', function () {
@@ -143,6 +185,35 @@ it('lets a customer cancel their own reservation', function () {
     expect($reservation->status)->toBe(ReservationStatus::Cancelled)
         ->and($reservation->cancelled_at)->not->toBeNull()
         ->and($reservation->cancelled_by_user_id)->toBe($user->id);
+});
+
+// An employee booking is created straight as Confirmed from the admin panel, so
+// the status never "changes" and updated() never fires — the created() hook on
+// ReservationObserver is what mails the customer their confirmation.
+it('emails the customer a confirmation when an employee creates a confirmed booking', function () {
+    Mail::fake();
+
+    $customer = User::factory()->create(['email' => 'gast@example.com']);
+
+    $reservation = Reservation::factory()
+        ->for($customer, 'customer')
+        ->bookedByEmployee(null)
+        ->create(['status' => ReservationStatus::Confirmed]);
+
+    Mail::assertQueued(
+        BookingConfirmed::class,
+        fn (BookingConfirmed $mail) => $mail->reservation->is($reservation) && $mail->hasTo('gast@example.com'),
+    );
+});
+
+// Online bookings are born Pending; their confirmation must wait for the status
+// to change after payment, so creating one must not fire a confirmation mail.
+it('does not email a confirmation when an online booking is created pending', function () {
+    Mail::fake();
+
+    Reservation::factory()->pending()->create();
+
+    Mail::assertNothingQueued();
 });
 
 it('forbids cancelling a reservation that belongs to someone else', function () {

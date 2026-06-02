@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Auth\Actions\SendBookingsLink;
 use App\Auth\Services\SignedUrlGenerator;
 use App\Booking\Actions\CreateReservation;
+use App\Booking\Actions\RecordCashPayment;
 use App\Booking\DTO\StayCriteria;
 use App\Booking\Queries\CheckAvailability;
 use App\Booking\Queries\GetAvailableExtras;
 use App\Booking\Queries\PreviewPrice;
 use App\Enums\ReservationStatus;
 use App\Http\Requests\BookingRequest;
+use App\Mail\BookingReceived;
 use App\Models\Campsite;
 use App\Models\Reservation;
 use App\Models\User;
@@ -18,6 +19,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
@@ -102,17 +104,22 @@ class BookingController extends Controller
         ]);
     }
 
-    public function store(BookingRequest $request, CreateReservation $createReservation, SendBookingsLink $sendBookingsLink, SignedUrlGenerator $urls): RedirectResponse
+    public function store(BookingRequest $request, CreateReservation $createReservation, RecordCashPayment $recordCashPayment, SignedUrlGenerator $urls): RedirectResponse
     {
         $reservation = $createReservation->handle($request);
 
         // Online: send the customer straight to the (signed) Stripe payment page.
-        // @todo pay_method is still not persisted (see Reservation model docblock / todo.md).
         if ($request->validated('pay_method') === 'online') {
             return redirect()->to($urls->payment($reservation));
         }
 
-        $sendBookingsLink->handle($reservation->customer);
+        // Pay-on-site: record the amount owed as a pending cash payment and email
+        // a "we received your booking" confirmation that carries the (signed) link
+        // to view or cancel the reservation.
+        $recordCashPayment->handle($reservation);
+
+        Mail::to($reservation->customer->email)
+            ->send(new BookingReceived($reservation, $urls->bookings($reservation->customer)));
 
         return redirect()
             ->route('login.sent')
