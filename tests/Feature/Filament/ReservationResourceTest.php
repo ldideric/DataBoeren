@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use App\Enums\ReservationSource;
 use App\Enums\ReservationStatus;
 use App\Enums\UserRole;
@@ -12,6 +14,9 @@ use App\Filament\Resources\Reservations\Pages\ViewReservation;
 use App\Filament\Resources\Reservations\RelationManagers\ExtrasRelationManager;
 use App\Filament\Resources\Reservations\RelationManagers\PaymentsRelationManager;
 use App\Filament\Resources\Reservations\ReservationResource;
+use App\Mail\BookingCancelled;
+use App\Mail\BookingConfirmed;
+use App\Mail\MagicLink;
 use App\Models\Extra;
 use App\Models\Payment;
 use App\Models\Reservation;
@@ -20,6 +25,7 @@ use App\Models\User;
 use Filament\Actions\DeleteBulkAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
@@ -169,6 +175,73 @@ it('can update a reservation status', function () {
         ->assertHasNoFormErrors();
 
     expect($reservation->refresh()->status)->toBe(ReservationStatus::Confirmed);
+});
+
+// Staff actions
+
+it('accepts a pending reservation and marks the cash payment paid', function () {
+    Mail::fake();
+
+    $reservation = Reservation::factory()->pending()->create();
+    $payment = Payment::factory()->for($reservation)->create([
+        'method' => PaymentMethod::Cash,
+        'status' => PaymentStatus::Pending,
+    ]);
+
+    Livewire::test(ViewReservation::class, ['record' => $reservation->getRouteKey()])
+        ->callAction('accept');
+
+    expect($reservation->refresh()->status)->toBe(ReservationStatus::Confirmed)
+        ->and($payment->refresh()->status)->toBe(PaymentStatus::Paid)
+        ->and($payment->paid_at)->not->toBeNull();
+
+    Mail::assertQueued(BookingConfirmed::class, fn (BookingConfirmed $mail) => $mail->reservation->is($reservation));
+});
+
+it('hides the accept action for non-pending reservations', function () {
+    $reservation = Reservation::factory()->create(['status' => ReservationStatus::Confirmed]);
+
+    Livewire::test(ViewReservation::class, ['record' => $reservation->getRouteKey()])
+        ->assertActionHidden('accept');
+});
+
+it('cancels a reservation with a reason', function () {
+    Mail::fake();
+
+    $reservation = Reservation::factory()->create(['status' => ReservationStatus::Confirmed]);
+
+    Livewire::test(ViewReservation::class, ['record' => $reservation->getRouteKey()])
+        ->callAction('cancel', data: ['cancellation_reason' => 'Geannuleerd via de telefoon']);
+
+    $reservation->refresh();
+
+    expect($reservation->status)->toBe(ReservationStatus::Cancelled)
+        ->and($reservation->cancellation_reason)->toBe('Geannuleerd via de telefoon')
+        ->and($reservation->cancelled_by_user_id)->toBe($this->admin->id);
+
+    Mail::assertQueued(BookingCancelled::class, fn (BookingCancelled $mail) => $mail->reservation->is($reservation));
+});
+
+it('sends a login link to the customer', function () {
+    Mail::fake();
+
+    $reservation = Reservation::factory()->create();
+
+    Livewire::test(ViewReservation::class, ['record' => $reservation->getRouteKey()])
+        ->callAction('sendLoginLink');
+
+    Mail::assertQueued(MagicLink::class, fn (MagicLink $mail) => $mail->hasTo($reservation->customer->email));
+});
+
+it('resends the confirmation email for a confirmed reservation', function () {
+    Mail::fake();
+
+    $reservation = Reservation::factory()->create(['status' => ReservationStatus::Confirmed]);
+
+    Livewire::test(ViewReservation::class, ['record' => $reservation->getRouteKey()])
+        ->callAction('resendConfirmation');
+
+    Mail::assertQueued(BookingConfirmed::class, fn (BookingConfirmed $mail) => $mail->reservation->is($reservation));
 });
 
 // Extras relation manager

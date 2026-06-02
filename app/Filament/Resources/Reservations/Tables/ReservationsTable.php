@@ -2,6 +2,10 @@
 
 namespace App\Filament\Resources\Reservations\Tables;
 
+use App\Filament\Resources\Reservations\Actions\AcceptReservationAction;
+use App\Filament\Resources\Reservations\Actions\CancelReservationAction;
+use App\Filament\Resources\Reservations\Actions\ResendConfirmationAction;
+use App\Filament\Resources\Reservations\Actions\SendLoginLinkAction;
 use App\Filament\Resources\Reservations\Filters\ArrivalPeriodFilter;
 use App\Filament\Resources\Reservations\Filters\BookedByStaffFilter;
 use App\Filament\Resources\Reservations\Filters\CampsiteFilter;
@@ -10,6 +14,7 @@ use App\Filament\Resources\Reservations\Filters\HasCouponFilter;
 use App\Filament\Resources\Reservations\Filters\OnSiteFilter;
 use App\Filament\Resources\Reservations\Filters\SourceFilter;
 use App\Filament\Resources\Reservations\Filters\StatusFilter;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -65,6 +70,12 @@ class ReservationsTable
             ->recordActions([
                 ViewAction::make()->iconButton(),
                 EditAction::make()->iconButton(),
+                ActionGroup::make([
+                    AcceptReservationAction::make(),
+                    SendLoginLinkAction::make(),
+                    ResendConfirmationAction::make(),
+                    CancelReservationAction::make(),
+                ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
