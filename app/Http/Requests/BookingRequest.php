@@ -25,6 +25,7 @@ class BookingRequest extends FormRequest
             'num_children' => ['required', 'integer', 'min:0'],
             'num_vehicles' => ['required', 'integer', 'min:0'],
             'pay_method' => ['required', 'string', 'in:online,in_person'],
+            'coupon_code' => ['nullable', 'string', 'max:255'],
             'adult_confirmation' => ['accepted'],
             'house_rules' => ['accepted'],
             'extras' => ['nullable', 'array'],

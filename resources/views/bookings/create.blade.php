@@ -125,6 +125,18 @@
                     </fieldset>
 
                     <fieldset>
+                        <legend class="w-full border-b border-olivegreen-800 pb-2 text-sm font-semibold text-black">Couponcode</legend>
+
+                        <div class="mt-4">
+                            <label for="coupon_code" class="block text-sm text-black">Heeft u een couponcode? (optioneel)</label>
+                            <input type="text" id="coupon_code" name="coupon_code" value="{{ old('coupon_code') }}"
+                                class="mt-1 w-full rounded-lg border border-olivegreen-500 bg-tan-200 px-3 py-2 text-sm uppercase focus:border-olivegreen-400 focus:outline-none focus:ring-2 focus:ring-olivegreen-400"
+                                placeholder="BIJV. ZOMER25">
+                            <p class="mt-1 text-xs text-black">De korting wordt verrekend bij het afronden van uw reservering.</p>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
                         <legend class="w-full border-b border-olivegreen-800 pb-2 text-sm font-semibold text-black">Betaalmethode</legend>
 
                         <div class="mt-4">

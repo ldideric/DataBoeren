@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\CheckoutMethod;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Enums\ReservationSource;
@@ -14,13 +15,20 @@ use App\Filament\Resources\Reservations\Pages\ViewReservation;
 use App\Filament\Resources\Reservations\RelationManagers\ExtrasRelationManager;
 use App\Filament\Resources\Reservations\RelationManagers\PaymentsRelationManager;
 use App\Filament\Resources\Reservations\ReservationResource;
+use App\Mail\AwaitingPayment;
 use App\Mail\BookingCancelled;
 use App\Mail\BookingConfirmed;
+use App\Mail\BookingReceived;
 use App\Mail\MagicLink;
+use App\Models\Campsite;
+use App\Models\CampsitePrice;
+use App\Models\Coupon;
 use App\Models\Extra;
 use App\Models\Payment;
 use App\Models\Reservation;
 use App\Models\ReservationExtra;
+use App\Models\Season;
+use App\Models\SeasonPeriod;
 use App\Models\User;
 use Filament\Actions\DeleteBulkAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -125,9 +133,207 @@ it('can bulk delete reservations', function () {
 
 // New booking page (replaces create page)
 
+/**
+ * A priced, fitting campsite plus the dates for a valid stay, so the wizard's
+ * save() resolves availability and pricing. Returns [campsite, checkIn, checkOut].
+ */
+function newBookingFixture(): array
+{
+    $checkIn = now()->addDays(10)->startOfDay();
+    $checkOut = $checkIn->copy()->addDays(2);
+
+    $season = Season::factory()->create();
+    SeasonPeriod::factory()->for($season)->create([
+        'starts_at' => $checkIn->copy()->subMonth(),
+        'ends_at'   => $checkIn->copy()->addMonth(),
+    ]);
+    $campsite = Campsite::factory()->create(['max_people' => 6, 'max_vehicles' => 2]);
+    CampsitePrice::factory()->create(['campsite_id' => $campsite->id, 'season_id' => $season->id]);
+
+    return [$campsite, $checkIn, $checkOut];
+}
+
+/**
+ * Base wizard form state for a new guest. Override per-test (e.g. payment_method,
+ * coupon_id) by array-merging.
+ */
+function newBookingFormData(Campsite $campsite, $checkIn, $checkOut, array $overrides = []): array
+{
+    return array_merge([
+        'existing_customer' => false,
+        'first_name'        => 'Nieuw',
+        'last_name'         => 'Gast',
+        'email'             => 'nieuw@example.com',
+        'phone'             => '0612345678',
+        'campsite_id'       => $campsite->id,
+        'check_in'          => $checkIn->format('Y-m-d'),
+        'check_out'         => $checkOut->format('Y-m-d'),
+        'num_adults'        => 2,
+        'num_children'      => 1,
+        'num_vehicles'      => 1,
+        'extras'            => [],
+        'payment_method'    => CheckoutMethod::CashPaid->value,
+    ], $overrides);
+}
+
 it('can render the new booking page', function () {
     Livewire::test(NewBooking::class)
         ->assertSuccessful();
+});
+
+it('shows a live price total in the wizard summary once the stay is filled', function () {
+    [$campsite, $checkIn, $checkOut] = newBookingFixture();
+
+    Livewire::test(NewBooking::class)
+        ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut))
+        ->assertSee('Prijsoverzicht')
+        ->assertSee('Totaal');
+});
+
+it('confirms the booking and records a paid cash payment when cash is taken now', function () {
+    Mail::fake();
+    [$campsite, $checkIn, $checkOut] = newBookingFixture();
+
+    Livewire::test(NewBooking::class)
+        ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut))
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    $reservation = Reservation::query()->firstOrFail();
+
+    expect($reservation->status)->toBe(ReservationStatus::Confirmed)
+        ->and($reservation->source)->toBe(ReservationSource::Employee);
+
+    $payment = $reservation->payments()->firstOrFail();
+    expect($payment->method)->toBe(PaymentMethod::Cash)
+        ->and($payment->status)->toBe(PaymentStatus::Paid)
+        ->and($payment->amount)->toBe($reservation->orderSummary->total);
+
+    Mail::assertQueued(BookingConfirmed::class, fn (BookingConfirmed $m) => $m->reservation->is($reservation));
+});
+
+it('leaves the booking pending with a cash payment due on arrival', function () {
+    Mail::fake();
+    [$campsite, $checkIn, $checkOut] = newBookingFixture();
+
+    Livewire::test(NewBooking::class)
+        ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut, [
+            'payment_method' => CheckoutMethod::PayOnArrival->value,
+        ]))
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    $reservation = Reservation::query()->firstOrFail();
+
+    expect($reservation->status)->toBe(ReservationStatus::Pending)
+        ->and($reservation->payments()->firstOrFail()->status)->toBe(PaymentStatus::Pending);
+
+    Mail::assertQueued(BookingReceived::class, fn (BookingReceived $m) => $m->reservation->is($reservation));
+});
+
+it('emails a payment link and stays pending when sending a link', function () {
+    Mail::fake();
+    [$campsite, $checkIn, $checkOut] = newBookingFixture();
+
+    Livewire::test(NewBooking::class)
+        ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut, [
+            'payment_method' => CheckoutMethod::SendLink->value,
+        ]))
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    $reservation = Reservation::query()->firstOrFail();
+
+    expect($reservation->status)->toBe(ReservationStatus::Pending)
+        ->and($reservation->payments()->count())->toBe(0);
+
+    Mail::assertQueued(AwaitingPayment::class, fn (AwaitingPayment $m) => $m->reservation->is($reservation));
+});
+
+it('redirects to the stripe payment page when taking a card now', function () {
+    Mail::fake();
+    [$campsite, $checkIn, $checkOut] = newBookingFixture();
+
+    Livewire::test(NewBooking::class)
+        ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut, [
+            'payment_method' => CheckoutMethod::CardNow->value,
+        ]))
+        ->call('save')
+        ->assertHasNoFormErrors()
+        ->assertRedirect();
+
+    $reservation = Reservation::query()->firstOrFail();
+
+    expect($reservation->status)->toBe(ReservationStatus::Pending)
+        ->and($reservation->payments()->count())->toBe(0);
+});
+
+it('rejects a party that exceeds the campsite capacity', function () {
+    [$campsite, $checkIn, $checkOut] = newBookingFixture(); // max_people 6, max_vehicles 2
+
+    Livewire::test(NewBooking::class)
+        ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut, [
+            'num_adults'   => 2,
+            'num_children' => 100,
+        ]))
+        ->call('save')
+        ->assertHasFormErrors(['num_children']);
+
+    expect(Reservation::query()->count())->toBe(0);
+});
+
+it('rejects a zero-night stay where check-out equals check-in', function () {
+    [$campsite, $checkIn] = newBookingFixture();
+
+    Livewire::test(NewBooking::class)
+        ->fillForm(newBookingFormData($campsite, $checkIn, $checkIn, [
+            'check_out' => $checkIn->format('Y-m-d'),
+        ]))
+        ->call('save')
+        ->assertHasFormErrors(['check_out']);
+
+    expect(Reservation::query()->count())->toBe(0);
+});
+
+it('rejects more vehicles than the campsite allows', function () {
+    [$campsite, $checkIn, $checkOut] = newBookingFixture(); // max_vehicles 2
+
+    Livewire::test(NewBooking::class)
+        ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut, [
+            'num_vehicles' => 5,
+        ]))
+        ->call('save')
+        ->assertHasFormErrors(['num_vehicles']);
+
+    expect(Reservation::query()->count())->toBe(0);
+});
+
+it('applies a coupon, increments its usage, and discounts the total', function () {
+    Mail::fake();
+    [$campsite, $checkIn, $checkOut] = newBookingFixture();
+    $coupon = Coupon::factory()->flat()->create(['discount_value' => 10, 'uses_count' => 0, 'max_uses' => 5]);
+
+    Livewire::test(NewBooking::class)
+        ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut, [
+            'coupon_id' => $coupon->id,
+        ]))
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    $reservation = Reservation::query()->firstOrFail();
+
+    expect($reservation->coupon_id)->toBe($coupon->id)
+        ->and($coupon->refresh()->uses_count)->toBe(1)
+        ->and($reservation->orderSummary->coupon_discount)->not->toBeNull();
+});
+
+it('does not list an expired coupon in the wizard', function () {
+    $expired = Coupon::factory()->expired()->create();
+    $valid = Coupon::factory()->create(['expires_at' => null, 'max_uses' => null]);
+
+    expect(Coupon::query()->redeemable()->pluck('id')->all())
+        ->toContain($valid->id)
+        ->not->toContain($expired->id);
 });
 
 // View page

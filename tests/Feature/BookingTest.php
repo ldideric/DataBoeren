@@ -8,6 +8,7 @@ use App\Mail\BookingConfirmed;
 use App\Mail\BookingReceived;
 use App\Mail\MagicLink;
 use App\Models\Campsite;
+use App\Models\Coupon;
 use App\Models\CampsitePrice;
 use App\Models\Extra;
 use App\Models\OrderSummary;
@@ -163,6 +164,69 @@ it('records a pending cash payment and emails a received notice for pay-on-site 
         fn (BookingReceived $mail) => $mail->reservation->is($reservation) && $mail->hasTo('jan@example.com'),
     );
     Mail::assertNotQueued(MagicLink::class);
+});
+
+function validBookingPayload(Campsite $campsite, $checkIn, $checkOut, array $overrides = []): array
+{
+    return array_merge([
+        'first_name'         => 'Jan',
+        'last_name'          => 'Jansen',
+        'phone'              => '0612345678',
+        'email'              => 'jan@example.com',
+        'check_in'           => $checkIn->format('Y-m-d'),
+        'check_out'          => $checkOut->format('Y-m-d'),
+        'campsite_id'        => $campsite->id,
+        'num_adults'         => 2,
+        'num_children'       => 1,
+        'num_vehicles'       => 1,
+        'pay_method'         => 'in_person',
+        'adult_confirmation' => '1',
+        'house_rules'        => '1',
+    ], $overrides);
+}
+
+it('rejects a public booking when the party exceeds the campsite capacity', function () {
+    Mail::fake();
+    [$campsite, $checkIn, $checkOut] = bookableCampsite(); // max_people 6
+
+    $this->post(route('bookings.store'), validBookingPayload($campsite, $checkIn, $checkOut, [
+        'num_children' => 100,
+    ]))->assertSessionHasErrors(['num_children']);
+
+    expect(Reservation::query()->count())->toBe(0);
+});
+
+it('applies a coupon to a public booking and tracks its usage', function () {
+    Mail::fake();
+    [$campsite, $checkIn, $checkOut] = bookableCampsite();
+    $coupon = Coupon::factory()->flat()->create([
+        'discount_value' => 10,
+        'uses_count'     => 0,
+        'max_uses'       => null,
+        'expires_at'     => null,
+    ]);
+
+    $this->post(route('bookings.store'), validBookingPayload($campsite, $checkIn, $checkOut, [
+        'coupon_code' => $coupon->code,
+    ]))->assertRedirect(route('login.sent'));
+
+    $reservation = Reservation::query()->firstOrFail();
+
+    expect($reservation->coupon_id)->toBe($coupon->id)
+        ->and($coupon->refresh()->uses_count)->toBe(1)
+        ->and($reservation->orderSummary->coupon_discount)->not->toBeNull();
+});
+
+it('rejects an expired coupon code on a public booking', function () {
+    Mail::fake();
+    [$campsite, $checkIn, $checkOut] = bookableCampsite();
+    $coupon = Coupon::factory()->expired()->create();
+
+    $this->post(route('bookings.store'), validBookingPayload($campsite, $checkIn, $checkOut, [
+        'coupon_code' => $coupon->code,
+    ]))->assertSessionHasErrors(['coupon_code']);
+
+    expect(Reservation::query()->count())->toBe(0);
 });
 
 // destroy() takes a SignedUrlGenerator to build the redirect target. It was missing
