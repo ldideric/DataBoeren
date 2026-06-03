@@ -85,7 +85,7 @@ class Coupon extends Model
 
                 $target = $this->scope === CouponScope::Extra && $this->extra
                     ? $this->extra->name
-                    : $this->scope->getLabel();
+                    : $this->scope->dutchLabel();
 
                 return Str::of($value)->append(" op {$target}");
             }

@@ -310,8 +310,7 @@ new class () extends Component {
                     <label for="coupon_code" class="block text-sm text-black">Heeft u een couponcode? (optioneel)</label>
                     <div class="mt-1 flex gap-2">
                         <input type="text" id="coupon_code" wire:model="couponCode" wire:keydown.enter.prevent="applyCoupon"
-                            class="w-full flex-1 rounded-lg border border-olivegreen-500 bg-tan-200 px-3 py-2 text-sm uppercase focus:border-olivegreen-400 focus:outline-none focus:ring-2 focus:ring-olivegreen-400"
-                            placeholder="BIJV. ZOMER25">
+                            class="w-full flex-1 rounded-lg border border-olivegreen-500 bg-tan-200 px-3 py-2 text-sm uppercase focus:border-olivegreen-400 focus:outline-none focus:ring-2 focus:ring-olivegreen-400">
                         <button type="button" wire:click="applyCoupon"
                             class="shrink-0 rounded-lg border-2 bg-cerulean-300 border-cerulean-400 px-4 py-2 text-sm font-semibold text-cerulean-900 transition hover:border-cerulean-400 hover:bg-cerulean-400">
                             Toepassen

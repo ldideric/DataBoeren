@@ -103,7 +103,7 @@ class CalculatePrice
         };
 
         return match ($coupon->discount_type) {
-            DiscountType::Flat => min((int) round($coupon->discount_value * 100), $base),
+            DiscountType::Flat => min((int) round($coupon->discount_value), $base),
             DiscountType::Percent => (int) round($base * $coupon->discount_value / 100),
         };
     }

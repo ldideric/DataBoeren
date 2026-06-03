@@ -75,6 +75,49 @@ it('calculates the order summary with coupon and extra totals', function () {
         ->and($summary->total)->toBe(6000);
 });
 
+it('applies a flat coupon as a fixed cent amount, not euros times one hundred', function () {
+    config()->set('pricing.last_minute.enabled', false);
+
+    $season = Season::factory()->create(['name' => 'Zomer']);
+    SeasonPeriod::factory()->create([
+        'season_id' => $season->id,
+        'starts_at' => '2026-01-01',
+        'ends_at' => '2026-12-31',
+    ]);
+    $campsite = Campsite::factory()->create();
+    CampsitePrice::factory()->create([
+        'campsite_id' => $campsite->id,
+        'season_id' => $season->id,
+        'nightly_rate' => 2500,
+        'per_adult_rate' => 660,
+        'per_child_rate' => 0,
+    ]);
+
+    $customer = User::factory()->create();
+    $coupon = Coupon::factory()->create([
+        'scope' => CouponScope::Accommodation,
+        'discount_type' => DiscountType::Flat,
+        'discount_value' => 4000, // € 40,00 stored in cents
+        'uses_count' => 0,
+    ]);
+    $reservation = Reservation::factory()->pending()->create([
+        'customer_id' => $customer->id,
+        'campsite_id' => $campsite->id,
+        'coupon_id' => $coupon->id,
+        'check_in' => '2026-06-01',
+        'check_out' => '2026-06-03',
+        'num_adults' => 1,
+        'num_children' => 0,
+        'num_vehicles' => 0,
+    ]);
+
+    $summary = app(CalculatePrice::class)->calculate($reservation);
+
+    // Accommodation = (2500 + 660) * 2 = 6320; flat coupon takes a fixed € 40,00 off.
+    expect($summary->coupon_discount)->toBe(4000)
+        ->and($summary->total)->toBe(2320);
+});
+
 it('applies a total-scope coupon to accommodation and extras combined', function () {
     config()->set('pricing.last_minute.enabled', false);
 

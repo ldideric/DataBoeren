@@ -27,8 +27,9 @@ new class () extends Component {
     #[Url]
     public int $vehicles = 0;
 
-    #[Url(except: '')]
-    public string $type = '';
+    /** @var array<int, string> */
+    #[Url(except: [])]
+    public array $types = [];
 
     public function updated(): void
     {
@@ -61,12 +62,14 @@ new class () extends Component {
             return null;
         }
 
-        $type = CampsiteType::tryFrom($this->type);
+        $types = collect($this->types)
+            ->filter(fn ($value) => CampsiteType::tryFrom($value) !== null)
+            ->values();
 
         return Campsite::query()
             ->whereFitsParty($criteria->partySize(), $criteria->vehicles)
             ->whereAvailableBetween($criteria->checkIn, $criteria->checkOut)
-            ->when($type, fn ($query) => $query->where('type', $type))
+            ->when($types->isNotEmpty(), fn ($query) => $query->whereIn('type', $types))
             ->orderBy('name')
             ->paginate(8);
     }
@@ -163,24 +166,45 @@ new class () extends Component {
                 </div>
 
                 @if ($this->criteria->isComplete())
-                    <div class="rounded-xl border border-tan-400 bg-tan-300 p-5 shadow-sm ring-1 ring-black/5">
-                        <h2 class="text-lg font-semibold text-black">Accommodatie type</h2>
-                        <p class="mt-2 text-sm text-black">Selecteer een type om de resultaten te filteren.</p>
+                    <div class="rounded-xl border border-tan-400 bg-tan-300 p-4 shadow-sm ring-1 ring-black/5">
+                        <h2 class="text-base font-semibold text-black">Accommodatie type</h2>
+                        <p class="mt-1 text-sm text-black">Filter op één of meer types.</p>
 
-                        <div class="mt-4 space-y-2">
-                            <label class="group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-olivegreen-500 hover:text-white">
-                                <input type="radio" wire:model.live="type" value="" class="h-4 w-4 accent-olivegreen-600">
-                                <span>Alle</span>
-                            </label>
-                            @foreach (\App\Enums\CampsiteType::cases() as $type)
-                                <label class="group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-olivegreen-500 hover:text-white">
-                                    <input type="radio" wire:model.live="type" value="{{ $type->value }}" class="h-4 w-4 accent-olivegreen-600">
-                                    <div class="flex flex-col">
-                                        <span class="text-base font-bold text-black group-hover:text-white">{{ $type->getHeadline() }}</span>
-                                        <span class="text-sm text-black group-hover:text-white">{{ $type->getDescription() }}</span>
-                                    </div>
-                                </label>
-                            @endforeach
+                        <div class="mt-3" x-data="{ open: false }">
+                            <button
+                                type="button"
+                                @click="open = !open"
+                                :aria-expanded="open"
+                                class="flex w-full items-center justify-between gap-2 rounded-lg border border-olivegreen-600 bg-tan-200 px-3 py-2 text-left text-base text-black transition focus:border-olivegreen-400 focus:outline-none focus:ring-2 focus:ring-olivegreen-400"
+                            >
+                                <span class="truncate">
+                                    @if (empty($types))
+                                        Alle types
+                                    @else
+                                        {{ count($types) }} {{ count($types) === 1 ? 'type' : 'types' }} geselecteerd
+                                    @endif
+                                </span>
+                                <svg class="h-4 w-4 shrink-0 text-black/60 transition-transform" :class="open && 'rotate-180'" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+
+                            <div
+                                x-show="open"
+                                x-collapse
+                                x-cloak
+                                class="mt-2 space-y-1 rounded-lg border border-olivegreen-600 bg-tan-200 p-2"
+                            >
+                                @foreach (\App\Enums\CampsiteType::cases() as $type)
+                                    <label class="group flex cursor-pointer items-start gap-3 rounded-lg px-3 py-1.5 transition hover:bg-olivegreen-500 hover:text-white">
+                                        <input type="checkbox" wire:model.live="types" value="{{ $type->value }}" class="mt-0.5 h-4 w-4 shrink-0 accent-olivegreen-600">
+                                        <div class="flex flex-col">
+                                            <span class="text-sm font-bold text-black group-hover:text-white">{{ $type->getHeadline() }}</span>
+                                            <span class="text-xs text-black/80 group-hover:text-white">{{ $type->getDescription() }}</span>
+                                        </div>
+                                    </label>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 @endif

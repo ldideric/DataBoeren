@@ -41,10 +41,23 @@ it('filters by accommodation type in SQL, not just in the browser (bug: filters 
     Campsite::factory()->ofType(CampsiteType::Geitenveld)->create(['name' => 'Geit Plek', 'max_people' => 6, 'max_vehicles' => 2]);
 
     Livewire::test('campsite-search', stay())
-        ->set('type', CampsiteType::Koeienveld->value)
+        ->set('types', [CampsiteType::Koeienveld->value])
         ->assertSee('Koe Plek')
         ->assertDontSee('Geit Plek')
         ->assertSee('1 beschikbaarheden gevonden'); // total reflects the filter
+});
+
+it('filters by multiple accommodation types at once', function () {
+    Campsite::factory()->ofType(CampsiteType::Koeienveld)->create(['name' => 'Koe Plek', 'max_people' => 6, 'max_vehicles' => 2]);
+    Campsite::factory()->ofType(CampsiteType::Geitenveld)->create(['name' => 'Geit Plek', 'max_people' => 6, 'max_vehicles' => 2]);
+    Campsite::factory()->ofType(CampsiteType::Schapenveld)->create(['name' => 'Schaap Plek', 'max_people' => 6, 'max_vehicles' => 2]);
+
+    Livewire::test('campsite-search', stay())
+        ->set('types', [CampsiteType::Koeienveld->value, CampsiteType::Geitenveld->value])
+        ->assertSee('Koe Plek')
+        ->assertSee('Geit Plek')
+        ->assertDontSee('Schaap Plek')
+        ->assertSee('2 beschikbaarheden gevonden');
 });
 
 it('keeps the type filter when paging (bug: page 2 reset the filter)', function () {
@@ -52,9 +65,9 @@ it('keeps the type filter when paging (bug: page 2 reset the filter)', function 
     Campsite::factory()->count(5)->ofType(CampsiteType::Geitenveld)->create(['max_people' => 6, 'max_vehicles' => 2]);
 
     Livewire::test('campsite-search', stay())
-        ->set('type', CampsiteType::Koeienveld->value)
+        ->set('types', [CampsiteType::Koeienveld->value])
         ->call('gotoPage', 2)
-        ->assertSet('type', CampsiteType::Koeienveld->value)
+        ->assertSet('types', [CampsiteType::Koeienveld->value])
         ->assertSee('12 beschikbaarheden gevonden'); // still only the filtered total
 });
 
@@ -63,7 +76,7 @@ it('does not paginate an empty filtered result (bug: empty results had multiple 
     Campsite::factory()->count(12)->ofType(CampsiteType::Koeienveld)->create(['max_people' => 6, 'max_vehicles' => 2]);
 
     Livewire::test('campsite-search', stay())
-        ->set('type', CampsiteType::Schapenveld->value)
+        ->set('types', [CampsiteType::Schapenveld->value])
         ->assertSee('Geen beschikbare plekken')
         ->assertDontSee('Volgende'); // no pagination nav at all
 });
