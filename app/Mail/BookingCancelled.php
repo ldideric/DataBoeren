@@ -12,9 +12,12 @@ use Illuminate\Queue\SerializesModels;
 
 class BookingCancelled extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
-    public function __construct(public Reservation $reservation) {}
+    public function __construct(public Reservation $reservation)
+    {
+    }
 
     public function envelope(): Envelope
     {

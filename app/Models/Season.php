@@ -23,7 +23,8 @@ use Illuminate\Support\Carbon;
 class Season extends Model
 {
     /** @use HasFactory<SeasonFactory> */
-    use HasFactory, HasUuids;
+    use HasFactory;
+    use HasUuids;
 
     public function periods(): HasMany
     {

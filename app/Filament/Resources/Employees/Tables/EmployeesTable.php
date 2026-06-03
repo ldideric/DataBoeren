@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Employees\Tables;
 
+use App\Filament\Resources\Employees\Filters\RoleFilter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -18,25 +19,19 @@ class EmployeesTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')
-                    ->searchable(),
+                TextColumn::make('first_name')
+                    ->formatStateUsing(fn ($_, $record) => $record->first_name.' '.$record->last_name)
+                    ->label('Name')
+                    ->searchable(['first_name', 'last_name']),
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->copyable()
                     ->searchable(),
-                TextColumn::make('phone')
-                    ->placeholder('N/A')
-                    ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggledHiddenByDefault(),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggledHiddenByDefault(),
+                TextColumn::make('role')
+                    ->badge(),
             ])
             ->filters([
                 TrashedFilter::make(),
+                RoleFilter::make(),
             ])
             ->recordActions([
                 ViewAction::make()->iconButton(),
@@ -45,8 +40,8 @@ class EmployeesTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
                     ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }

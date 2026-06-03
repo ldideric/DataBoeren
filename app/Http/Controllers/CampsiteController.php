@@ -19,8 +19,9 @@ class CampsiteController extends Controller
                 ->whereFitsParty($criteria->partySize(), $criteria->vehicles)
                 ->whereAvailableBetween($criteria->checkIn, $criteria->checkOut)
                 ->orderBy('name')
-                ->get()
-            : new Collection;
+                ->paginate(8)
+                ->withQueryString()
+            : new Collection();
 
         return view('campsites.index', [
             'campsites' => $campsites,

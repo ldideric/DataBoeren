@@ -10,7 +10,9 @@ class SignedUrlGenerator
 {
     public const TTL_MINUTES = 60;
 
-    public function __construct(private readonly UrlGenerator $url) {}
+    public function __construct(private readonly UrlGenerator $url)
+    {
+    }
 
     public function bookings(User $user): string
     {

@@ -2,39 +2,39 @@
 
 namespace App\Filament\Resources\Customers;
 
+use App\Enums\UserRole;
 use App\Filament\Resources\Customers\Pages\CreateCustomer;
 use App\Filament\Resources\Customers\Pages\EditCustomer;
 use App\Filament\Resources\Customers\Pages\ListCustomers;
 use App\Filament\Resources\Customers\Pages\ViewCustomer;
+use App\Filament\Resources\Customers\RelationManagers\ReservationsRelationManager;
 use App\Filament\Resources\Customers\Schemas\CustomerForm;
 use App\Filament\Resources\Customers\Schemas\CustomerInfolist;
 use App\Filament\Resources\Customers\Tables\CustomersTable;
 use App\Models\User;
-use App\Queries\UserQuery;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CustomerResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?string $label = 'Customer';
 
-    protected static ?string $recordTitleAttribute = 'name';
+    protected static ?string $pluralLabel = 'Customers';
 
-    public static function getModelLabel(): string
+    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedUser;
+
+    protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): string|\UnitEnum|null
     {
-        return __('Customer');
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->where(fn (UserQuery $query) => $query->whereCustomer());
+        return 'Customers';
     }
 
     public static function form(Schema $schema): Schema
@@ -55,7 +55,7 @@ class CustomerResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ReservationsRelationManager::class,
         ];
     }
 
@@ -67,5 +67,12 @@ class CustomerResource extends Resource
             'view' => ViewCustomer::route('/{record}'),
             'edit' => EditCustomer::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([SoftDeletingScope::class])
+            ->where('role', UserRole::Customer);
     }
 }

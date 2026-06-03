@@ -17,6 +17,7 @@ use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class BookingController extends Controller
 {
@@ -31,10 +32,17 @@ class BookingController extends Controller
             $reservation->id => $urls->cancelReservation($user, $reservation),
         ]);
 
+        $paymentUrls = $reservations
+            ->where('status', ReservationStatus::Pending)
+            ->mapWithKeys(fn (Reservation $reservation) => [
+                $reservation->id => $urls->payment($reservation),
+            ]);
+
         return view('bookings.index', [
             'user' => $user,
             'reservations' => $reservations,
             'cancelUrls' => $cancelUrls,
+            'paymentUrls' => $paymentUrls,
         ]);
     }
 
@@ -113,7 +121,7 @@ class BookingController extends Controller
 
     public function destroy(User $user, Reservation $reservation, SignedUrlGenerator $urls): RedirectResponse
     {
-        abort_if($reservation->customer_id !== $user->id, 403);
+        Gate::forUser($user)->authorize('cancel', $reservation);
 
         if ($reservation->status === ReservationStatus::Cancelled) {
             return redirect()->to($urls->bookings($user));

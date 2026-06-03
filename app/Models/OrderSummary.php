@@ -31,7 +31,8 @@ use Illuminate\Support\Carbon;
 class OrderSummary extends Model
 {
     /** @use HasFactory<OrderSummaryFactory> */
-    use HasFactory, HasUuids;
+    use HasFactory;
+    use HasUuids;
 
     protected function casts(): array
     {

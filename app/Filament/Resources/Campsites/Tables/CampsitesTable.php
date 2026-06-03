@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\Campsites\Tables;
 
+use App\Filament\Resources\Campsites\Filters\CampsiteTypeFilter;
+use App\Filament\Resources\Campsites\Filters\ElectricityFilter;
+use App\Filament\Resources\Campsites\Filters\MinCapacityFilter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -19,9 +22,6 @@ class CampsitesTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->searchable(),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('type')
@@ -30,32 +30,30 @@ class CampsitesTable
                 IconColumn::make('has_electricity')
                     ->boolean(),
                 TextColumn::make('max_people')
-                    ->numeric()
+                    ->suffix(' pers.')
                     ->sortable(),
                 TextColumn::make('max_vehicles')
-                    ->numeric()
+                    ->suffix(' voertuig(en)')
                     ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('notes')
+                    ->limit(40)
+                    ->toggledHiddenByDefault(),
             ])
             ->filters([
                 TrashedFilter::make(),
+                CampsiteTypeFilter::make(),
+                ElectricityFilter::make(),
+                MinCapacityFilter::make(),
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()->iconButton(),
+                EditAction::make()->iconButton(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
                     ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }

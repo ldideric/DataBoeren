@@ -26,7 +26,8 @@ use Illuminate\Support\Carbon;
 class ReservationExtra extends Model
 {
     /** @use HasFactory<ReservationExtraFactory> */
-    use HasFactory, HasUuids;
+    use HasFactory;
+    use HasUuids;
 
     public function reservation(): BelongsTo
     {

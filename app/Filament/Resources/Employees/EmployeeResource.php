@@ -11,35 +11,29 @@ use App\Filament\Resources\Employees\Schemas\EmployeeForm;
 use App\Filament\Resources\Employees\Schemas\EmployeeInfolist;
 use App\Filament\Resources\Employees\Tables\EmployeesTable;
 use App\Models\User;
-use App\Queries\UserQuery;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class EmployeeResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?string $label = 'Employee';
 
-    protected static ?string $recordTitleAttribute = 'name';
+    protected static ?string $pluralLabel = 'Employees';
 
-    public static function getModelLabel(): string
+    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedIdentification;
+
+    protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): string|\UnitEnum|null
     {
-        return __('Employee');
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->whereNot('id', Auth::id())
-            ->where(fn (UserQuery $query) => $query
-                ->whereRoleIn(UserRole::Admin, UserRole::Employee)
-            );
+        return 'Staff';
     }
 
     public static function form(Schema $schema): Schema
@@ -59,9 +53,7 @@ class EmployeeResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
@@ -72,5 +64,12 @@ class EmployeeResource extends Resource
             'view' => ViewEmployee::route('/{record}'),
             'edit' => EditEmployee::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([SoftDeletingScope::class])
+            ->whereIn('role', [UserRole::Employee, UserRole::Admin]);
     }
 }
