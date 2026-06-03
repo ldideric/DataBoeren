@@ -1,6 +1,7 @@
 <?php
 
 use App\Booking\Actions\CreateReservation;
+use App\Enums\CouponScope;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Enums\ReservationStatus;
@@ -11,7 +12,6 @@ use App\Models\Campsite;
 use App\Models\Coupon;
 use App\Models\CampsitePrice;
 use App\Models\Extra;
-use App\Models\OrderSummary;
 use App\Models\Reservation;
 use App\Models\Season;
 use App\Models\SeasonPeriod;
@@ -19,6 +19,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
+use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
 
@@ -58,22 +59,42 @@ it('resolves the booking pipeline through the container', function () {
     expect(app(CreateReservation::class))->toBeInstanceOf(CreateReservation::class);
 });
 
-it('shows the booking form with a price preview and the available extras', function () {
-    [$campsite, $checkIn, $checkOut] = bookableCampsite();
-    Extra::factory()->create();
+/** Mount the booking-form component for a stay, with valid customer details filled in. */
+function bookingForm(Campsite $campsite, $checkIn, $checkOut, array $params = [])
+{
+    return Livewire::test('booking-form', array_merge([
+        'campsite' => $campsite,
+        'checkIn' => $checkIn->format('Y-m-d'),
+        'checkOut' => $checkOut->format('Y-m-d'),
+        'adults' => 2,
+        'children' => 1,
+        'vehicles' => 1,
+    ], $params))
+        ->set('firstName', 'Jan')
+        ->set('lastName', 'Jansen')
+        ->set('phone', '0612345678')
+        ->set('email', 'jan@example.com')
+        ->set('payMethod', 'in_person')
+        ->set('adultConfirmation', true)
+        ->set('houseRules', true);
+}
 
-    $response = $this->get(route('bookings.create', [
+it('shows the booking form with the live price and the available extras', function () {
+    [$campsite, $checkIn, $checkOut] = bookableCampsite();
+    $extra = Extra::factory()->create();
+
+    $this->get(route('bookings.create', [
         'campsite' => $campsite->id,
         'check_in' => $checkIn->format('Y-m-d'),
         'check_out' => $checkOut->format('Y-m-d'),
         'adults' => 2,
         'children' => 1,
         'vehicles' => 1,
-    ]));
-
-    $response->assertOk()
-        ->assertViewHas('order', fn ($order) => $order instanceof OrderSummary)
-        ->assertViewHas('extras', fn ($extras) => $extras->count() === 1);
+    ]))
+        ->assertOk()
+        ->assertSeeLivewire('booking-form')
+        ->assertSee('Prijsoverzicht')
+        ->assertSee($extra->name);
 });
 
 it('redirects away from the booking form when the campsite does not fit the party', function () {
@@ -96,61 +117,32 @@ it('redirects away from the booking form when the campsite does not fit the part
     ]));
 });
 
-it('stores a pending reservation from a valid booking request', function () {
+it('stores a pending reservation from a valid booking', function () {
     Mail::fake();
-
     [$campsite, $checkIn, $checkOut] = bookableCampsite();
 
-    $response = $this->post(route('bookings.store'), [
-        'first_name' => 'Jan',
-        'last_name' => 'Jansen',
-        'phone' => '0612345678',
-        'email' => 'jan@example.com',
-        'check_in' => $checkIn->format('Y-m-d'),
-        'check_out' => $checkOut->format('Y-m-d'),
-        'campsite_id' => $campsite->id,
-        'num_adults' => 2,
-        'num_children' => 1,
-        'num_vehicles' => 1,
-        'pay_method' => 'in_person',
-        'adult_confirmation' => '1',
-        'house_rules' => '1',
-    ]);
-
-    $response->assertRedirect(route('login.sent'));
+    bookingForm($campsite, $checkIn, $checkOut)
+        ->call('submit')
+        ->assertRedirect(route('login.sent'));
 
     $reservation = Reservation::query()->firstOrFail();
 
     expect($reservation->campsite_id)->toBe($campsite->id)
         ->and($reservation->status)->toBe(ReservationStatus::Pending)
         ->and($reservation->num_adults)->toBe(2)
-        ->and($reservation->num_children)->toBe(1);
-
-    expect($reservation->orderSummary()->exists())->toBeTrue();
+        ->and($reservation->num_children)->toBe(1)
+        ->and($reservation->orderSummary()->exists())->toBeTrue();
 });
 
 // Pay-on-site: the amount owed is recorded as a pending cash payment and the
 // customer gets a "we received your booking" email carrying the management link.
 it('records a pending cash payment and emails a received notice for pay-on-site bookings', function () {
     Mail::fake();
-
     [$campsite, $checkIn, $checkOut] = bookableCampsite();
 
-    $this->post(route('bookings.store'), [
-        'first_name' => 'Jan',
-        'last_name' => 'Jansen',
-        'phone' => '0612345678',
-        'email' => 'jan@example.com',
-        'check_in' => $checkIn->format('Y-m-d'),
-        'check_out' => $checkOut->format('Y-m-d'),
-        'campsite_id' => $campsite->id,
-        'num_adults' => 2,
-        'num_children' => 1,
-        'num_vehicles' => 1,
-        'pay_method' => 'in_person',
-        'adult_confirmation' => '1',
-        'house_rules' => '1',
-    ])->assertRedirect(route('login.sent'));
+    bookingForm($campsite, $checkIn, $checkOut)
+        ->call('submit')
+        ->assertRedirect(route('login.sent'));
 
     $reservation = Reservation::query()->firstOrFail();
     $payment = $reservation->payments()->firstOrFail();
@@ -166,32 +158,13 @@ it('records a pending cash payment and emails a received notice for pay-on-site 
     Mail::assertNotQueued(MagicLink::class);
 });
 
-function validBookingPayload(Campsite $campsite, $checkIn, $checkOut, array $overrides = []): array
-{
-    return array_merge([
-        'first_name'         => 'Jan',
-        'last_name'          => 'Jansen',
-        'phone'              => '0612345678',
-        'email'              => 'jan@example.com',
-        'check_in'           => $checkIn->format('Y-m-d'),
-        'check_out'          => $checkOut->format('Y-m-d'),
-        'campsite_id'        => $campsite->id,
-        'num_adults'         => 2,
-        'num_children'       => 1,
-        'num_vehicles'       => 1,
-        'pay_method'         => 'in_person',
-        'adult_confirmation' => '1',
-        'house_rules'        => '1',
-    ], $overrides);
-}
-
-it('rejects a public booking when the party exceeds the campsite capacity', function () {
+it('blocks submission when the chosen party exceeds the campsite capacity', function () {
     Mail::fake();
     [$campsite, $checkIn, $checkOut] = bookableCampsite(); // max_people 6
 
-    $this->post(route('bookings.store'), validBookingPayload($campsite, $checkIn, $checkOut, [
-        'num_children' => 100,
-    ]))->assertSessionHasErrors(['num_children']);
+    bookingForm($campsite, $checkIn, $checkOut, ['children' => 100])
+        ->call('submit')
+        ->assertHasErrors('num_children');
 
     expect(Reservation::query()->count())->toBe(0);
 });
@@ -206,9 +179,10 @@ it('applies a coupon to a public booking and tracks its usage', function () {
         'expires_at'     => null,
     ]);
 
-    $this->post(route('bookings.store'), validBookingPayload($campsite, $checkIn, $checkOut, [
-        'coupon_code' => $coupon->code,
-    ]))->assertRedirect(route('login.sent'));
+    bookingForm($campsite, $checkIn, $checkOut)
+        ->set('couponCode', $coupon->code)
+        ->call('submit')
+        ->assertRedirect(route('login.sent'));
 
     $reservation = Reservation::query()->firstOrFail();
 
@@ -222,11 +196,54 @@ it('rejects an expired coupon code on a public booking', function () {
     [$campsite, $checkIn, $checkOut] = bookableCampsite();
     $coupon = Coupon::factory()->expired()->create();
 
-    $this->post(route('bookings.store'), validBookingPayload($campsite, $checkIn, $checkOut, [
-        'coupon_code' => $coupon->code,
-    ]))->assertSessionHasErrors(['coupon_code']);
+    bookingForm($campsite, $checkIn, $checkOut)
+        ->set('couponCode', $coupon->code)
+        ->call('submit')
+        ->assertHasErrors('coupon_code');
 
     expect(Reservation::query()->count())->toBe(0);
+});
+
+it('updates the live price when an extra quantity changes', function () {
+    [$campsite, $checkIn, $checkOut] = bookableCampsite();
+    $extra = Extra::factory()->create([
+        'name' => 'Brandhout',
+        'price' => 500, // € 5,00
+        'billing_type' => \App\Enums\BillingType::OneTime,
+    ]);
+
+    bookingForm($campsite, $checkIn, $checkOut)
+        ->assertDontSee('€ 15,00')
+        ->set("extras.{$extra->id}", 3)
+        ->assertSee('€ 15,00'); // 3 × € 5,00 shows in the breakdown's extras line
+});
+
+it('shows the live discount when a valid total-scope coupon is applied', function () {
+    [$campsite, $checkIn, $checkOut] = bookableCampsite();
+    $coupon = Coupon::factory()->percent()->create([
+        'scope'          => CouponScope::Total,
+        'discount_value' => 50,
+        'uses_count'     => 0,
+        'max_uses'       => null,
+        'expires_at'     => null,
+    ]);
+
+    bookingForm($campsite, $checkIn, $checkOut)
+        ->set('couponCode', $coupon->code)
+        ->call('applyCoupon')
+        ->assertSee('Couponkorting')
+        ->assertSee($coupon->title)
+        ->assertSee('%');
+});
+
+it('does not apply an unknown coupon code in the live preview', function () {
+    [$campsite, $checkIn, $checkOut] = bookableCampsite();
+
+    bookingForm($campsite, $checkIn, $checkOut)
+        ->set('couponCode', 'NOPE404')
+        ->call('applyCoupon')
+        ->assertSee('ongeldig of niet meer geldig')
+        ->assertDontSee('Couponkorting');
 });
 
 // destroy() takes a SignedUrlGenerator to build the redirect target. It was missing

@@ -7,12 +7,14 @@ use Filament\Support\Contracts\HasLabel;
 
 enum CouponScope: string implements HasColor, HasLabel
 {
+    case Total = 'total';
     case Accommodation = 'accommodation';
     case Extra = 'extra';
 
     public function getLabel(): ?string
     {
         return match ($this) {
+            self::Total         => 'Total price',
             self::Accommodation => 'Accommodation',
             self::Extra         => 'Extra',
         };
@@ -21,6 +23,7 @@ enum CouponScope: string implements HasColor, HasLabel
     public function getColor(): string|array|null
     {
         return match ($this) {
+            self::Total         => 'success',
             self::Accommodation => 'primary',
             self::Extra         => 'info',
         };

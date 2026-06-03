@@ -3,16 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Auth\Services\SignedUrlGenerator;
-use App\Booking\Actions\CreateReservation;
-use App\Booking\Actions\RecordCashPayment;
 use App\Booking\DTO\StayCriteria;
 use App\Booking\Queries\CheckAvailability;
-use App\Booking\Queries\GetAvailableExtras;
-use App\Booking\Queries\PreviewPrice;
 use App\Enums\PaymentStatus;
 use App\Enums\ReservationStatus;
-use App\Http\Requests\BookingRequest;
-use App\Mail\BookingReceived;
 use App\Models\Campsite;
 use App\Models\Reservation;
 use App\Models\User;
@@ -20,7 +14,6 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
@@ -62,12 +55,8 @@ class BookingController extends Controller
         ]);
     }
 
-    public function create(
-        Request $request,
-        CheckAvailability $checkAvailability,
-        GetAvailableExtras $getAvailableExtras,
-        PreviewPrice $previewPrice,
-    ): View|RedirectResponse {
+    public function create(Request $request, CheckAvailability $checkAvailability): View|RedirectResponse
+    {
         $campsite = $request->filled('campsite')
             ? Campsite::find($request->query('campsite'))
             : null;
@@ -113,31 +102,7 @@ class BookingController extends Controller
             'adults' => $criteria->adults,
             'children' => $criteria->children,
             'vehicles' => $criteria->vehicles,
-            'order' => $previewPrice->handle($campsite, $criteria->checkIn, $criteria->checkOut, $criteria->adults, $criteria->children),
-            'extras' => $getAvailableExtras->handle($criteria->checkIn, $criteria->checkOut),
         ]);
-    }
-
-    public function store(BookingRequest $request, CreateReservation $createReservation, RecordCashPayment $recordCashPayment, SignedUrlGenerator $urls): RedirectResponse
-    {
-        $reservation = $createReservation->handle($request);
-
-        // Online: send the customer straight to the (signed) Stripe payment page.
-        if ($request->validated('pay_method') === 'online') {
-            return redirect()->to($urls->payment($reservation));
-        }
-
-        // Pay-on-site: record the amount owed as a pending cash payment and email
-        // a "we received your booking" confirmation that carries the (signed) link
-        // to view or cancel the reservation.
-        $recordCashPayment->handle($reservation);
-
-        Mail::to($reservation->customer->email)
-            ->send(new BookingReceived($reservation, $urls->bookings($reservation->customer)));
-
-        return redirect()
-            ->route('login.sent')
-            ->with('status', 'Uw reservering is ingediend. We hebben u een e-mail gestuurd met een link om uw boeking te bekijken of te annuleren.');
     }
 
     public function destroy(User $user, Reservation $reservation, SignedUrlGenerator $urls): RedirectResponse

@@ -91,7 +91,11 @@ class CalculatePrice
             return 0;
         }
 
+        $extrasTotal = fn (): int => collect($extraSelections)
+            ->sum(fn (array $line) => self::lineSubtotal($line['extra'], $line['quantity'], $nights));
+
         $base = match ($coupon->scope) {
+            CouponScope::Total => $baseAmount + $extrasTotal(),
             CouponScope::Accommodation => $baseAmount,
             CouponScope::Extra => collect($extraSelections)
                 ->filter(fn (array $line) => $line['extra']->id === $coupon->extra_id)

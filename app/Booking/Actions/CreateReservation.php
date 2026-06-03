@@ -7,7 +7,6 @@ use App\Booking\Queries\FindAvailableCampsite;
 use App\Enums\ReservationSource;
 use App\Enums\ReservationStatus;
 use App\Enums\UserRole;
-use App\Http\Requests\BookingRequest;
 use App\Models\Campsite;
 use App\Models\Coupon;
 use App\Models\Reservation;
@@ -32,27 +31,24 @@ readonly class CreateReservation
     /**
      * @throws ValidationException|Throwable when the campsite is no longer available.
      */
-    public function handle(BookingRequest $request): Reservation
+    public function handle(array $data): Reservation
     {
-        $data = $request->validated();
         $checkIn = Carbon::parse($data['check_in']);
         $checkOut = Carbon::parse($data['check_out']);
+        $adults = (int) $data['num_adults'];
+        $children = (int) $data['num_children'];
+        $vehicles = (int) $data['num_vehicles'];
 
-        return DB::transaction(function () use ($request, $data, $checkIn, $checkOut) {
+        return DB::transaction(function () use ($data, $checkIn, $checkOut, $adults, $children, $vehicles) {
             $campsite = Campsite::query()->whereKey($data['campsite_id'])->first()
                 ?? throw ValidationException::withMessages(['campsite_id' => 'De gekozen plek bestaat niet.']);
 
-            $this->validator->validateCapacity(
-                $campsite,
-                (int) $data['num_adults'],
-                (int) $data['num_children'],
-                $request->vehicleCount(),
-            );
+            $this->validator->validateCapacity($campsite, $adults, $children, $vehicles);
 
             $campsite = $this->findAvailableCampsite->handle(
-                $request->validated('campsite_id'),
-                $request->partySize(),
-                $request->vehicleCount(),
+                $data['campsite_id'],
+                $adults + $children,
+                $vehicles,
                 $checkIn,
                 $checkOut,
             );
@@ -76,9 +72,9 @@ readonly class CreateReservation
                 'source' => ReservationSource::Online,
                 'check_in' => $checkIn,
                 'check_out' => $checkOut,
-                'num_adults' => (int) $data['num_adults'],
-                'num_children' => (int) $data['num_children'],
-                'num_vehicles' => $request->vehicleCount(),
+                'num_adults' => $adults,
+                'num_children' => $children,
+                'num_vehicles' => $vehicles,
                 'status' => ReservationStatus::Pending,
             ]);
             $reservation->setRelation('customer', $customer)

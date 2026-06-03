@@ -87,7 +87,7 @@ class Coupon extends Model
                     ? $this->extra->name
                     : $this->scope->getLabel();
 
-                return Str::of($value)->append(" on {$target}");
+                return Str::of($value)->append(" op {$target}");
             }
         );
     }

@@ -23,7 +23,6 @@ Route::controller(BookingController::class)
     ->name('bookings.')
     ->group(function () {
         Route::get('/create', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
     });
 
 /* Customer self-service */
