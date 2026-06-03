@@ -233,7 +233,7 @@ it('shows the live discount when a valid total-scope coupon is applied', functio
         ->call('applyCoupon')
         ->assertSee('Couponkorting')
         ->assertSee($coupon->title)
-        ->assertSee('%');
+        ->assertSee($coupon->formatted_discount);
 });
 
 it('does not apply an unknown coupon code in the live preview', function () {

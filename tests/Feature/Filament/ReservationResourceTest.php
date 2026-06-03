@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Enums\CheckoutMethod;
+use App\Enums\CouponScope;
+use App\Enums\DiscountType;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Enums\ReservationSource;
@@ -188,6 +190,135 @@ it('shows a live price total in the wizard summary once the stay is filled', fun
         ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut))
         ->assertSee('Prijsoverzicht')
         ->assertSee('Totaal');
+});
+
+it('shows the coupon line in the wizard summary when a coupon is selected', function () {
+    [$campsite, $checkIn, $checkOut] = newBookingFixture();
+    $coupon = Coupon::factory()->flat()->create([
+        'discount_value' => 10,
+        'uses_count'     => 0,
+        'max_uses'       => null,
+        'expires_at'     => null,
+    ]);
+
+    Livewire::test(NewBooking::class)
+        ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut, [
+            'coupon_id' => $coupon->id,
+        ]))
+        ->assertSchemaStateSet(['coupon_id' => $coupon->id])
+        ->assertSee('Prijsoverzicht')
+        ->assertSee('Coupon')
+        ->assertSee('Totaal');
+});
+
+it('calculates the exact booking total when a coupon is applied', function () {
+    Mail::fake();
+
+    [$campsite, $checkIn, $checkOut] = newBookingFixture();
+    CampsitePrice::query()
+        ->where('campsite_id', $campsite->id)
+        ->update([
+            'nightly_rate' => 2000,
+            'per_adult_rate' => 500,
+            'per_child_rate' => 200,
+        ]);
+
+    $coupon = Coupon::factory()->create([
+        'scope' => CouponScope::Accommodation,
+        'discount_type' => DiscountType::Percent,
+        'discount_value' => 25,
+        'uses_count' => 0,
+        'max_uses' => null,
+        'expires_at' => null,
+    ]);
+
+    Livewire::test(NewBooking::class)
+        ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut, [
+            'coupon_id' => $coupon->id,
+            'payment_method' => CheckoutMethod::CashPaid->value,
+        ]))
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    $reservation = Reservation::query()->firstOrFail();
+
+    expect($reservation->coupon_id)->toBe($coupon->id)
+        ->and($reservation->orderSummary->nightly_rate)->toBe(2000)
+        ->and($reservation->orderSummary->per_adult_rate)->toBe(500)
+        ->and($reservation->orderSummary->per_child_rate)->toBe(200)
+        ->and($reservation->orderSummary->coupon_discount)->toBe(1600)
+        ->and($reservation->orderSummary->total)->toBe(4800)
+        ->and($reservation->payments()->firstOrFail()->amount)->toBe(4800)
+        ->and($coupon->refresh()->uses_count)->toBe(1);
+});
+
+it('reuses an existing customer when the booking is created for one', function () {
+    [$campsite, $checkIn, $checkOut] = newBookingFixture();
+    $customer = User::factory()->create(['email' => 'bestaand@example.com']);
+    $userCount = User::query()->count();
+
+    Livewire::test(NewBooking::class)
+        ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut, [
+            'existing_customer' => true,
+            'customer_id' => $customer->id,
+            'email' => 'wordt-niet-gebruikt@example.com',
+        ]))
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    $reservation = Reservation::query()->firstOrFail();
+
+    expect($reservation->customer_id)->toBe($customer->id)
+        ->and(User::query()->count())->toBe($userCount);
+});
+
+it('rejects a campsite that is already booked for the selected dates', function () {
+    [$campsite, $checkIn, $checkOut] = newBookingFixture();
+
+    Reservation::factory()->create([
+        'campsite_id' => $campsite->id,
+        'check_in' => $checkIn,
+        'check_out' => $checkOut,
+        'status' => ReservationStatus::Confirmed,
+    ]);
+
+    Livewire::test(NewBooking::class)
+        ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut))
+        ->call('save')
+        ->assertHasFormErrors(['campsite_id']);
+
+    expect(Reservation::query()->count())->toBe(1);
+});
+
+it('rejects a tampered coupon id when the booking is submitted', function () {
+    [$campsite, $checkIn, $checkOut] = newBookingFixture();
+    $coupon = Coupon::factory()->expired()->create();
+
+    Livewire::test(NewBooking::class)
+        ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut, [
+            'coupon_id' => $coupon->id,
+        ]))
+        ->call('save')
+        ->assertHasFormErrors(['coupon_id']);
+
+    expect(Reservation::query()->count())->toBe(0);
+});
+
+it('rejects a booking when no price is configured for the chosen dates', function () {
+    $checkIn = now()->addDays(10)->startOfDay();
+    $checkOut = $checkIn->copy()->addDays(2);
+
+    $campsite = Campsite::factory()->create([
+        'max_people' => 6,
+        'max_vehicles' => 2,
+    ]);
+
+    Livewire::test(NewBooking::class)
+        ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut))
+        ->call('save')
+        ->assertHasFormErrors(['check_in']);
+
+    expect(Reservation::query()->count())->toBe(0);
 });
 
 it('confirms the booking and records a paid cash payment when cash is taken now', function () {
