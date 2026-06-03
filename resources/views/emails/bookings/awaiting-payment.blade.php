@@ -18,6 +18,6 @@ Nu betalen
 
 Deze betaallink is **60 minuten** geldig. Heeft u inmiddels al betaald? Dan kunt u deze e-mail negeren.
 
-Groet,
+Vriendelijke groet,
 {{ config('app.name') }}
 </x-mail::message>

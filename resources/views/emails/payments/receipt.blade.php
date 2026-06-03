@@ -3,7 +3,7 @@
 
 Beste {{ $reservation->customer->first_name }},
 
-We hebben uw betaling in goede orde ontvangen. Bewaar deze e-mail als betalingsbewijs.
+We hebben uw betaling goed ontvangen. Bewaar deze e-mail als betalingsbewijs.
 
 - **Plek:** {{ $reservation->campsite->name }}
 - **Aankomst:** {{ $reservation->check_in->format('d M Y') }}
@@ -15,6 +15,6 @@ We hebben uw betaling in goede orde ontvangen. Bewaar deze e-mail als betalingsb
 
 Tot ziens op de camping!
 
-Groet,
+Vriendelijke groet,
 {{ config('app.name') }}
 </x-mail::message>

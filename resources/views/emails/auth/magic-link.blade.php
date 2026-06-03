@@ -11,6 +11,6 @@ Bekijk mijn boekingen
 
 Deze link is **60 minuten** geldig. Heeft u deze link niet aangevraagd? Dan kunt u deze e-mail negeren.
 
-Groet,
+Vriendelijke groet,
 {{ config('app.name') }}
 </x-mail::message>

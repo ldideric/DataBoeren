@@ -10,7 +10,7 @@ Uw verblijf bij Camping De Groene Weide komt eraan. We kijken ernaar uit u te on
 - **Vertrek:** {{ $reservation->check_out->format('d M Y') }}
 - **Referentie:** {{ $reservation->id }}
 
-**Goed om te weten:** inchecken kan vanaf 14:00 uur. Houd uw reserveringsnummer bij de hand bij aankomst.
+**Goed om te weten:** inchecken kan vanaf 14:00 uur.
 
 Tot snel op de camping!
 

@@ -3,7 +3,7 @@
 
 Beste {{ $reservation->customer->first_name }},
 
-Bedankt voor uw reservering bij Camping De Groene Weide. We hebben uw boeking ontvangen. Het bedrag voldoet u bij aankomst op de camping.
+Bedankt voor uw reservering bij Camping De Groene Weide. We hebben uw boeking ontvangen.
 
 - **Plek:** {{ $reservation->campsite->name }}
 - **Aankomst:** {{ $reservation->check_in->format('d M Y') }}
@@ -19,10 +19,10 @@ Bedankt voor uw reservering bij Camping De Groene Weide. We hebben uw boeking on
 Bekijk mijn reservering
 </x-mail::button>
 
-Deze link is **60 minuten** geldig. Heeft u een nieuwe link nodig? Vraag deze opnieuw aan via de website.
+Deze link is **60 minuten** geldig. Heeft u een nieuwe link nodig? Vraag deze opnieuw aan via 'mijn boekingen'de website.
 
 Tot ziens op de camping!
 
-Groet,
+Vriendelijke groet,
 {{ config('app.name') }}
 </x-mail::message>

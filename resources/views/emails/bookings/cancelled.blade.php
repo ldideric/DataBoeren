@@ -10,8 +10,8 @@ Uw reservering bij Camping De Groene Weide is geannuleerd.
 - **Vertrek:** {{ $reservation->check_out->format('d M Y') }}
 - **Referentie:** {{ $reservation->id }}
 
-Heeft u dit niet zelf gedaan? Neem dan contact met ons op.
+Heeft u dit niet zelf gedaan? Neem dan contact met ons op via de website.
 
-Groet,
+Vriendelijke groet,
 {{ config('app.name') }}
 </x-mail::message>
