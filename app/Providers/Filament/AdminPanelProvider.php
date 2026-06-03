@@ -32,6 +32,7 @@ class AdminPanelProvider extends PanelProvider
             // ->emailVerification() // TODO: Check later
             ->emailChangeVerification()
             ->profile(EditProfile::class)
+            ->favicon(asset('favicon-32.png'))
             ->colors([
                 'primary' => Color::Amber,
             ])
