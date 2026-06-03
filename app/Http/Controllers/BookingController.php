@@ -9,6 +9,7 @@ use App\Booking\DTO\StayCriteria;
 use App\Booking\Queries\CheckAvailability;
 use App\Booking\Queries\GetAvailableExtras;
 use App\Booking\Queries\PreviewPrice;
+use App\Enums\PaymentStatus;
 use App\Enums\ReservationStatus;
 use App\Http\Requests\BookingRequest;
 use App\Mail\BookingReceived;
@@ -26,7 +27,7 @@ class BookingController extends Controller
     public function index(User $user, SignedUrlGenerator $urls): View
     {
         $reservations = $user->reservations()
-            ->with('campsite')
+            ->with(['campsite', 'orderSummary', 'extras.extra', 'coupon', 'payments'])
             ->latest('check_in')
             ->get();
 
@@ -40,11 +41,24 @@ class BookingController extends Controller
                 $reservation->id => $urls->payment($reservation),
             ]);
 
+        $active = $reservations->where('status', '!==', ReservationStatus::Cancelled);
+
+        $stats = [
+            'total' => $reservations->count(),
+            'upcoming' => $active->filter(fn (Reservation $reservation) => $reservation->check_in->gte(today()))->count(),
+            'nights' => $active->sum(fn (Reservation $reservation) => (int) $reservation->check_in->diffInDays($reservation->check_out)),
+            'paid' => $reservations
+                ->flatMap->payments
+                ->where('status', PaymentStatus::Paid)
+                ->sum('amount'),
+        ];
+
         return view('bookings.index', [
             'user' => $user,
             'reservations' => $reservations,
             'cancelUrls' => $cancelUrls,
             'paymentUrls' => $paymentUrls,
+            'stats' => $stats,
         ]);
     }
 
