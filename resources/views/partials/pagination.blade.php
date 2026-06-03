@@ -6,9 +6,9 @@
                 ← Vorige
             </span>
         @else
-            <a href="{{ $paginator->previousPageUrl() }}" class="rounded-lg border border-tan-400 bg-tan-300 px-4 py-2 text-sm text-black transition hover:bg-tan-400">
+            <button type="button" wire:click="previousPage('{{ $paginator->getPageName() }}')" wire:loading.attr="disabled" class="rounded-lg border border-tan-400 bg-tan-300 px-4 py-2 text-sm text-black transition hover:bg-tan-400">
                 ← Vorige
-            </a>
+            </button>
         @endif
 
         {{-- Page numbers --}}
@@ -25,9 +25,9 @@
                                 {{ $page }}
                             </span>
                         @else
-                            <a href="{{ $url }}" class="rounded-lg border border-tan-400 bg-tan-300 px-3 py-1.5 text-sm text-black transition hover:bg-tan-400">
+                            <button type="button" wire:key="page-{{ $page }}" wire:click="gotoPage({{ $page }}, '{{ $paginator->getPageName() }}')" class="rounded-lg border border-tan-400 bg-tan-300 px-3 py-1.5 text-sm text-black transition hover:bg-tan-400">
                                 {{ $page }}
-                            </a>
+                            </button>
                         @endif
                     @endforeach
                 @endif
@@ -36,9 +36,9 @@
 
         {{-- Next --}}
         @if ($paginator->hasMorePages())
-            <a href="{{ $paginator->nextPageUrl() }}" class="rounded-lg border border-tan-400 bg-tan-300 px-4 py-2 text-sm text-black transition hover:bg-tan-400">
+            <button type="button" wire:click="nextPage('{{ $paginator->getPageName() }}')" wire:loading.attr="disabled" class="rounded-lg border border-tan-400 bg-tan-300 px-4 py-2 text-sm text-black transition hover:bg-tan-400">
                 Volgende →
-            </a>
+            </button>
         @else
             <span class="rounded-lg border border-tan-400 bg-tan-200 px-4 py-2 text-sm text-black/40 cursor-not-allowed select-none">
                 Volgende →
