@@ -16,6 +16,8 @@ class RoleFilter extends SelectFilter
     {
         parent::setUp();
 
-        $this->options(UserRole::class);
+        $this
+            ->label(__('employee.filters.role'))
+            ->options(UserRole::class);
     }
 }

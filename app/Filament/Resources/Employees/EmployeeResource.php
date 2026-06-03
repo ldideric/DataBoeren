@@ -23,17 +23,23 @@ class EmployeeResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $label = 'Employee';
-
-    protected static ?string $pluralLabel = 'Employees';
-
     protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedIdentification;
 
     protected static ?int $navigationSort = 1;
 
     public static function getNavigationGroup(): string|\UnitEnum|null
     {
-        return 'Staff';
+        return __('navigation.groups.staff');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('navigation.employee.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('navigation.employee.plural');
     }
 
     public static function form(Schema $schema): Schema

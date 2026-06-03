@@ -34,26 +34,31 @@ class ReservationsTable
             ->columns([
                 TextColumn::make('customer.first_name')
                     ->formatStateUsing(fn ($_, $record) => $record->customer?->first_name.' '.$record->customer?->last_name)
-                    ->label('Customer')
+                    ->label(__('reservation.fields.customer'))
                     ->searchable(query: fn (Builder $query, string $search) => $query->whereHas('customer', fn ($q) => $q->where('first_name', 'like', "%{$search}%")->orWhere('last_name', 'like', "%{$search}%"))),
                 TextColumn::make('campsite.name')
+                    ->label(__('reservation.fields.campsite'))
                     ->searchable(),
                 TextColumn::make('check_in')
+                    ->label(__('reservation.fields.check_in'))
                     ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('check_out')
+                    ->label(__('reservation.fields.check_out'))
                     ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('num_adults')
-                    ->formatStateUsing(fn ($state, $record) => $state.' adult(s), '.$record->num_children.' child(ren)')
-                    ->label('Guests'),
+                    ->formatStateUsing(fn ($state, $record) => __('reservation.fields.guests_summary', ['adults' => $state, 'children' => $record->num_children]))
+                    ->label(__('reservation.fields.guests')),
                 TextColumn::make('status')
+                    ->label(__('common.status'))
                     ->badge(),
                 TextColumn::make('source')
+                    ->label(__('reservation.fields.source'))
                     ->badge(),
                 TextColumn::make('orderSummary.total')
                     ->formatStateUsing(fn ($state) => $state !== null ? '€ '.number_format($state / 100, 2, ',', '.') : '—')
-                    ->label('Total'),
+                    ->label(__('reservation.fields.total')),
             ])
             ->filtersFormColumns(2)
             ->filters([

@@ -17,6 +17,7 @@ class AwaitingPayment extends Mailable implements ShouldQueue
 
     public function __construct(public Reservation $reservation, public string $paymentUrl)
     {
+        $this->locale('nl');
     }
 
     public function envelope(): Envelope

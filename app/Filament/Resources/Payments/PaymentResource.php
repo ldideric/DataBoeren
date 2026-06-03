@@ -26,7 +26,17 @@ class PaymentResource extends Resource
 
     public static function getNavigationGroup(): string|\UnitEnum|null
     {
-        return 'Reservations';
+        return __('navigation.groups.reservations');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('navigation.payment.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('navigation.payment.plural');
     }
 
     public static function form(Schema $schema): Schema

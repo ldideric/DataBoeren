@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
 
 /**
  * @property string $id
@@ -85,9 +84,9 @@ class Coupon extends Model
 
                 $target = $this->scope === CouponScope::Extra && $this->extra
                     ? $this->extra->name
-                    : $this->scope->dutchLabel();
+                    : $this->scope->getLabel();
 
-                return Str::of($value)->append(" op {$target}");
+                return __('coupon.discount_on', ['value' => $value, 'target' => $target]);
             }
         );
     }

@@ -14,18 +14,9 @@ enum CouponScope: string implements HasColor, HasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::Total         => 'Total price',
-            self::Accommodation => 'Accommodation',
-            self::Extra         => 'Extra',
-        };
-    }
-
-    public function dutchLabel(): string
-    {
-        return match ($this) {
-            self::Total         => 'Totaalprijs',
-            self::Accommodation => 'Accommodatie',
-            self::Extra         => 'Extra',
+            self::Total         => __('enums.coupon_scope.total'),
+            self::Accommodation => __('enums.coupon_scope.accommodation'),
+            self::Extra         => __('enums.coupon_scope.extra'),
         };
     }
 

@@ -17,6 +17,7 @@ class PreArrival extends Mailable implements ShouldQueue
 
     public function __construct(public Reservation $reservation)
     {
+        $this->locale('nl');
     }
 
     public function envelope(): Envelope

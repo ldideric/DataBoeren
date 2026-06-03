@@ -60,7 +60,7 @@ class BookingForm
 
     public static function customerStep(): Step
     {
-        return Step::make('Customer')
+        return Step::make(__('booking.steps.customer'))
             ->icon(Heroicon::User)
             ->schema([
                 self::existingCustomer(),
@@ -71,7 +71,7 @@ class BookingForm
 
     public static function stayStep(): Step
     {
-        return Step::make('Stay')
+        return Step::make(__('booking.steps.stay'))
             ->icon(Heroicon::CalendarDays)
             ->columns(2)
             ->schema([
@@ -90,7 +90,7 @@ class BookingForm
 
     public static function extrasStep(): Step
     {
-        return Step::make('Extras')
+        return Step::make(__('booking.steps.extras'))
             ->icon(Heroicon::ShoppingBag)
             ->schema([
                 self::extras(),
@@ -99,7 +99,7 @@ class BookingForm
 
     public static function summaryStep(): Step
     {
-        return Step::make('Summary & payment')
+        return Step::make(__('booking.steps.summary'))
             ->icon(Heroicon::Banknotes)
             ->schema([
                 self::coupon(),
@@ -113,7 +113,7 @@ class BookingForm
     public static function existingCustomer(): Toggle
     {
         return Toggle::make('existing_customer')
-            ->label('Existing customer')
+            ->label(__('booking.fields.existing_customer'))
             ->live()
             ->default(false);
     }
@@ -121,7 +121,7 @@ class BookingForm
     public static function customerSelect(): Select
     {
         return Select::make('customer_id')
-            ->label('Customer')
+            ->label(__('booking.fields.customer'))
             ->options(User::whereRole(UserRole::Customer)->pluck('email', 'id'))
             ->searchable()
             ->preload()
@@ -144,7 +144,7 @@ class BookingForm
     public static function firstName(): TextInput
     {
         return TextInput::make('first_name')
-            ->label('First name')
+            ->label(__('common.first_name'))
             ->required()
             ->maxLength(255);
     }
@@ -152,7 +152,7 @@ class BookingForm
     public static function lastName(): TextInput
     {
         return TextInput::make('last_name')
-            ->label('Last name')
+            ->label(__('common.last_name'))
             ->required()
             ->maxLength(255);
     }
@@ -160,7 +160,7 @@ class BookingForm
     public static function email(): TextInput
     {
         return TextInput::make('email')
-            ->label('Email')
+            ->label(__('common.email'))
             ->email()
             ->required()
             ->maxLength(255);
@@ -169,7 +169,7 @@ class BookingForm
     public static function phone(): TextInput
     {
         return TextInput::make('phone')
-            ->label('Phone')
+            ->label(__('common.phone'))
             ->tel()
             ->required()
             ->maxLength(32);
@@ -180,7 +180,7 @@ class BookingForm
     public static function campsite(): Select
     {
         return Select::make('campsite_id')
-            ->label('Campsite')
+            ->label(__('booking.fields.campsite'))
             ->options(Campsite::query()->pluck('name', 'id'))
             ->required();
     }
@@ -188,7 +188,7 @@ class BookingForm
     public static function checkIn(): DatePicker
     {
         return DatePicker::make('check_in')
-            ->label('Check-in')
+            ->label(__('booking.fields.check_in'))
             ->required()
             ->minDate(today())
             ->live();
@@ -197,7 +197,7 @@ class BookingForm
     public static function checkOut(): DatePicker
     {
         return DatePicker::make('check_out')
-            ->label('Check-out')
+            ->label(__('booking.fields.check_out'))
             ->required()
             ->minDate(fn (Get $get): ?string => $get('check_in'))
             // Strictly after check-in: a same-day, zero-night stay isn't a booking.
@@ -207,7 +207,7 @@ class BookingForm
     public static function numAdults(): TextInput
     {
         return TextInput::make('num_adults')
-            ->label('Adults')
+            ->label(__('booking.fields.adults'))
             ->numeric()
             ->integer()
             ->minValue(1)
@@ -219,7 +219,7 @@ class BookingForm
     public static function numChildren(): TextInput
     {
         return TextInput::make('num_children')
-            ->label('Children')
+            ->label(__('booking.fields.children'))
             ->numeric()
             ->integer()
             ->minValue(0)
@@ -231,7 +231,7 @@ class BookingForm
     public static function numVehicles(): TextInput
     {
         return TextInput::make('num_vehicles')
-            ->label('Vehicles')
+            ->label(__('booking.fields.vehicles'))
             ->numeric()
             ->integer()
             ->minValue(0)
@@ -286,9 +286,9 @@ class BookingForm
     public static function coupon(): Select
     {
         return Select::make('coupon_id')
-            ->label('Coupon')
+            ->label(__('booking.fields.coupon'))
             ->options(Coupon::query()->redeemable()->orderBy('code')->pluck('code', 'id'))
-            ->helperText('Only currently valid coupons are listed.')
+            ->helperText(__('booking.fields.coupon_helper'))
             ->searchable()
             ->live()
             ->nullable();
@@ -296,11 +296,11 @@ class BookingForm
 
     public static function priceSummary(): Section
     {
-        return Section::make('Prijsoverzicht')
+        return Section::make(__('booking.summary.heading'))
             ->schema([
                 TextEntry::make('summary_empty')
                     ->hiddenLabel()
-                    ->state('Vul de verblijfsgegevens in om de prijs te berekenen.')
+                    ->state(__('booking.summary.empty'))
                     ->visible(fn (Get $get): bool => self::previewOrder($get) === null),
 
                 TextEntry::make('summary_stay')
@@ -310,25 +310,25 @@ class BookingForm
                     ->visible(fn (Get $get): bool => self::previewOrder($get) !== null),
 
                 TextEntry::make('summary_last_minute')
-                    ->label('Last-minute korting')
+                    ->label(__('booking.summary.last_minute'))
                     ->money('EUR', divideBy: 100, locale: 'nl')
                     ->state(fn (Get $get): ?int => ($d = self::previewOrder($get)?->last_minute_discount) ? -$d : null)
                     ->visible(fn (Get $get): bool => (bool) self::previewOrder($get)?->last_minute_discount),
 
                 TextEntry::make('summary_coupon')
-                    ->label('Coupon')
+                    ->label(__('booking.summary.coupon'))
                     ->money('EUR', divideBy: 100, locale: 'nl')
                     ->state(fn (Get $get): ?int => ($d = self::previewOrder($get)?->coupon_discount) ? -$d : null)
                     ->visible(fn (Get $get): bool => (bool) self::previewOrder($get)?->coupon_discount),
 
                 TextEntry::make('summary_extras')
-                    ->label("Extra's")
+                    ->label(__('booking.summary.extras'))
                     ->money('EUR', divideBy: 100, locale: 'nl')
                     ->state(fn (Get $get): ?int => self::previewOrder($get)?->extras_total ?: null)
                     ->visible(fn (Get $get): bool => (bool) self::previewOrder($get)?->extras_total),
 
                 TextEntry::make('summary_total')
-                    ->label('Totaal')
+                    ->label(__('booking.summary.total'))
                     ->weight(FontWeight::Bold)
                     ->money('EUR', divideBy: 100, locale: 'nl')
                     ->state(fn (Get $get): ?int => self::previewOrder($get)?->total)
@@ -366,7 +366,10 @@ class BookingForm
     {
         $nights = self::previewOrder($get)?->num_nights ?? 0;
 
-        return 'Verblijf ('.$nights.' '.($nights === 1 ? 'nacht' : 'nachten').')';
+        return __('booking.summary.stay', [
+            'count' => $nights,
+            'unit'  => $nights === 1 ? __('booking.summary.night') : __('booking.summary.nights'),
+        ]);
     }
 
     /** Pre-discount accommodation cost, derived from the frozen summary totals. */
@@ -381,7 +384,7 @@ class BookingForm
     public static function paymentMethod(): Radio
     {
         return Radio::make('payment_method')
-            ->label('Payment')
+            ->label(__('booking.fields.payment'))
             ->options(CheckoutMethod::class)
             ->descriptions(
                 collect(CheckoutMethod::cases())
@@ -397,20 +400,20 @@ class BookingForm
     public static function extras(): Repeater
     {
         return Repeater::make('extras')
-            ->label('Extras')
+            ->label(__('booking.fields.extras'))
             ->schema([
                 self::extraSelect(),
                 self::extraQuantity(),
             ])
             ->nullable()
-            ->addActionLabel('Add extra')
+            ->addActionLabel(__('booking.fields.add_extra'))
             ->columns(2);
     }
 
     public static function extraSelect(): Select
     {
         return Select::make('extra_id')
-            ->label('Extra')
+            ->label(__('booking.fields.extra'))
             ->options(Extra::orderBy('name')->pluck('name', 'id'))
             ->required();
     }
@@ -418,7 +421,7 @@ class BookingForm
     public static function extraQuantity(): TextInput
     {
         return TextInput::make('quantity')
-            ->label('Quantity')
+            ->label(__('booking.fields.quantity'))
             ->numeric()
             ->integer()
             ->minValue(1)
@@ -429,7 +432,8 @@ class BookingForm
     private static function submitButton(): HtmlString
     {
         return new HtmlString(Blade::render(
-            '<x-filament::button type="submit">Create Booking</x-filament::button>'
+            '<x-filament::button type="submit">{{ $label }}</x-filament::button>',
+            ['label' => __('booking.page.submit')]
         ));
     }
 }

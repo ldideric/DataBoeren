@@ -18,6 +18,7 @@ class PaymentReceipt extends Mailable implements ShouldQueue
 
     public function __construct(public Reservation $reservation, public Payment $payment)
     {
+        $this->locale('nl');
     }
 
     public function envelope(): Envelope

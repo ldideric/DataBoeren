@@ -13,13 +13,13 @@ class CancelReservationAction
     public static function make(): Action
     {
         return Action::make('cancel')
-            ->label('Cancel')
+            ->label(__('reservation.actions.cancel.label'))
             ->icon('heroicon-o-x-circle')
             ->color('danger')
             ->visible(fn (Reservation $record): bool => $record->status !== ReservationStatus::Cancelled)
             ->schema([
                 Textarea::make('cancellation_reason')
-                    ->label('Reason')
+                    ->label(__('reservation.actions.cancel.reason'))
                     ->required()
                     ->maxLength(255),
             ])
@@ -32,6 +32,6 @@ class CancelReservationAction
                     'cancelled_by_user_id' => Auth::id(),
                 ]);
             })
-            ->successNotificationTitle('Reservation cancelled');
+            ->successNotificationTitle(__('reservation.actions.cancel.success'));
     }
 }

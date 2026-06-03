@@ -13,8 +13,8 @@ enum PaymentMethod: string implements HasColor, HasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::Stripe => 'Stripe',
-            self::Cash   => 'Cash',
+            self::Stripe => __('enums.payment_method.stripe'),
+            self::Cash   => __('enums.payment_method.cash'),
         };
     }
 

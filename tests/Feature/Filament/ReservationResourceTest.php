@@ -207,7 +207,7 @@ it('shows the coupon line in the wizard summary when a coupon is selected', func
         ]))
         ->assertSchemaStateSet(['coupon_id' => $coupon->id])
         ->assertSee('Prijsoverzicht')
-        ->assertSee('Coupon')
+        ->assertSee('Kortingsbon')
         ->assertSee('Totaal');
 });
 

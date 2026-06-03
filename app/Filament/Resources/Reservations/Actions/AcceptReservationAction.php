@@ -13,12 +13,12 @@ class AcceptReservationAction
     public static function make(): Action
     {
         return Action::make('accept')
-            ->label('Accept')
+            ->label(__('reservation.actions.accept.label'))
             ->icon('heroicon-o-check-circle')
             ->color('success')
             ->requiresConfirmation()
-            ->modalHeading('Accept pending reservation')
-            ->modalDescription('Confirm this reservation and mark any pending on-site payment as paid. The customer receives a confirmation email.')
+            ->modalHeading(__('reservation.actions.accept.modal_heading'))
+            ->modalDescription(__('reservation.actions.accept.modal_description'))
             ->visible(fn (Reservation $record): bool => $record->status === ReservationStatus::Pending)
             ->action(function (Reservation $record): void {
                 $record->payments()
@@ -32,6 +32,6 @@ class AcceptReservationAction
                 // Triggers ReservationObserver -> BookingConfirmed email.
                 $record->update(['status' => ReservationStatus::Confirmed]);
             })
-            ->successNotificationTitle('Reservation accepted');
+            ->successNotificationTitle(__('reservation.actions.accept.success'));
     }
 }

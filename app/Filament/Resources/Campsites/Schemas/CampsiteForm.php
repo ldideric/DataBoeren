@@ -16,19 +16,25 @@ class CampsiteForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('common.name'))
                     ->required(),
                 Select::make('type')
+                    ->label(__('campsite.fields.type'))
                     ->options(CampsiteType::class)
                     ->required(),
                 Toggle::make('has_electricity')
+                    ->label(__('campsite.fields.has_electricity'))
                     ->required(),
                 TextInput::make('max_people')
+                    ->label(__('campsite.fields.max_people'))
                     ->required()
                     ->numeric(),
                 TextInput::make('max_vehicles')
+                    ->label(__('campsite.fields.max_vehicles'))
                     ->required()
                     ->numeric(),
                 Textarea::make('notes')
+                    ->label(__('common.notes'))
                     ->columnSpanFull(),
             ]);
     }

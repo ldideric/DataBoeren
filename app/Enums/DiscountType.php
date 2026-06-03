@@ -13,8 +13,8 @@ enum DiscountType: string implements HasColor, HasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::Flat    => 'Flat',
-            self::Percent => 'Percent',
+            self::Flat    => __('enums.discount_type.flat'),
+            self::Percent => __('enums.discount_type.percent'),
         };
     }
 

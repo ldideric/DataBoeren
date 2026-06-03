@@ -13,11 +13,11 @@ class ResendConfirmationAction
     public static function make(): Action
     {
         return Action::make('resendConfirmation')
-            ->label('Resend confirmation')
+            ->label(__('reservation.actions.resend_confirmation.label'))
             ->icon('heroicon-o-envelope')
             ->requiresConfirmation()
             ->visible(fn (Reservation $record): bool => $record->status === ReservationStatus::Confirmed)
             ->action(fn (Reservation $record) => Mail::to($record->customer->email)->send(new BookingConfirmed($record)))
-            ->successNotificationTitle('Confirmation email re-sent');
+            ->successNotificationTitle(__('reservation.actions.resend_confirmation.success'));
     }
 }

@@ -18,10 +18,11 @@ class SeasonsTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('common.name'))
                     ->searchable(),
                 TextColumn::make('periods_count')
                     ->counts('periods')
-                    ->label('Periods'),
+                    ->label(__('season.fields.periods')),
             ])
             ->filters([
                 ActiveNowFilter::make(),

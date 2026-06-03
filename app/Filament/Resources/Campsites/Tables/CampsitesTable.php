@@ -23,19 +23,25 @@ class CampsitesTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('common.name'))
                     ->searchable(),
                 TextColumn::make('type')
+                    ->label(__('campsite.fields.type'))
                     ->badge()
                     ->searchable(),
                 IconColumn::make('has_electricity')
+                    ->label(__('campsite.fields.has_electricity'))
                     ->boolean(),
                 TextColumn::make('max_people')
-                    ->suffix(' pers.')
+                    ->label(__('campsite.fields.max_people'))
+                    ->suffix(__('campsite.suffix.people'))
                     ->sortable(),
                 TextColumn::make('max_vehicles')
-                    ->suffix(' voertuig(en)')
+                    ->label(__('campsite.fields.max_vehicles'))
+                    ->suffix(__('campsite.suffix.vehicles'))
                     ->sortable(),
                 TextColumn::make('notes')
+                    ->label(__('common.notes'))
                     ->limit(40)
                     ->toggledHiddenByDefault(),
             ])

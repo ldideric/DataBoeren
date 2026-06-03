@@ -41,13 +41,21 @@ class NewBooking extends Page
 {
     protected string $view = 'filament.pages.new-booking';
 
-    protected static ?string $title = 'New Booking';
-
     protected static string|null|\BackedEnum $navigationIcon = Heroicon::CalendarDateRange;
 
     protected static ?int $navigationSort = 2;
 
     public ?array $data = [];
+
+    public function getTitle(): string
+    {
+        return __('booking.page.title');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('booking.page.title');
+    }
 
     public function mount(): void
     {
@@ -118,7 +126,7 @@ class NewBooking extends Page
             );
         } catch (ValidationException) {
             throw ValidationException::withMessages([
-                'data.campsite_id' => 'Deze plek is niet (meer) beschikbaar voor deze data.',
+                'data.campsite_id' => __('booking.errors.campsite_unavailable'),
             ]);
         }
 
@@ -128,7 +136,7 @@ class NewBooking extends Page
 
         if ($coupon !== null && ! $coupon->isRedeemable()) {
             throw ValidationException::withMessages([
-                'data.coupon_id' => 'This coupon is expired or has reached its usage limit.',
+                'data.coupon_id' => __('booking.errors.coupon_invalid'),
             ]);
         }
 
@@ -170,7 +178,7 @@ class NewBooking extends Page
             $reservation->setRelation('orderSummary', $summary);
         } catch (RuntimeException) {
             throw ValidationException::withMessages([
-                'data.check_in' => 'No pricing set for these dates.',
+                'data.check_in' => __('booking.errors.no_pricing'),
             ]);
         }
 
@@ -215,7 +223,7 @@ class NewBooking extends Page
         };
 
         Notification::make()
-            ->title('Booking created successfully')
+            ->title(__('booking.page.created'))
             ->success()
             ->send();
 

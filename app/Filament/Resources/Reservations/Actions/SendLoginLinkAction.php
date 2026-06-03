@@ -11,12 +11,12 @@ class SendLoginLinkAction
     public static function make(): Action
     {
         return Action::make('sendLoginLink')
-            ->label('Send login link')
+            ->label(__('reservation.actions.send_login_link.label'))
             ->icon('heroicon-o-paper-airplane')
             ->requiresConfirmation()
-            ->modalHeading('Send login link')
-            ->modalDescription(fn (Reservation $record): string => "Email a sign-in link to {$record->customer->email} so they can view or cancel their bookings.")
+            ->modalHeading(__('reservation.actions.send_login_link.modal_heading'))
+            ->modalDescription(fn (Reservation $record): string => __('reservation.actions.send_login_link.modal_description', ['email' => $record->customer->email]))
             ->action(fn (Reservation $record) => app(SendBookingsLink::class)->handle($record->customer))
-            ->successNotificationTitle('Login link sent');
+            ->successNotificationTitle(__('reservation.actions.send_login_link.success'));
     }
 }

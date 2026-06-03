@@ -15,6 +15,6 @@ class ElectricityFilter extends TernaryFilter
     {
         parent::setUp();
 
-        $this->label('Electricity');
+        $this->label(__('campsite.filters.electricity'));
     }
 }
