@@ -19,7 +19,7 @@
 @endphp
 
 @section('content')
-    <div class="mx-auto max-w-3xl px-6 py-8">
+    <div class="mx-auto w-full max-w-3xl px-6 py-8">
 
         @if (session('status'))
             <div class="mb-6 rounded-md border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-800">

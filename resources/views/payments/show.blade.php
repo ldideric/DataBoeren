@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mx-auto max-w-2xl px-6 py-8">
+    <div class="mx-auto w-full max-w-2xl px-6 py-8">
             <div class="rounded-2xl border border-tan-400 bg-tan-300 p-6 shadow-sm ring-1 ring-black/5">
                 <h1 class="text-xl font-bold text-black">Reservering betalen</h1>
 
