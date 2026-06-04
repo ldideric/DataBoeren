@@ -37,7 +37,14 @@ function applyFilter(root) {
     });
 
     const countEl = root.querySelector(SELECTORS.count);
-    if (countEl) countEl.textContent = String(visible);
+    if (countEl) {
+        if (selected === '') {
+            const totalEl = countEl.closest('[data-total]');
+            countEl.textContent = totalEl ? totalEl.dataset.total : String(visible);
+        } else {
+            countEl.textContent = String(visible);
+        }
+    }
 
     const emptyEl = root.querySelector(SELECTORS.empty);
     if (emptyEl) emptyEl.hidden = visible !== 0 || items.length === 0;
