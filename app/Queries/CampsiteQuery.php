@@ -23,4 +23,17 @@ class CampsiteQuery extends Builder
                 ->where('check_out', '>', $checkIn)
         );
     }
+
+    public function whereBookableFor(Carbon $checkIn): self
+    {
+        return $this->whereHas(
+            'prices',
+            fn (Builder $price) => $price->whereHas(
+                'season.periods',
+                fn (Builder $period) => $period
+                    ->where('starts_at', '<=', $checkIn)
+                    ->where('ends_at', '>=', $checkIn),
+            ),
+        );
+    }
 }

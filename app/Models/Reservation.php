@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BillingType;
 use App\Enums\ReservationSource;
 use App\Enums\ReservationStatus;
 use App\Observers\ReservationObserver;
@@ -102,6 +103,18 @@ class Reservation extends Model
     public function extras(): HasMany
     {
         return $this->hasMany(ReservationExtra::class);
+    }
+
+    public function extraLineItems(): array
+    {
+        return $this->extras
+            ->map(fn (ReservationExtra $line) => [
+                'name' => $line->extra->name,
+                'quantity' => $line->quantity,
+                'per_night' => $line->extra->billing_type === BillingType::PerNight,
+                'subtotal' => $line->subtotal,
+            ])
+            ->all();
     }
 
     public function payments(): HasMany

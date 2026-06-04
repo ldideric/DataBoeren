@@ -126,6 +126,7 @@
                                         'order' => $summary,
                                         'adults' => $reservation->num_adults,
                                         'children' => $reservation->num_children,
+                                        'extraLines' => $reservation->extraLineItems(),
                                     ])
                                 </div>
                                 @if ($paidPayment)

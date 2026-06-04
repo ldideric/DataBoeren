@@ -4,6 +4,8 @@ use App\Booking\Actions\CreateReservation;
 use App\Booking\Actions\RecordCashPayment;
 use App\Booking\Queries\GetAvailableExtras;
 use App\Booking\Queries\PreviewBookingPrice;
+use App\Enums\BillingType;
+use App\Pricing\Actions\CalculatePrice;
 use App\Auth\Services\SignedUrlGenerator;
 use App\Mail\BookingReceived;
 use App\Models\Campsite;
@@ -13,6 +15,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Session;
 use Livewire\Component;
 
 new class () extends Component {
@@ -22,16 +25,26 @@ new class () extends Component {
     public int $adults = 1;
     public int $children = 0;
 
+    #[Session]
     public array $extras = [];
+    #[Session]
     public string $couponCode = '';
+    #[Session]
     public string $appliedCoupon = '';
 
+    #[Session]
     public string $firstName = '';
+    #[Session]
     public string $lastName = '';
+    #[Session]
     public string $phone = '';
+    #[Session]
     public string $email = '';
+    #[Session]
     public string $payMethod = '';
+    #[Session]
     public bool $adultConfirmation = false;
+    #[Session]
     public bool $houseRules = false;
 
     public function mount(Campsite $campsite, string $checkIn, string $checkOut, int $adults, int $children): void
@@ -104,6 +117,24 @@ new class () extends Component {
     }
 
     #[Computed]
+    public function extraLines(): array
+    {
+        $nights = (int) Carbon::parse($this->checkIn)->diffInDays(Carbon::parse($this->checkOut));
+
+        return $this->availableExtras
+            ->map(fn (array $row) => $row['model'])
+            ->filter(fn ($extra) => (int) ($this->extras[$extra->id] ?? 0) > 0)
+            ->map(fn ($extra) => [
+                'name' => $extra->name,
+                'quantity' => (int) $this->extras[$extra->id],
+                'per_night' => $extra->billing_type === BillingType::PerNight,
+                'subtotal' => CalculatePrice::lineSubtotal($extra, (int) $this->extras[$extra->id], $nights),
+            ])
+            ->values()
+            ->all();
+    }
+
+    #[Computed]
     public function couponNotice(): ?array
     {
         if ($this->appliedCoupon === '') {
@@ -130,6 +161,10 @@ new class () extends Component {
 
     public function submit(CreateReservation $createReservation, RecordCashPayment $recordCashPayment, SignedUrlGenerator $urls)
     {
+        $this->extras = collect($this->extras)
+            ->map(fn ($quantity) => (int) $quantity)
+            ->all();
+
         $this->validate();
 
         $this->appliedCoupon = trim($this->couponCode);
@@ -148,7 +183,14 @@ new class () extends Component {
             'extras' => $this->extras,
         ]);
 
-        if ($this->payMethod === 'online') {
+        $payOnline = $this->payMethod === 'online';
+
+        $this->reset([
+            'extras', 'couponCode', 'appliedCoupon', 'firstName', 'lastName',
+            'phone', 'email', 'payMethod', 'adultConfirmation', 'houseRules',
+        ]);
+
+        if ($payOnline) {
             return $this->redirect($urls->payment($reservation));
         }
 
@@ -248,9 +290,33 @@ new class () extends Component {
                                         <p class="text-xs text-red-600">Uitverkocht voor deze data</p>
                                     @endif
                                 </div>
-                                <input type="number" wire:model.live.debounce.400ms="extras.{{ $extra->id }}"
-                                    min="0" @if ($cap !== null) max="{{ $cap }}" @endif @disabled($cap === 0)
-                                    class="w-20 rounded-lg border border-olivegreen-500 bg-tan-200 px-3 py-2 text-sm focus:border-olivegreen-400 focus:outline-none focus:ring-2 focus:ring-olivegreen-400">
+                                <div class="shrink-0">
+                                    @if ($cap === 0)
+                                        <span class="text-sm text-black/40">—</span>
+                                    @elseif ($cap === 1)
+                                        <label class="relative flex cursor-pointer items-center" aria-label="{{ $extra->name }} toevoegen">
+                                            <input type="checkbox" wire:model.live="extras.{{ $extra->id }}"
+                                                class="peer h-5 w-5 appearance-none rounded border-2 border-olivegreen-600 bg-tan-200 checked:border-olivegreen-500 checked:bg-olivegreen-500 focus:outline-none focus:ring-2 focus:ring-olivegreen-400 cursor-pointer transition">
+                                            <svg class="pointer-events-none absolute left-0.5 top-0.5 hidden h-4 w-4 text-white peer-checked:block" viewBox="0 0 16 16" fill="currentColor">
+                                                <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"/>
+                                            </svg>
+                                        </label>
+                                    @else
+                                        <div class="relative">
+                                            <select wire:model.live="extras.{{ $extra->id }}" aria-label="Aantal {{ $extra->name }}"
+                                                class="w-20 appearance-none rounded-lg border border-olivegreen-500 bg-tan-200 px-3 py-2 pr-8 text-sm focus:border-olivegreen-400 focus:outline-none focus:ring-2 focus:ring-olivegreen-400">
+                                                @for ($i = 0; $i <= ($cap ?? 10); $i++)
+                                                    <option value="{{ $i }}">{{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-olivegreen-600">
+                                                <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         @endforeach
                     </div>
@@ -265,6 +331,7 @@ new class () extends Component {
                             'order' => $this->order,
                             'adults' => $adults,
                             'children' => $children,
+                            'extraLines' => $this->extraLines,
                         ])
                     @else
                         <p class="text-sm text-black">Vul je gegevens in om de prijs te berekenen.</p>

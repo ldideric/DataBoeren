@@ -20,7 +20,7 @@ class PaymentController extends Controller
 {
     public function show(Reservation $reservation, SignedUrlGenerator $urls): View|RedirectResponse
     {
-        $reservation->loadMissing('campsite', 'customer', 'orderSummary');
+        $reservation->loadMissing('campsite', 'customer', 'orderSummary', 'extras.extra');
 
         abort_if($reservation->orderSummary === null, 409, 'Deze reservering heeft geen prijsoverzicht.');
         abort_if($reservation->status === ReservationStatus::Cancelled, 409, 'Deze reservering is geannuleerd.');
@@ -82,9 +82,6 @@ class PaymentController extends Controller
             ]
         );
 
-        // Only email a receipt the first time we record this session's payment,
-        // so a refresh of the success URL doesn't send it twice. The booking
-        // confirmation itself is sent by the ReservationObserver on the status change.
         if ($payment->wasRecentlyCreated) {
             $reservation->loadMissing('customer');
             Mail::to($reservation->customer->email)->send(new PaymentReceipt($reservation, $payment));

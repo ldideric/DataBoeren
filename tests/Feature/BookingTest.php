@@ -112,6 +112,35 @@ it('redirects away from the booking form when the campsite does not fit the part
     ]));
 });
 
+it('redirects away from the booking form when the campsite has no price for the stay', function () {
+    [$campsite, $checkIn, $checkOut] = bookableCampsite();
+    $campsite->prices()->delete(); // misconfigured spot: no rate to charge
+
+    $this->get(route('bookings.create', [
+        'campsite' => $campsite->id,
+        'check_in' => $checkIn->format('Y-m-d'),
+        'check_out' => $checkOut->format('Y-m-d'),
+        'adults' => 2,
+        'children' => 0,
+    ]))->assertRedirect(route('campsites.index', [
+        'datestart' => $checkIn->format('Y-m-d'),
+        'dateend' => $checkOut->format('Y-m-d'),
+        'adults' => 2,
+        'children' => 0,
+    ]));
+});
+
+it('blocks submission when the campsite has no price for the stay', function () {
+    [$campsite, $checkIn, $checkOut] = bookableCampsite();
+    $campsite->prices()->delete();
+
+    bookingForm($campsite, $checkIn, $checkOut)
+        ->call('submit')
+        ->assertHasErrors('check_in'); // CalculatePrice has no rate; the transaction rolls back
+
+    expect(Reservation::query()->count())->toBe(0);
+});
+
 it('stores a pending reservation from a valid booking', function () {
     Mail::fake();
     [$campsite, $checkIn, $checkOut] = bookableCampsite();
@@ -151,6 +180,50 @@ it('records a pending cash payment and emails a received notice for pay-on-site 
         fn (BookingReceived $mail) => $mail->reservation->is($reservation) && $mail->hasTo('jan@example.com'),
     );
     Mail::assertNotQueued(MagicLink::class);
+});
+
+it('keeps the entered form values after a page refresh', function () {
+    [$campsite, $checkIn, $checkOut] = bookableCampsite();
+
+    $params = [
+        'campsite' => $campsite,
+        'checkIn' => $checkIn->format('Y-m-d'),
+        'checkOut' => $checkOut->format('Y-m-d'),
+        'adults' => 2,
+        'children' => 1,
+    ];
+
+    Livewire::test('booking-form', $params)
+        ->set('firstName', 'Jan')
+        ->set('email', 'jan@example.com')
+        ->set('payMethod', 'in_person');
+
+    // A hard refresh re-mounts the component; #[Session] restores the entries.
+    Livewire::test('booking-form', $params)
+        ->assertSet('firstName', 'Jan')
+        ->assertSet('email', 'jan@example.com')
+        ->assertSet('payMethod', 'in_person');
+});
+
+it('clears the persisted form once a booking is placed', function () {
+    Mail::fake();
+    [$campsite, $checkIn, $checkOut] = bookableCampsite();
+
+    bookingForm($campsite, $checkIn, $checkOut)
+        ->call('submit')
+        ->assertRedirect(route('login.sent'));
+
+    // The next visit starts blank — no leftover details from the placed booking.
+    Livewire::test('booking-form', [
+        'campsite' => $campsite,
+        'checkIn' => $checkIn->format('Y-m-d'),
+        'checkOut' => $checkOut->format('Y-m-d'),
+        'adults' => 2,
+        'children' => 1,
+    ])
+        ->assertSet('firstName', '')
+        ->assertSet('email', '')
+        ->assertSet('payMethod', '');
 });
 
 it('blocks submission when the chosen party exceeds the campsite capacity', function () {
@@ -210,7 +283,9 @@ it('updates the live price when an extra quantity changes', function () {
     bookingForm($campsite, $checkIn, $checkOut)
         ->assertDontSee('€ 15,00')
         ->set("extras.{$extra->id}", 3)
-        ->assertSee('€ 15,00'); // 3 × € 5,00 shows in the breakdown's extras line
+        ->assertSee('€ 15,00')   // 3 × € 5,00 shows in the breakdown
+        ->assertSee('Brandhout') // itemized per extra type, not a lumped "Extra's" total
+        ->assertSee('3×');
 });
 
 it('shows the live discount when a valid total-scope coupon is applied', function () {

@@ -17,6 +17,7 @@ class CheckAvailability
             ->whereKey($campsite->id)
             ->whereFitsParty($partySize)
             ->whereAvailableBetween($checkIn, $checkOut)
+            ->whereBookableFor($checkIn)
             ->exists();
     }
 }

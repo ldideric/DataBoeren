@@ -35,7 +35,15 @@
         </div>
     @endif
 
-    @if ($order->extras_total > 0)
+    @php $extraLines = $extraLines ?? []; @endphp
+    @if (! empty($extraLines))
+        @foreach ($extraLines as $line)
+            <div class="flex justify-between">
+                <dt>{{ $line['name'] }} · {{ $line['quantity'] }}× {{ $line['per_night'] ? 'per nacht' : 'eenmalig' }}</dt>
+                <dd class="font-medium text-black">{{ $euro($line['subtotal']) }}</dd>
+            </div>
+        @endforeach
+    @elseif ($order->extras_total > 0)
         <div class="flex justify-between">
             <dt>Extra's</dt>
             <dd class="font-medium text-black">{{ $euro($order->extras_total) }}</dd>

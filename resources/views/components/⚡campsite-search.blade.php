@@ -65,6 +65,7 @@ new class () extends Component {
         return Campsite::query()
             ->whereFitsParty($criteria->partySize())
             ->whereAvailableBetween($criteria->checkIn, $criteria->checkOut)
+            ->whereBookableFor($criteria->checkIn)
             ->when($types->isNotEmpty(), fn ($query) => $query->whereIn('type', $types))
             ->orderBy('name')
             ->paginate(8);
