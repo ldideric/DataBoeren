@@ -29,7 +29,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon $check_out
  * @property int $num_adults
  * @property int $num_children
- * @property int $num_vehicles
  * @property ReservationStatus $status
  * @property Carbon|null $cancelled_at
  * @property string|null $cancellation_reason
@@ -48,7 +47,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<ReservationExtra> $extras
  * @property-read Collection<Payment> $payments
  */
-#[Fillable(['customer_id', 'campsite_id', 'booked_by_user_id', 'coupon_id', 'source', 'check_in', 'check_out', 'num_adults', 'num_children', 'num_vehicles', 'status', 'cancelled_at', 'cancellation_reason', 'cancelled_by_user_id', 'payment_reminder_sent_at', 'arrival_reminder_sent_at'])]
+#[Fillable(['customer_id', 'campsite_id', 'booked_by_user_id', 'coupon_id', 'source', 'check_in', 'check_out', 'num_adults', 'num_children', 'status', 'cancelled_at', 'cancellation_reason', 'cancelled_by_user_id', 'payment_reminder_sent_at', 'arrival_reminder_sent_at'])]
 #[ObservedBy(ReservationObserver::class)]
 class Reservation extends Model
 {

@@ -112,7 +112,6 @@ class NewBooking extends Page
             $campsite,
             (int) $data['num_adults'],
             (int) $data['num_children'],
-            (int) $data['num_vehicles'],
             'data.',
         );
 
@@ -120,7 +119,6 @@ class NewBooking extends Page
             app(FindAvailableCampsite::class)->handle(
                 $data['campsite_id'],
                 (int) $data['num_adults'] + (int) $data['num_children'],
-                (int) $data['num_vehicles'],
                 $checkIn,
                 $checkOut,
             );
@@ -153,7 +151,6 @@ class NewBooking extends Page
             'check_out'         => $checkOut,
             'num_adults'        => (int) $data['num_adults'],
             'num_children'      => (int) $data['num_children'],
-            'num_vehicles'      => (int) $data['num_vehicles'],
         ]);
 
         $quantities = collect($data['extras'] ?? [])

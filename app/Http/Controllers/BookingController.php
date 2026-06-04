@@ -78,7 +78,6 @@ class BookingController extends Controller
         $fits = $checkAvailability->handle(
             $campsite,
             $criteria->partySize(),
-            $criteria->vehicles,
             $criteria->checkIn,
             $criteria->checkOut,
         );
@@ -90,7 +89,6 @@ class BookingController extends Controller
                     'dateend' => $criteria->checkOut->format('Y-m-d'),
                     'adults' => $criteria->adults,
                     'children' => $criteria->children,
-                    'vehicles' => $criteria->vehicles,
                 ])
                 ->with('status', 'Deze plek is niet (meer) beschikbaar voor je verblijfsgegevens.');
         }
@@ -101,7 +99,6 @@ class BookingController extends Controller
             'checkOut' => $criteria->checkOut,
             'adults' => $criteria->adults,
             'children' => $criteria->children,
-            'vehicles' => $criteria->vehicles,
         ]);
     }
 

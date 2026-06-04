@@ -26,9 +26,6 @@ class CampsiteInfolist
                 TextEntry::make('max_people')
                     ->label(__('campsite.fields.max_people'))
                     ->numeric(),
-                TextEntry::make('max_vehicles')
-                    ->label(__('campsite.fields.max_vehicles'))
-                    ->numeric(),
                 TextEntry::make('notes')
                     ->label(__('common.notes'))
                     ->placeholder('-')

@@ -37,18 +37,16 @@ readonly class CreateReservation
         $checkOut = Carbon::parse($data['check_out']);
         $adults = (int) $data['num_adults'];
         $children = (int) $data['num_children'];
-        $vehicles = (int) $data['num_vehicles'];
 
-        return DB::transaction(function () use ($data, $checkIn, $checkOut, $adults, $children, $vehicles) {
+        return DB::transaction(function () use ($data, $checkIn, $checkOut, $adults, $children) {
             $campsite = Campsite::query()->whereKey($data['campsite_id'])->first()
                 ?? throw ValidationException::withMessages(['campsite_id' => 'De gekozen plek bestaat niet.']);
 
-            $this->validator->validateCapacity($campsite, $adults, $children, $vehicles);
+            $this->validator->validateCapacity($campsite, $adults, $children);
 
             $campsite = $this->findAvailableCampsite->handle(
                 $data['campsite_id'],
                 $adults + $children,
-                $vehicles,
                 $checkIn,
                 $checkOut,
             );
@@ -74,7 +72,6 @@ readonly class CreateReservation
                 'check_out' => $checkOut,
                 'num_adults' => $adults,
                 'num_children' => $children,
-                'num_vehicles' => $vehicles,
                 'status' => ReservationStatus::Pending,
             ]);
             $reservation->setRelation('customer', $customer)

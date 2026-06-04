@@ -22,7 +22,6 @@ return [
         'check_out'         => 'Uitchecken',
         'adults'            => 'Volwassenen',
         'children'          => 'Kinderen',
-        'vehicles'          => 'Voertuigen',
         'coupon'            => 'Kortingsbon',
         'coupon_helper'     => 'Alleen momenteel geldige kortingsbonnen worden getoond.',
         'payment'           => 'Betaling',

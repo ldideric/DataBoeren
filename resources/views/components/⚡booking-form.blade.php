@@ -21,7 +21,6 @@ new class () extends Component {
     public string $checkOut;
     public int $adults = 1;
     public int $children = 0;
-    public int $vehicles = 0;
 
     public array $extras = [];
     public string $couponCode = '';
@@ -35,14 +34,13 @@ new class () extends Component {
     public bool $adultConfirmation = false;
     public bool $houseRules = false;
 
-    public function mount(Campsite $campsite, string $checkIn, string $checkOut, int $adults, int $children, int $vehicles): void
+    public function mount(Campsite $campsite, string $checkIn, string $checkOut, int $adults, int $children): void
     {
         $this->campsiteId = $campsite->id;
         $this->checkIn = $checkIn;
         $this->checkOut = $checkOut;
         $this->adults = $adults;
         $this->children = $children;
-        $this->vehicles = $vehicles;
     }
 
     protected function rules(): array
@@ -146,7 +144,6 @@ new class () extends Component {
             'check_out' => $this->checkOut,
             'num_adults' => $this->adults,
             'num_children' => $this->children,
-            'num_vehicles' => $this->vehicles,
             'coupon_code' => $this->appliedCoupon ?: null,
             'extras' => $this->extras,
         ]);
@@ -217,8 +214,7 @@ new class () extends Component {
                 <div>
                     Groep:
                     <strong>{{ $adults }}</strong> {{ $adults === 1 ? 'volwassene' : 'volwassenen' }},
-                    <strong>{{ $children }}</strong> {{ $children === 1 ? 'kind' : 'kinderen' }},
-                    <strong>{{ $vehicles }}</strong> {{ $vehicles === 1 ? 'voertuig' : 'voertuigen' }}.
+                    <strong>{{ $children }}</strong> {{ $children === 1 ? 'kind' : 'kinderen' }}.
                 </div>
                 <div class="pt-1">
                     <a href="{{ route('campsites.index', [
@@ -226,7 +222,6 @@ new class () extends Component {
                         'dateend' => $checkOut->format('Y-m-d'),
                         'adults' => $adults,
                         'children' => $children,
-                        'vehicles' => $vehicles,
                     ]) }}" class="underline hover:no-underline">Wijzig verblijfsgegevens</a>
                 </div>
             </div>

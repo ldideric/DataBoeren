@@ -22,7 +22,6 @@ return [
         'check_out'         => 'Check-out',
         'adults'            => 'Adults',
         'children'          => 'Children',
-        'vehicles'          => 'Vehicles',
         'coupon'            => 'Coupon',
         'coupon_helper'     => 'Only currently valid coupons are listed.',
         'payment'           => 'Payment',

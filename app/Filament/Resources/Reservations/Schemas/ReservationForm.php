@@ -46,11 +46,6 @@ class ReservationForm
                     ->minValue(0)
                     ->required()
                     ->default(0),
-                TextInput::make('num_vehicles')
-                    ->label(__('reservation.fields.num_vehicles'))
-                    ->numeric()
-                    ->minValue(0)
-                    ->required(),
                 Select::make('coupon_id')
                     ->label(__('reservation.fields.coupon'))
                     ->relationship('coupon', 'code')

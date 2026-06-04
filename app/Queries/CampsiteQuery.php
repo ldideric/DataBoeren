@@ -8,10 +8,9 @@ use Illuminate\Support\Carbon;
 
 class CampsiteQuery extends Builder
 {
-    public function whereFitsParty(int $people, int $vehicles = 1): self
+    public function whereFitsParty(int $people): self
     {
-        return $this->where('max_people', '>=', $people)
-            ->where('max_vehicles', '>=', $vehicles);
+        return $this->where('max_people', '>=', $people);
     }
 
     public function whereAvailableBetween(Carbon $checkIn, Carbon $checkOut): self

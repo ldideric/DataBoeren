@@ -29,10 +29,6 @@ class CampsiteForm
                     ->label(__('campsite.fields.max_people'))
                     ->required()
                     ->numeric(),
-                TextInput::make('max_vehicles')
-                    ->label(__('campsite.fields.max_vehicles'))
-                    ->required()
-                    ->numeric(),
                 Textarea::make('notes')
                     ->label(__('common.notes'))
                     ->columnSpanFull(),

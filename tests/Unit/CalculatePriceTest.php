@@ -50,7 +50,6 @@ it('calculates the order summary with coupon and extra totals', function () {
         'check_out' => '2026-06-03',
         'num_adults' => 2,
         'num_children' => 1,
-        'num_vehicles' => 0,
     ]);
 
     $extra = Extra::factory()->create([
@@ -108,7 +107,6 @@ it('applies a flat coupon as a fixed cent amount, not euros times one hundred', 
         'check_out' => '2026-06-03',
         'num_adults' => 1,
         'num_children' => 0,
-        'num_vehicles' => 0,
     ]);
 
     $summary = app(CalculatePrice::class)->calculate($reservation);
@@ -151,7 +149,6 @@ it('applies a total-scope coupon to accommodation and extras combined', function
         'check_out' => '2026-06-03',
         'num_adults' => 2,
         'num_children' => 1,
-        'num_vehicles' => 0,
     ]);
 
     $extra = Extra::factory()->create([

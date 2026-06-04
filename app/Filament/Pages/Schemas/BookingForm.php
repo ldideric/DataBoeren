@@ -78,11 +78,10 @@ class BookingForm
                 self::campsite()->columnSpanFull(),
                 self::checkIn(),
                 self::checkOut(),
-                Grid::make(3)
+                Grid::make(2)
                     ->schema([
                         self::numAdults(),
                         self::numChildren(),
-                        self::numVehicles(),
                     ])
                     ->columnSpanFull(),
             ]);
@@ -228,18 +227,6 @@ class BookingForm
             ->rule(self::peopleCapacityRule());
     }
 
-    public static function numVehicles(): TextInput
-    {
-        return TextInput::make('num_vehicles')
-            ->label(__('booking.fields.vehicles'))
-            ->numeric()
-            ->integer()
-            ->minValue(0)
-            ->default(0)
-            ->required()
-            ->rule(self::vehicleCapacityRule());
-    }
-
     /**
      * Live validation that the guests fit the chosen campsite, so the Stay step
      * blocks before advancing. Filament injects Get into the outer closure and
@@ -254,20 +241,6 @@ class BookingForm
                 $campsite,
                 (int) $get('num_adults'),
                 (int) $get('num_children'),
-            )) !== null) {
-                $fail($message);
-            }
-        };
-    }
-
-    private static function vehicleCapacityRule(): Closure
-    {
-        return static fn (Get $get): Closure => static function (string $attribute, mixed $value, Closure $fail) use ($get): void {
-            $campsite = self::selectedCampsite($get);
-
-            if ($campsite !== null && ($message = app(BookingValidator::class)->vehiclesError(
-                $campsite,
-                (int) $get('num_vehicles'),
             )) !== null) {
                 $fail($message);
             }

@@ -93,8 +93,7 @@
                             <div>
                                 Groep:
                                 <strong>{{ $reservation->num_adults }}</strong> {{ $reservation->num_adults === 1 ? 'volwassene' : 'volwassenen' }},
-                                <strong>{{ $reservation->num_children }}</strong> {{ $reservation->num_children === 1 ? 'kind' : 'kinderen' }},
-                                <strong>{{ $reservation->num_vehicles }}</strong> {{ $reservation->num_vehicles === 1 ? 'voertuig' : 'voertuigen' }}.
+                                <strong>{{ $reservation->num_children }}</strong> {{ $reservation->num_children === 1 ? 'kind' : 'kinderen' }}.
                             </div>
                             <div>
                                 Voorzieningen:

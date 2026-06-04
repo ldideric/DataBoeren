@@ -7,6 +7,5 @@
         :check-out="$checkOut->format('Y-m-d')"
         :adults="$adults"
         :children="$children"
-        :vehicles="$vehicles"
     />
 @endsection

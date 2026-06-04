@@ -41,7 +41,6 @@ function bookableCampsite(): array
 
     $campsite = Campsite::factory()->create([
         'max_people' => 6,
-        'max_vehicles' => 2,
     ]);
 
     CampsitePrice::factory()->create([
@@ -68,7 +67,6 @@ function bookingForm(Campsite $campsite, $checkIn, $checkOut, array $params = []
         'checkOut' => $checkOut->format('Y-m-d'),
         'adults' => 2,
         'children' => 1,
-        'vehicles' => 1,
     ], $params))
         ->set('firstName', 'Jan')
         ->set('lastName', 'Jansen')
@@ -89,7 +87,6 @@ it('shows the booking form with the live price and the available extras', functi
         'check_out' => $checkOut->format('Y-m-d'),
         'adults' => 2,
         'children' => 1,
-        'vehicles' => 1,
     ]))
         ->assertOk()
         ->assertSeeLivewire('booking-form')
@@ -107,13 +104,11 @@ it('redirects away from the booking form when the campsite does not fit the part
         'check_out' => $checkOut->format('Y-m-d'),
         'adults' => 4,
         'children' => 0,
-        'vehicles' => 1,
     ]))->assertRedirect(route('campsites.index', [
         'datestart' => $checkIn->format('Y-m-d'),
         'dateend' => $checkOut->format('Y-m-d'),
         'adults' => 4,
         'children' => 0,
-        'vehicles' => 1,
     ]));
 });
 

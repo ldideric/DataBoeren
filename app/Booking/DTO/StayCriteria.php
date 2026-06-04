@@ -12,7 +12,6 @@ final readonly class StayCriteria
         public ?Carbon $checkOut,
         public ?int $adults,
         public ?int $children,
-        public ?int $vehicles,
     ) {
     }
 
@@ -23,7 +22,6 @@ final readonly class StayCriteria
             checkOut: $request->date($checkOutKey),
             adults: $request->filled('adults') ? max(1, $request->integer('adults')) : null,
             children: $request->filled('children') ? max(0, $request->integer('children')) : null,
-            vehicles: $request->filled('vehicles') ? max(0, $request->integer('vehicles')) : null,
         );
     }
 
@@ -39,8 +37,7 @@ final readonly class StayCriteria
     {
         return $this->hasValidDates()
             && $this->adults !== null
-            && $this->children !== null
-            && $this->vehicles !== null;
+            && $this->children !== null;
     }
 
     public function partySize(): int

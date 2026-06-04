@@ -24,9 +24,6 @@ new class () extends Component {
     #[Url]
     public int $children = 0;
 
-    #[Url]
-    public int $vehicles = 0;
-
     /** @var array<int, string> */
     #[Url(except: [])]
     public array $types = [];
@@ -49,7 +46,6 @@ new class () extends Component {
             checkOut: $this->dateend ? Carbon::parse($this->dateend)->startOfDay() : null,
             adults: max(1, $this->adults),
             children: max(0, $this->children),
-            vehicles: max(0, $this->vehicles),
         );
     }
 
@@ -67,7 +63,7 @@ new class () extends Component {
             ->values();
 
         return Campsite::query()
-            ->whereFitsParty($criteria->partySize(), $criteria->vehicles)
+            ->whereFitsParty($criteria->partySize())
             ->whereAvailableBetween($criteria->checkIn, $criteria->checkOut)
             ->when($types->isNotEmpty(), fn ($query) => $query->whereIn('type', $types))
             ->orderBy('name')
@@ -91,8 +87,7 @@ new class () extends Component {
             @else
                 <p class="mt-1 text-sm text-black">
                     Beschikbaar van {{ $this->criteria->checkIn->format('d-m-Y') }} t/m {{ $this->criteria->checkOut->format('d-m-Y') }}
-                    voor {{ $this->criteria->partySize() }} {{ $this->criteria->partySize() === 1 ? 'persoon' : 'personen' }}
-                    ({{ $this->criteria->vehicles }} {{ $this->criteria->vehicles === 1 ? 'voertuig' : 'voertuigen' }}).
+                    voor {{ $this->criteria->partySize() }} {{ $this->criteria->partySize() === 1 ? 'persoon' : 'personen' }}.
                 </p>
                 <p class="mt-2 font-semibold text-black">
                     {{ $this->campsites->total() }} beschikbaarheden gevonden
@@ -152,17 +147,6 @@ new class () extends Component {
                             >
                         </div>
                     </div>
-                    <div>
-                        <label for="vehicles" class="text-sm font-semibold text-black">Voertuigen</label>
-                        <input
-                            type="number"
-                            id="vehicles"
-                            wire:model.live.debounce.400ms="vehicles"
-                            min="0"
-                            required
-                            class="mt-2 w-full rounded-lg border border-olivegreen-600 bg-tan-200 px-3 py-2 text-base focus:border-olivegreen-400 focus:outline-none focus:ring-2 focus:ring-olivegreen-400"
-                        >
-                    </div>
                 </div>
 
                 @if ($this->criteria->isComplete())
@@ -215,12 +199,12 @@ new class () extends Component {
             @if (! $this->criteria->isComplete())
                 <div class="rounded-xl border border-tan-400 bg-tan-300 p-10 text-center shadow-sm ring-1 ring-black/5">
                     <p class="text-base font-medium text-olivegreen-400">Nog geen zoekopdracht</p>
-                    <p class="mt-2 text-sm text-black">Vul links je aankomst- en vertrekdatum, aantal personen en voertuigen in om beschikbare plekken te zien.</p>
+                    <p class="mt-2 text-sm text-black">Vul links je aankomst- en vertrekdatum en aantal personen in om beschikbare plekken te zien.</p>
                 </div>
             @elseif ($this->campsites->isEmpty())
                 <div class="rounded-xl border border-tan-400 bg-tan-300 p-10 text-center shadow-sm ring-1 ring-black/5">
                     <p class="text-base font-medium text-olivegreen-400">Geen beschikbare plekken voor deze gegevens</p>
-                    <p class="mt-2 text-sm text-black">Probeer andere data, een kleinere groep, minder voertuigen of een ander accommodatie type.</p>
+                    <p class="mt-2 text-sm text-black">Probeer andere data, een kleinere groep of een ander accommodatie type.</p>
                 </div>
             @else
                 <div class="space-y-4">
@@ -232,7 +216,6 @@ new class () extends Component {
                                 name: @js($campsite->name),
                                 type: @js($campsite->type->getHeadline()),
                                 people: @js($campsite->max_people),
-                                vehicles: @js($campsite->max_vehicles),
                                 electricity: @js($campsite->has_electricity),
                                 notes: @js($campsite->notes ?: 'Geen extra informatie beschikbaar'),
                                 url: @js(route('bookings.create', [
@@ -241,7 +224,6 @@ new class () extends Component {
                                     'check_out' => $this->criteria->checkOut->format('Y-m-d'),
                                     'adults' => $this->criteria->adults,
                                     'children' => $this->criteria->children,
-                                    'vehicles' => $this->criteria->vehicles,
                                 ])),
                             }; open = true"
                             class="flex w-full flex-col gap-4 rounded-xl border border-tan-400 bg-tan-300 p-4 text-left transition hover:scale-[1.01] hover:shadow-md sm:flex-row sm:items-center"
@@ -253,7 +235,7 @@ new class () extends Component {
                                 </p>
                                 <p class="mt-2 text-xs text-black">
                                     @if ($campsite->has_electricity) ✔ Stroom @endif
-                                    ✔ Max {{ $campsite->max_people }} pers • ✔ Max {{ $campsite->max_vehicles }} voertuig
+                                    ✔ Max {{ $campsite->max_people }} pers
                                 </p>
                             </div>
 
@@ -290,7 +272,6 @@ new class () extends Component {
                 <div class="mt-4 flex gap-5">
                     <ul class="space-y-2 text-sm text-black flex-1">
                         <li x-text="'• Max personen: ' + c.people"></li>
-                        <li x-text="'• Max voertuigen: ' + c.vehicles"></li>
                         <li x-text="'• Stroom: ' + (c.electricity ? 'Ja' : 'Nee')"></li>
                     </ul>
                     <p class="text-sm text-black flex-1" x-text="c.notes"></p>

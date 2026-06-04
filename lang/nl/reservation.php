@@ -8,7 +8,6 @@ return [
         'check_out'           => 'Uitchecken',
         'num_adults'          => 'Volwassenen',
         'num_children'        => 'Kinderen',
-        'num_vehicles'        => 'Voertuigen',
         'guests'              => 'Gasten',
         'guests_summary'      => ':adults volwassene(n), :children kind(eren)',
         'coupon'              => 'Kortingsbon',

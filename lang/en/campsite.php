@@ -5,12 +5,10 @@ return [
         'type'           => 'Type',
         'has_electricity' => 'Electricity',
         'max_people'     => 'Max. people',
-        'max_vehicles'   => 'Max. vehicles',
     ],
 
     'suffix' => [
         'people'   => ' ppl.',
-        'vehicles' => ' vehicle(s)',
     ],
 
     'filters' => [

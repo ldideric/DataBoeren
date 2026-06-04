@@ -8,7 +8,6 @@ return [
         'check_out'           => 'Check-out',
         'num_adults'          => 'Adults',
         'num_children'        => 'Children',
-        'num_vehicles'        => 'Vehicles',
         'guests'              => 'Guests',
         'guests_summary'      => ':adults adult(s), :children child(ren)',
         'coupon'              => 'Coupon',

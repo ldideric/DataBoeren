@@ -20,6 +20,11 @@ class ExtrasRelationManager extends RelationManager
 {
     protected static string $relationship = 'extras';
 
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema

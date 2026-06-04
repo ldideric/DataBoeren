@@ -36,10 +36,6 @@ class CampsitesTable
                     ->label(__('campsite.fields.max_people'))
                     ->suffix(__('campsite.suffix.people'))
                     ->sortable(),
-                TextColumn::make('max_vehicles')
-                    ->label(__('campsite.fields.max_vehicles'))
-                    ->suffix(__('campsite.suffix.vehicles'))
-                    ->sortable(),
                 TextColumn::make('notes')
                     ->label(__('common.notes'))
                     ->limit(40)

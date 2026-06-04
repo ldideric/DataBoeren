@@ -35,8 +35,6 @@ class ReservationInfolist
                             ->label(__('reservation.fields.num_adults')),
                         TextEntry::make('num_children')
                             ->label(__('reservation.fields.num_children')),
-                        TextEntry::make('num_vehicles')
-                            ->label(__('reservation.fields.num_vehicles')),
                         TextEntry::make('status')
                             ->label(__('common.status'))
                             ->badge(),

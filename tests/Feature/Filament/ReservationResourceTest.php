@@ -41,8 +41,8 @@ use Livewire\Livewire;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->admin = User::factory()->withRole(UserRole::Admin)->create();
-    $this->actingAs($this->admin);
+    $admin = User::factory()->withRole(UserRole::Admin)->create();
+    $this->actingAs($admin);
 });
 
 // List page
@@ -149,7 +149,7 @@ function newBookingFixture(): array
         'starts_at' => $checkIn->copy()->subMonth(),
         'ends_at'   => $checkIn->copy()->addMonth(),
     ]);
-    $campsite = Campsite::factory()->create(['max_people' => 6, 'max_vehicles' => 2]);
+    $campsite = Campsite::factory()->create(['max_people' => 6]);
     CampsitePrice::factory()->create(['campsite_id' => $campsite->id, 'season_id' => $season->id]);
 
     return [$campsite, $checkIn, $checkOut];
@@ -172,7 +172,6 @@ function newBookingFormData(Campsite $campsite, $checkIn, $checkOut, array $over
         'check_out'         => $checkOut->format('Y-m-d'),
         'num_adults'        => 2,
         'num_children'      => 1,
-        'num_vehicles'      => 1,
         'extras'            => [],
         'payment_method'    => CheckoutMethod::CashPaid->value,
     ], $overrides);
@@ -310,7 +309,6 @@ it('rejects a booking when no price is configured for the chosen dates', functio
 
     $campsite = Campsite::factory()->create([
         'max_people' => 6,
-        'max_vehicles' => 2,
     ]);
 
     Livewire::test(NewBooking::class)
@@ -400,7 +398,7 @@ it('redirects to the stripe payment page when taking a card now', function () {
 });
 
 it('rejects a party that exceeds the campsite capacity', function () {
-    [$campsite, $checkIn, $checkOut] = newBookingFixture(); // max_people 6, max_vehicles 2
+    [$campsite, $checkIn, $checkOut] = newBookingFixture(); // max_people 6
 
     Livewire::test(NewBooking::class)
         ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut, [
@@ -422,19 +420,6 @@ it('rejects a zero-night stay where check-out equals check-in', function () {
         ]))
         ->call('save')
         ->assertHasFormErrors(['check_out']);
-
-    expect(Reservation::query()->count())->toBe(0);
-});
-
-it('rejects more vehicles than the campsite allows', function () {
-    [$campsite, $checkIn, $checkOut] = newBookingFixture(); // max_vehicles 2
-
-    Livewire::test(NewBooking::class)
-        ->fillForm(newBookingFormData($campsite, $checkIn, $checkOut, [
-            'num_vehicles' => 5,
-        ]))
-        ->call('save')
-        ->assertHasFormErrors(['num_vehicles']);
 
     expect(Reservation::query()->count())->toBe(0);
 });
@@ -554,7 +539,7 @@ it('cancels a reservation with a reason', function () {
 
     expect($reservation->status)->toBe(ReservationStatus::Cancelled)
         ->and($reservation->cancellation_reason)->toBe('Geannuleerd via de telefoon')
-        ->and($reservation->cancelled_by_user_id)->toBe($this->admin->id);
+        ->and($reservation->cancelled_by_user_id)->toBe(Auth::id());
 
     Mail::assertQueued(BookingCancelled::class, fn (BookingCancelled $mail) => $mail->reservation->is($reservation));
 });
@@ -616,12 +601,33 @@ it('can create an extra via the extras relation manager', function () {
             'extra_id' => $extra->id,
             'quantity' => 2,
         ])
-        ->assertHasNoFormErrors();
+        ->assertHasNoTableActionErrors();
 
     $this->assertDatabaseHas(ReservationExtra::class, [
         'reservation_id' => $reservation->id,
         'extra_id'       => $extra->id,
         'quantity'       => 2,
+    ]);
+});
+
+it('can create an extra from the reservation view page', function () {
+    $reservation = Reservation::factory()->create();
+    $extra = Extra::factory()->create();
+
+    Livewire::test(ExtrasRelationManager::class, [
+        'ownerRecord' => $reservation,
+        'pageClass'   => ViewReservation::class,
+    ])
+        ->callTableAction('create', data: [
+            'extra_id' => $extra->id,
+            'quantity' => 3,
+        ])
+        ->assertHasNoTableActionErrors();
+
+    $this->assertDatabaseHas(ReservationExtra::class, [
+        'reservation_id' => $reservation->id,
+        'extra_id'       => $extra->id,
+        'quantity'       => 3,
     ]);
 });
 
