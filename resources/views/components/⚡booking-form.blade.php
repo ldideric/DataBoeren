@@ -323,22 +323,6 @@ new class () extends Component {
                 </fieldset>
             @endif
 
-            <div class="rounded-lg border border-tan-500 bg-tan-200 px-4 py-3">
-                <h2 class="text-sm font-semibold text-olivegreen-400">Prijsoverzicht</h2>
-                <div class="mt-2">
-                    @if ($this->order)
-                        @include('partials.price-breakdown', [
-                            'order' => $this->order,
-                            'adults' => $adults,
-                            'children' => $children,
-                            'extraLines' => $this->extraLines,
-                        ])
-                    @else
-                        <p class="text-sm text-black">Vul je gegevens in om de prijs te berekenen.</p>
-                    @endif
-                </div>
-            </div>
-
             <fieldset>
                 <legend class="w-full border-b border-olivegreen-800 pb-2 text-sm font-semibold text-black">Persoonsgegevens</legend>
 
@@ -384,6 +368,22 @@ new class () extends Component {
                     <p class="mt-1 text-xs text-black">De korting wordt direct in het prijsoverzicht verrekend.</p>
                 </div>
             </fieldset>
+
+            <div class="rounded-lg border border-tan-500 bg-tan-200 px-4 py-3">
+                <h2 class="text-sm font-semibold text-olivegreen-400">Prijsoverzicht</h2>
+                <div class="mt-2">
+                    @if ($this->order)
+                        @include('partials.price-breakdown', [
+                            'order' => $this->order,
+                            'adults' => $adults,
+                            'children' => $children,
+                            'extraLines' => $this->extraLines,
+                        ])
+                    @else
+                        <p class="text-sm text-black">Vul je gegevens in om de prijs te berekenen.</p>
+                    @endif
+                </div>
+            </div>
 
             <fieldset>
                 <legend class="w-full border-b border-olivegreen-800 pb-2 text-sm font-semibold text-black">Betaalmethode</legend>
