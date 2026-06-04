@@ -12,6 +12,7 @@ return [
         'guests_summary'      => ':adults adult(s), :children child(ren)',
         'coupon'              => 'Coupon',
         'source'              => 'Source',
+        'booked_by'           => 'Booked by',
         'cancellation_reason' => 'Cancellation reason',
         'total'               => 'Total',
     ],

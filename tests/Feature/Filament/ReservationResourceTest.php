@@ -73,6 +73,17 @@ it('can render reservation table columns', function () {
         ->assertCanRenderTableColumn('orderSummary.total');
 });
 
+it('shows which employee booked the reservation on the view page', function () {
+    $employee = User::factory()->withRole(UserRole::Employee)->create([
+        'first_name' => 'Bookervoornaam',
+        'last_name'  => 'Bookerachternaam',
+    ]);
+    $reservation = Reservation::factory()->bookedByEmployee($employee)->create();
+
+    Livewire::test(ViewReservation::class, ['record' => $reservation->getRouteKey()])
+        ->assertSee('Bookervoornaam Bookerachternaam');
+});
+
 it('can search reservations by customer name', function () {
     $customer = User::factory()->create(['first_name' => 'Uniekvoornaam', 'last_name' => 'Testachternaam']);
     $reservation = Reservation::factory()->create(['customer_id' => $customer->id]);

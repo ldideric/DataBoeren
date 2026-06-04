@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Reservations\Tables;
 
+use App\Enums\ReservationSource;
+use App\Filament\Resources\Employees\EmployeeResource;
 use App\Filament\Resources\Reservations\Actions\AcceptReservationAction;
 use App\Filament\Resources\Reservations\Actions\CancelReservationAction;
 use App\Filament\Resources\Reservations\Actions\ResendConfirmationAction;
@@ -24,6 +26,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use App\Models\Reservation;
 use Illuminate\Database\Eloquent\Builder;
 
 class ReservationsTable
@@ -55,7 +58,13 @@ class ReservationsTable
                     ->badge(),
                 TextColumn::make('source')
                     ->label(__('reservation.fields.source'))
-                    ->badge(),
+                    ->badge(fn (Reservation $record): bool => $record->booked_by_user_id === null)
+                    ->formatStateUsing(fn (ReservationSource $state, Reservation $record): ?string => $record->booked_by_user_id
+                        ? $record->bookedBy?->name
+                        : $state->getLabel())
+                    ->url(fn (Reservation $record) => $record->booked_by_user_id
+                        ? EmployeeResource::getUrl('view', ['record' => $record->booked_by_user_id])
+                        : null),
                 TextColumn::make('orderSummary.total')
                     ->formatStateUsing(fn ($state) => $state !== null ? '€ '.number_format($state / 100, 2, ',', '.') : '—')
                     ->label(__('reservation.fields.total')),

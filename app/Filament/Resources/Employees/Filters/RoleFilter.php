@@ -18,6 +18,9 @@ class RoleFilter extends SelectFilter
 
         $this
             ->label(__('employee.filters.role'))
-            ->options(UserRole::class);
+            ->options([
+                UserRole::Employee->value => UserRole::Employee->getLabel(),
+                UserRole::Admin->value    => UserRole::Admin->getLabel(),
+            ]);
     }
 }

@@ -12,6 +12,7 @@ return [
         'guests_summary'      => ':adults volwassene(n), :children kind(eren)',
         'coupon'              => 'Kortingsbon',
         'source'              => 'Bron',
+        'booked_by'           => 'Geboekt door',
         'cancellation_reason' => 'Annuleringsreden',
         'total'               => 'Totaal',
     ],

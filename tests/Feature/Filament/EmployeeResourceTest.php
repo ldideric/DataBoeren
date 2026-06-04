@@ -8,6 +8,8 @@ use App\Filament\Resources\Employees\Pages\CreateEmployee;
 use App\Filament\Resources\Employees\Pages\EditEmployee;
 use App\Filament\Resources\Employees\Pages\ListEmployees;
 use App\Filament\Resources\Employees\Pages\ViewEmployee;
+use App\Filament\Resources\Employees\RelationManagers\BookedReservationsRelationManager;
+use App\Models\Reservation;
 use App\Models\User;
 use Filament\Actions\DeleteBulkAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -171,6 +173,19 @@ it('can render the view employee page', function () {
 
     Livewire::test(ViewEmployee::class, ['record' => $employee->getRouteKey()])
         ->assertSuccessful();
+});
+
+it('lists the reservations an employee booked in the relation manager', function () {
+    $employee = User::factory()->withRole(UserRole::Employee)->create();
+    $booked = Reservation::factory()->bookedByEmployee($employee)->create();
+    $other = Reservation::factory()->create();
+
+    Livewire::test(BookedReservationsRelationManager::class, [
+        'ownerRecord' => $employee,
+        'pageClass'   => ViewEmployee::class,
+    ])
+        ->assertCanSeeTableRecords([$booked])
+        ->assertCanNotSeeTableRecords([$other]);
 });
 
 // Edit page

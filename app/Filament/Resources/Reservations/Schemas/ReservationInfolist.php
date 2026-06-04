@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\Reservations\Schemas;
 
+use App\Enums\ReservationSource;
 use App\Filament\Resources\Campsites\CampsiteResource;
 use App\Filament\Resources\Coupons\CouponResource;
 use App\Filament\Resources\Customers\CustomerResource;
+use App\Filament\Resources\Employees\EmployeeResource;
 use App\Models\Reservation;
 use Filament\Schemas\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -40,7 +42,13 @@ class ReservationInfolist
                             ->badge(),
                         TextEntry::make('source')
                             ->label(__('reservation.fields.source'))
-                            ->badge(),
+                            ->badge(fn (Reservation $record): bool => $record->booked_by_user_id === null)
+                            ->formatStateUsing(fn (ReservationSource $state, Reservation $record): ?string => $record->booked_by_user_id
+                                ? $record->bookedBy?->name
+                                : $state->getLabel())
+                            ->url(fn (Reservation $record) => $record->booked_by_user_id
+                                ? EmployeeResource::getUrl('view', ['record' => $record->booked_by_user_id])
+                                : null),
                         TextEntry::make('coupon.code')
                             ->label(__('reservation.fields.coupon'))
                             ->placeholder('-')
