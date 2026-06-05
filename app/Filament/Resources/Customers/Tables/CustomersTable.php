@@ -24,20 +24,22 @@ class CustomersTable
             ->columns([
                 TextColumn::make('first_name')
                     ->formatStateUsing(fn ($_, $record) => $record->first_name.' '.$record->last_name)
-                    ->label('Name')
+                    ->label(__('common.name'))
                     ->searchable(['first_name', 'last_name']),
                 TextColumn::make('email')
+                    ->label(__('common.email'))
                     ->copyable()
                     ->searchable(),
                 TextColumn::make('phone')
-                    ->placeholder('None')
+                    ->label(__('common.phone'))
+                    ->placeholder(__('customer.placeholders.no_phone'))
                     ->searchable(),
                 IconColumn::make('email_verified_at')
                     ->boolean()
-                    ->label('Verified'),
+                    ->label(__('customer.fields.verified')),
                 IconColumn::make('purged_at')
                     ->boolean()
-                    ->label('Purged')
+                    ->label(__('customer.fields.purged'))
                     ->trueIcon('heroicon-o-no-symbol')
                     ->trueColor('danger'),
             ])

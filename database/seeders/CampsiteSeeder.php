@@ -29,7 +29,6 @@ class CampsiteSeeder extends Seeder
                 [
                     'has_electricity' => $record['has_electricity'],
                     'max_people' => $record['max_people'],
-                    'max_vehicles' => $record['max_vehicles'],
                     'notes' => $record['notes'],
                 ],
             );

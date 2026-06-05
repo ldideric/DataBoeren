@@ -12,8 +12,10 @@ Uw reservering bij Camping De Groene Weide is bevestigd.
 - **Aantal kinderen:** {{ $reservation->num_children }}
 - **Referentie:** {{ $reservation->id }}
 
+Wilt u uw reservering aanpassen? Bezoek dan de website en klik op 'mijn boekingen'.
+
 Tot ziens op de camping!
 
-Groet,
+Vriendelijke groet,
 {{ config('app.name') }}
 </x-mail::message>

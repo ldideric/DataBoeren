@@ -19,13 +19,13 @@ class DeparturePeriodFilter extends Filter
         parent::setUp();
 
         $this
-            ->label('Departure period')
+            ->label(__('reservation.filters.departure_period'))
             ->columnSpanFull()
             ->schema([
                 Section::make()
                     ->schema([
-                        DatePicker::make('from')->label('From'),
-                        DatePicker::make('until')->label('Until'),
+                        DatePicker::make('from')->label(__('common.from')),
+                        DatePicker::make('until')->label(__('common.until')),
                     ])
                     ->columns(2),
             ])
@@ -36,8 +36,8 @@ class DeparturePeriodFilter extends Filter
             )
             ->indicateUsing(
                 fn (array $data) => collect()
-                ->when($data['from'] ?? null, fn ($collection) => $collection->push('Departing from: '.$data['from']))
-                ->when($data['until'] ?? null, fn ($collection) => $collection->push('Departing until: '.$data['until']))
+                ->when($data['from'] ?? null, fn ($collection) => $collection->push(__('reservation.filters.departing_from', ['date' => $data['from']])))
+                ->when($data['until'] ?? null, fn ($collection) => $collection->push(__('reservation.filters.departing_until', ['date' => $data['until']])))
                 ->toArray()
             );
     }

@@ -18,8 +18,8 @@ use Livewire\Livewire;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->admin = User::factory()->withRole(UserRole::Admin)->create();
-    $this->actingAs($this->admin);
+    $admin = User::factory()->withRole(UserRole::Admin)->create();
+    $this->actingAs($admin);
 });
 
 // List page

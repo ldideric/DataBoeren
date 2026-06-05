@@ -14,9 +14,9 @@ enum ReservationStatus: string implements HasColor, HasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::Pending   => 'Pending',
-            self::Confirmed => 'Confirmed',
-            self::Cancelled => 'Cancelled',
+            self::Pending   => __('enums.reservation_status.pending'),
+            self::Confirmed => __('enums.reservation_status.confirmed'),
+            self::Cancelled => __('enums.reservation_status.cancelled'),
         };
     }
 

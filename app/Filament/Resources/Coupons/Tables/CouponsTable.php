@@ -25,24 +25,28 @@ class CouponsTable
         return $table
             ->columns([
                 TextColumn::make('title')
+                    ->label(__('coupon.fields.title'))
                     ->searchable(),
                 TextColumn::make('code')
+                    ->label(__('coupon.fields.code'))
                     ->copyable()
                     ->fontFamily(FontFamily::Mono)
                     ->searchable(),
                 TextColumn::make('scope')
+                    ->label(__('coupon.fields.scope'))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('formatted_discount')
-                    ->label('Discount'),
+                    ->label(__('coupon.fields.discount')),
                 TextColumn::make('expires_at')
+                    ->label(__('coupon.fields.expires_at'))
                     ->date('d/m/Y')
                     ->color(fn ($record) => $record->expires_at?->isPast() ? 'danger' : null)
-                    ->placeholder('No expiry')
+                    ->placeholder(__('coupon.placeholders.no_expiry'))
                     ->sortable(),
                 TextColumn::make('uses_count')
                     ->formatStateUsing(fn ($state, Coupon $record) => $state.($record->max_uses ? ' / '.$record->max_uses : null))
-                    ->label('Uses'),
+                    ->label(__('coupon.fields.uses')),
             ])
             ->filters([
                 TrashedFilter::make(),

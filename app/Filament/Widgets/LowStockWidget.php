@@ -20,8 +20,8 @@ class LowStockWidget extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
-            ->heading('Low stock extras')
-            ->description('Extras with 3 or fewer items remaining')
+            ->heading(__('widget.low_stock.heading'))
+            ->description(__('widget.low_stock.description'))
             ->query(
                 Extra::query()
                     ->whereNotNull('stock')
@@ -29,13 +29,15 @@ class LowStockWidget extends BaseWidget
                     ->orderBy('stock'),
             )
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('name')
+                    ->label(__('common.name')),
                 Tables\Columns\TextColumn::make('stock')
+                    ->label(__('extra.fields.stock'))
                     ->badge()
                     ->color(fn (int $state) => $state === 0 ? 'danger' : 'warning'),
             ])
             ->paginated(false)
-            ->emptyStateHeading('All extras are well stocked')
+            ->emptyStateHeading(__('widget.low_stock.empty_heading'))
             ->emptyStateIcon('heroicon-o-check-circle');
     }
 }

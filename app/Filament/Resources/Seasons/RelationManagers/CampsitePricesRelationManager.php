@@ -24,17 +24,21 @@ class CampsitePricesRelationManager extends RelationManager
         return $schema
             ->components([
                 Select::make('campsite_id')
+                    ->label(__('season.fields.campsite'))
                     ->relationship('campsite', 'name')
                     ->required(),
                 TextInput::make('nightly_rate')
+                    ->label(__('season.fields.nightly_rate'))
                     ->numeric()
                     ->suffix('ct')
                     ->required(),
                 TextInput::make('per_adult_rate')
+                    ->label(__('season.fields.per_adult_rate'))
                     ->numeric()
                     ->suffix('ct')
                     ->required(),
                 TextInput::make('per_child_rate')
+                    ->label(__('season.fields.per_child_rate'))
                     ->numeric()
                     ->suffix('ct')
                     ->required()
@@ -48,12 +52,16 @@ class CampsitePricesRelationManager extends RelationManager
             ->recordTitleAttribute('id')
             ->columns([
                 TextColumn::make('campsite.name')
+                    ->label(__('season.fields.campsite'))
                     ->url(fn ($record) => CampsiteResource::getUrl('view', ['record' => $record->campsite_id])),
                 TextColumn::make('nightly_rate')
+                    ->label(__('season.fields.nightly_rate'))
                     ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
                 TextColumn::make('per_adult_rate')
+                    ->label(__('season.fields.per_adult_rate'))
                     ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
                 TextColumn::make('per_child_rate')
+                    ->label(__('season.fields.per_child_rate'))
                     ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
             ])
             ->filters([

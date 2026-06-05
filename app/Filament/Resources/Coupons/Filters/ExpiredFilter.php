@@ -17,9 +17,9 @@ class ExpiredFilter extends TernaryFilter
         parent::setUp();
 
         $this
-            ->label('Expiry status')
-            ->trueLabel('Expired')
-            ->falseLabel('Active')
+            ->label(__('coupon.filters.expiry_status'))
+            ->trueLabel(__('coupon.filters.expired'))
+            ->falseLabel(__('coupon.filters.active'))
             ->queries(
                 true: fn (Builder $query) => $query->where('expires_at', '<', now()),
                 false: fn (Builder $query) => $query->where(

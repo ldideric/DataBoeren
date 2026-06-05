@@ -12,6 +12,7 @@ class SeasonForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('common.name'))
                     ->required(),
             ]);
     }

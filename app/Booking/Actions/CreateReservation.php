@@ -2,11 +2,13 @@
 
 namespace App\Booking\Actions;
 
+use App\Booking\BookingValidator;
 use App\Booking\Queries\FindAvailableCampsite;
 use App\Enums\ReservationSource;
 use App\Enums\ReservationStatus;
 use App\Enums\UserRole;
-use App\Http\Requests\BookingRequest;
+use App\Models\Campsite;
+use App\Models\Coupon;
 use App\Models\Reservation;
 use App\Models\User;
 use App\Pricing\Actions\CalculatePrice;
@@ -22,32 +24,34 @@ readonly class CreateReservation
         private FindAvailableCampsite $findAvailableCampsite,
         private CalculatePrice $calculatePrice,
         private ResolveBookingExtras $resolveBookingExtras,
+        private BookingValidator $validator,
     ) {
     }
 
     /**
-     * Find-or-create the customer and store a pending reservation for them,
-     * holding a row lock on the campsite so concurrent requests can't double-book
-     * the same dates. The chosen extras and the frozen OrderSummary (the amount
-     * owed) are written in the same transaction, so a reservation always lands
-     * complete and payable.
-     *
      * @throws ValidationException|Throwable when the campsite is no longer available.
      */
-    public function handle(BookingRequest $request): Reservation
+    public function handle(array $data): Reservation
     {
-        $data = $request->validated();
         $checkIn = Carbon::parse($data['check_in']);
         $checkOut = Carbon::parse($data['check_out']);
+        $adults = (int) $data['num_adults'];
+        $children = (int) $data['num_children'];
 
-        return DB::transaction(function () use ($request, $data, $checkIn, $checkOut) {
+        return DB::transaction(function () use ($data, $checkIn, $checkOut, $adults, $children) {
+            $campsite = Campsite::query()->whereKey($data['campsite_id'])->first()
+                ?? throw ValidationException::withMessages(['campsite_id' => 'De gekozen plek bestaat niet.']);
+
+            $this->validator->validateCapacity($campsite, $adults, $children);
+
             $campsite = $this->findAvailableCampsite->handle(
-                $request->validated('campsite_id'),
-                $request->partySize(),
-                $request->vehicleCount(),
+                $data['campsite_id'],
+                $adults + $children,
                 $checkIn,
                 $checkOut,
             );
+
+            $coupon = $this->resolveCoupon($data['coupon_code'] ?? null);
 
             $customer = User::firstOrCreate(
                 ['email' => $data['email']],
@@ -62,15 +66,17 @@ readonly class CreateReservation
             $reservation = Reservation::create([
                 'customer_id' => $customer->id,
                 'campsite_id' => $campsite->id,
+                'coupon_id' => $coupon?->id,
                 'source' => ReservationSource::Online,
                 'check_in' => $checkIn,
                 'check_out' => $checkOut,
-                'num_adults' => (int) $data['num_adults'],
-                'num_children' => (int) $data['num_children'],
-                'num_vehicles' => $request->vehicleCount(),
+                'num_adults' => $adults,
+                'num_children' => $children,
                 'status' => ReservationStatus::Pending,
             ]);
-            $reservation->setRelation('customer', $customer)->setRelation('campsite', $campsite);
+            $reservation->setRelation('customer', $customer)
+                ->setRelation('campsite', $campsite)
+                ->setRelation('coupon', $coupon);
 
             $selections = $this->resolveBookingExtras->resolve($data['extras'] ?? [], $checkIn, $checkOut);
             $nights = (int) $checkIn->diffInDays($checkOut);
@@ -94,7 +100,26 @@ readonly class CreateReservation
                 ]);
             }
 
+            $coupon?->increment('uses_count');
+
             return $reservation;
         });
+    }
+
+    private function resolveCoupon(?string $code): ?Coupon
+    {
+        if (blank($code)) {
+            return null;
+        }
+
+        $coupon = Coupon::query()->where('code', $code)->lockForUpdate()->first();
+
+        if ($coupon === null || ! $coupon->isRedeemable()) {
+            throw ValidationException::withMessages([
+                'coupon_code' => 'Deze couponcode is ongeldig of niet meer geldig.',
+            ]);
+        }
+
+        return $coupon;
     }
 }

@@ -31,7 +31,6 @@ class ReservationFactory extends Factory
             'check_out' => $checkOut,
             'num_adults' => fake()->numberBetween(1, 4),
             'num_children' => fake()->numberBetween(0, 3),
-            'num_vehicles' => fake()->numberBetween(0, 2),
             'status' => ReservationStatus::Confirmed,
             'cancelled_at' => null,
             'cancellation_reason' => null,

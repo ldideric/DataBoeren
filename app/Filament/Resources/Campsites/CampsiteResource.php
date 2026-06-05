@@ -28,7 +28,20 @@ class CampsiteResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Campsite';
+    public static function getNavigationGroup(): string|\UnitEnum|null
+    {
+        return __('navigation.groups.campsite');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('navigation.campsite.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('navigation.campsite.plural');
+    }
 
     public static function form(Schema $schema): Schema
     {

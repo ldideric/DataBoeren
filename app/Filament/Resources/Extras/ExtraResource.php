@@ -28,7 +28,17 @@ class ExtraResource extends Resource
 
     public static function getNavigationGroup(): string|\UnitEnum|null
     {
-        return 'Campsite';
+        return __('navigation.groups.campsite');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('navigation.extra.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('navigation.extra.plural');
     }
 
     public static function form(Schema $schema): Schema
