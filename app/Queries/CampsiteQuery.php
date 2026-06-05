@@ -8,10 +8,9 @@ use Illuminate\Support\Carbon;
 
 class CampsiteQuery extends Builder
 {
-    public function whereFitsParty(int $people, int $vehicles = 1): self
+    public function whereFitsParty(int $people): self
     {
-        return $this->where('max_people', '>=', $people)
-            ->where('max_vehicles', '>=', $vehicles);
+        return $this->where('max_people', '>=', $people);
     }
 
     public function whereAvailableBetween(Carbon $checkIn, Carbon $checkOut): self
@@ -22,6 +21,19 @@ class CampsiteQuery extends Builder
                 ->whereIn('status', [ReservationStatus::Pending, ReservationStatus::Confirmed])
                 ->where('check_in', '<', $checkOut)
                 ->where('check_out', '>', $checkIn)
+        );
+    }
+
+    public function whereBookableFor(Carbon $checkIn): self
+    {
+        return $this->whereHas(
+            'prices',
+            fn (Builder $price) => $price->whereHas(
+                'season.periods',
+                fn (Builder $period) => $period
+                    ->where('starts_at', '<=', $checkIn)
+                    ->where('ends_at', '>=', $checkIn),
+            ),
         );
     }
 }

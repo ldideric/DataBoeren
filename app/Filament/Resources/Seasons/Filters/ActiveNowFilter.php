@@ -17,7 +17,7 @@ class ActiveNowFilter extends Filter
         parent::setUp();
 
         $this
-            ->label('Active now')
+            ->label(__('season.filters.active_now'))
             ->toggle()
             ->query(fn (Builder $query, array $data) => $query
                 ->when($data['isActive'] ?? false, fn ($q) => $q->whereHas(

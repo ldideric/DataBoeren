@@ -18,10 +18,10 @@ class RegistrationDateFilter extends Filter
         parent::setUp();
 
         $this
-            ->label('Registration date')
+            ->label(__('customer.filters.registration_date'))
             ->schema([
-                DatePicker::make('from')->label('From'),
-                DatePicker::make('until')->label('Until'),
+                DatePicker::make('from')->label(__('common.from')),
+                DatePicker::make('until')->label(__('common.until')),
             ])
             ->query(
                 fn (Builder $query, array $data) => $query
@@ -30,8 +30,8 @@ class RegistrationDateFilter extends Filter
             )
             ->indicateUsing(
                 fn (array $data) => collect()
-                ->when($data['from'] ?? null, fn ($collection) => $collection->push('Registered from: '.$data['from']))
-                ->when($data['until'] ?? null, fn ($collection) => $collection->push('Registered until: '.$data['until']))
+                ->when($data['from'] ?? null, fn ($collection) => $collection->push(__('customer.filters.registered_from', ['date' => $data['from']])))
+                ->when($data['until'] ?? null, fn ($collection) => $collection->push(__('customer.filters.registered_until', ['date' => $data['until']])))
                 ->toArray()
             );
     }

@@ -16,7 +16,7 @@ class EmailVerifiedFilter extends TernaryFilter
         parent::setUp();
 
         $this
-            ->label('Email verified')
+            ->label(__('customer.filters.email_verified'))
             ->nullable();
     }
 }

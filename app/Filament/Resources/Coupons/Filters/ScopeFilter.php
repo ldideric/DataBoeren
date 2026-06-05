@@ -16,6 +16,8 @@ class ScopeFilter extends SelectFilter
     {
         parent::setUp();
 
-        $this->options(CouponScope::class);
+        $this
+            ->label(__('coupon.fields.scope'))
+            ->options(CouponScope::class);
     }
 }

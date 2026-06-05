@@ -20,7 +20,6 @@ use Illuminate\Support\Carbon;
  * @property CampsiteType $type
  * @property bool $has_electricity
  * @property int $max_people
- * @property int $max_vehicles
  * @property string|null $notes
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -30,7 +29,7 @@ use Illuminate\Support\Carbon;
  *
  * @method CampsiteQuery|static query()
  */
-#[Fillable(['name', 'type', 'has_electricity', 'max_people', 'max_vehicles', 'notes'])]
+#[Fillable(['name', 'type', 'has_electricity', 'max_people', 'notes'])]
 class Campsite extends Model
 {
     /** @use HasFactory<CampsiteFactory> */

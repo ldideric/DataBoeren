@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class ReservationsByStatusWidget extends ChartWidget
 {
-    protected ?string $heading = 'Reservations by status';
-
     protected int | string | array $columnSpan = 1;
+
+    public function getHeading(): ?string
+    {
+        return __('widget.reservations_by_status.heading');
+    }
 
     public static function getSort(): int
     {

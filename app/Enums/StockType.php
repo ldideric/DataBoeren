@@ -13,8 +13,8 @@ enum StockType: string implements HasColor, HasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::Rental     => 'Rental',
-            self::Consumable => 'Consumable',
+            self::Rental     => __('enums.stock_type.rental'),
+            self::Consumable => __('enums.stock_type.consumable'),
         };
     }
 

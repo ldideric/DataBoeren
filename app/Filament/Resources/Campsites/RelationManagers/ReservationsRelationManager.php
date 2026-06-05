@@ -27,18 +27,21 @@ class ReservationsRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('customer.first_name')
                     ->formatStateUsing(fn ($state, $record) => $record->customer?->first_name . ' ' . $record->customer?->last_name)
-                    ->label('Customer'),
+                    ->label(__('campsite.reservations.customer')),
                 TextColumn::make('check_in')
+                    ->label(__('campsite.reservations.check_in'))
                     ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('check_out')
+                    ->label(__('campsite.reservations.check_out'))
                     ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('status')
+                    ->label(__('common.status'))
                     ->badge(),
                 TextColumn::make('orderSummary.total')
                     ->formatStateUsing(fn ($state) => $state !== null ? '€ ' . number_format($state / 100, 2, ',', '.') : '—')
-                    ->label('Total'),
+                    ->label(__('campsite.reservations.total')),
             ])
             ->filters([
                 //
