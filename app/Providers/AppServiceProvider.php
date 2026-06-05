@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Http\ViewComposers\NavigationComposer;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +31,8 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->loadSubdirMigrations();
+
+        View::composer('layouts.navigation', NavigationComposer::class);
     }
 
     protected function loadSubdirMigrations(): void
