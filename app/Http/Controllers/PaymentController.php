@@ -6,11 +6,13 @@ use App\Auth\Services\SignedUrlGenerator;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Enums\ReservationStatus;
+use App\Mail\PaymentReceipt;
 use App\Models\Payment;
 use App\Models\Reservation;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Cashier\Cashier;
 use Laravel\Cashier\Checkout;
 
@@ -18,7 +20,7 @@ class PaymentController extends Controller
 {
     public function show(Reservation $reservation, SignedUrlGenerator $urls): View|RedirectResponse
     {
-        $reservation->loadMissing('campsite', 'customer', 'orderSummary');
+        $reservation->loadMissing('campsite', 'customer', 'orderSummary', 'extras.extra');
 
         abort_if($reservation->orderSummary === null, 409, 'Deze reservering heeft geen prijsoverzicht.');
         abort_if($reservation->status === ReservationStatus::Cancelled, 409, 'Deze reservering is geannuleerd.');
@@ -69,7 +71,7 @@ class PaymentController extends Controller
         $reservation = Reservation::findOrFail($session->client_reference_id);
         $reservation->loadMissing('campsite', 'orderSummary');
 
-        Payment::firstOrCreate(
+        $payment = Payment::firstOrCreate(
             ['stripe_session_id' => $sessionId],
             [
                 'reservation_id' => $reservation->id,
@@ -79,6 +81,11 @@ class PaymentController extends Controller
                 'paid_at'        => now(),
             ]
         );
+
+        if ($payment->wasRecentlyCreated) {
+            $reservation->loadMissing('customer');
+            Mail::to($reservation->customer->email)->send(new PaymentReceipt($reservation, $payment));
+        }
 
         if ($reservation->status !== ReservationStatus::Confirmed) {
             $reservation->update(['status' => ReservationStatus::Confirmed]);

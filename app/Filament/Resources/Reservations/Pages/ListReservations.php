@@ -17,7 +17,7 @@ class ListReservations extends ListRecords
     {
         return [
             Action::make('newBooking')
-                ->label('New Booking')
+                ->label(__('booking.page.title'))
                 ->icon('heroicon-o-plus')
                 ->url(NewBooking::getUrl()),
         ];

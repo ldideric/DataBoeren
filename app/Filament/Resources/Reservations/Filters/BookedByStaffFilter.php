@@ -16,7 +16,7 @@ class BookedByStaffFilter extends TernaryFilter
         parent::setUp();
 
         $this
-            ->label('Booked by staff')
+            ->label(__('reservation.filters.booked_by_staff'))
             ->nullable();
     }
 }

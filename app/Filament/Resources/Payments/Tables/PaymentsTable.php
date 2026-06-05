@@ -20,23 +20,28 @@ class PaymentsTable
         return $table
             ->columns([
                 TextColumn::make('reservation.customer.email')
-                    ->label('Customer')
+                    ->label(__('payment.fields.customer'))
                     ->searchable(),
                 TextColumn::make('reservation.check_in')
                     ->date('d/m/Y')
-                    ->label('Check-in'),
+                    ->label(__('payment.fields.check_in')),
                 TextColumn::make('amount')
+                    ->label(__('payment.fields.amount'))
                     ->formatStateUsing(fn ($state) => '€ '.number_format($state / 100, 2, ',', '.'))
                     ->sortable(),
                 TextColumn::make('status')
+                    ->label(__('common.status'))
                     ->badge(),
                 TextColumn::make('method')
+                    ->label(__('payment.fields.method'))
                     ->badge()
                     ->searchable(),
                 TextColumn::make('paid_at')
+                    ->label(__('payment.fields.paid_at'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
                 TextColumn::make('stripe_session_id')
+                    ->label(__('payment.fields.stripe_session_id'))
                     ->copyable()
                     ->limit(20)
                     ->fontFamily(FontFamily::Mono)

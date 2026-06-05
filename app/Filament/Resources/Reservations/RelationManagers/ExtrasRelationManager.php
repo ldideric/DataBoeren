@@ -20,14 +20,21 @@ class ExtrasRelationManager extends RelationManager
 {
     protected static string $relationship = 'extras';
 
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 Select::make('extra_id')
+                    ->label(__('reservation.extras.extra'))
                     ->relationship('extra', 'name')
                     ->required(),
                 TextInput::make('quantity')
+                    ->label(__('reservation.extras.quantity'))
                     ->numeric()
                     ->minValue(1)
                     ->required()
@@ -39,17 +46,18 @@ class ExtrasRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('id')
-            ->recordUrl(fn ($record) =>  dd($record))
             ->recordUrl(fn ($record) =>  ExtraResource::getUrl('view', ['record' => $record->extra]))
             ->columns([
-                TextColumn::make('extra.name'),
-                    // ->url(fn ($record) => ExtraResource::getUrl('view', ['record' => $record->extra_id])),
+                TextColumn::make('extra.name')
+                    ->label(__('reservation.extras.extra')),
                 TextColumn::make('quantity')
+                    ->label(__('reservation.extras.quantity'))
                     ->numeric(),
                 TextColumn::make('unit_price')
                     ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.'))
-                    ->label('Unit Price'),
+                    ->label(__('reservation.extras.unit_price')),
                 TextColumn::make('subtotal')
+                    ->label(__('reservation.extras.subtotal'))
                     ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
             ])
             ->filters([

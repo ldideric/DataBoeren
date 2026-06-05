@@ -13,8 +13,8 @@ enum ReservationSource: string implements HasColor, HasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::Online   => 'Online',
-            self::Employee => 'Employee',
+            self::Online   => __('enums.reservation_source.online'),
+            self::Employee => __('enums.reservation_source.employee'),
         };
     }
 
