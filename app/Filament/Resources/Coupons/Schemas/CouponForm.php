@@ -20,9 +20,9 @@ class CouponForm
         return $schema
             ->components([
                 Grid::make(2)
+                ->columnSpanFull()
                     ->schema([
                         Section::make(__('coupon.sections.basic'))
-                            ->columnSpanFull()
                             ->schema([
                                 TextInput::make('title')
                                     ->label(__('coupon.fields.title'))
@@ -33,7 +33,6 @@ class CouponForm
                                     ->unique(ignoreRecord: true),
                         ]),
                         Section::make(__('coupon.sections.scope'))
-                            ->columnSpanFull()
                             ->schema([
                                 Select::make('scope')
                                     ->label(__('coupon.fields.scope'))
@@ -47,8 +46,7 @@ class CouponForm
                                     ->visible(fn (Get $get) => $get('scope') === CouponScope::Extra)
                                     ->required(fn (Get $get) => $get('scope') === CouponScope::Extra),
                             ]),
-                            Section::make(__('coupon.sections.discount'))
-                            ->columnSpanFull()
+                        Section::make(__('coupon.sections.discount'))
                             ->schema([
                                 Select::make('discount_type')
                                     ->label(__('coupon.fields.discount_type'))
@@ -75,7 +73,6 @@ class CouponForm
                                     ),
                         ]),
                         Section::make(__('coupon.sections.additional'))
-                            ->columnSpanFull()
                             ->schema([
                                 DatePicker::make('expires_at')
                                     ->label(__('coupon.fields.expires_at')),

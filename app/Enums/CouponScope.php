@@ -10,6 +10,7 @@ enum CouponScope: string implements HasColor, HasLabel
     case Total = 'total';
     case Accommodation = 'accommodation';
     case Extra = 'extra';
+    case AllExtras = 'all_extras';
 
     public function getLabel(): ?string
     {
@@ -17,6 +18,7 @@ enum CouponScope: string implements HasColor, HasLabel
             self::Total         => __('enums.coupon_scope.total'),
             self::Accommodation => __('enums.coupon_scope.accommodation'),
             self::Extra         => __('enums.coupon_scope.extra'),
+            self::AllExtras     => __('enums.coupon_scope.all_extras'),
         };
     }
 
@@ -26,6 +28,7 @@ enum CouponScope: string implements HasColor, HasLabel
             self::Total         => 'success',
             self::Accommodation => 'primary',
             self::Extra         => 'info',
+            self::AllExtras     => 'info',
         };
     }
 }

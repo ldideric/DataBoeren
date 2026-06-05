@@ -97,6 +97,7 @@ class CalculatePrice
         $base = match ($coupon->scope) {
             CouponScope::Total => $baseAmount + $extrasTotal(),
             CouponScope::Accommodation => $baseAmount,
+            CouponScope::AllExtras => $extrasTotal(),
             CouponScope::Extra => collect($extraSelections)
                 ->filter(fn (array $line) => $line['extra']->id === $coupon->extra_id)
                 ->sum(fn (array $line) => self::lineSubtotal($line['extra'], $line['quantity'], $nights)),

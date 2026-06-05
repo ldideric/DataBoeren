@@ -49,6 +49,7 @@ return [
         'total'         => 'Totaalprijs',
         'accommodation' => 'Accommodatie',
         'extra'         => 'Extra',
+        'all_extras'    => 'Alle extra’s',
     ],
 
     'checkout_method' => [
