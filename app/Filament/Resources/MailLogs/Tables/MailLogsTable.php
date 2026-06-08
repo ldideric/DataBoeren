@@ -5,9 +5,12 @@ namespace App\Filament\Resources\MailLogs\Tables;
 use App\Filament\Resources\MailLogs\Filters\EventFilter;
 use App\Filament\Resources\MailLogs\Filters\FailuresFilter;
 use App\Filament\Resources\MailLogs\Filters\MailableFilter;
+use App\Filament\Resources\MailLogs\Filters\OccurredAtFilter;
+use App\Models\MailLog;
 use Filament\Actions\ViewAction;
 use Filament\Support\Enums\FontFamily;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 
 class MailLogsTable
@@ -17,6 +20,13 @@ class MailLogsTable
         return $table
             ->poll('15s')
             ->defaultSort('created_at', 'desc')
+            ->groups([
+                Group::make('trace_id')
+                    ->label(__('mail_log.groups.mail'))
+                    ->getTitleFromRecordUsing(fn (MailLog $record): string => $record->groupTitle())
+                    ->collapsible(),
+            ])
+            ->defaultGroup('trace_id')
             ->columns([
                 TextColumn::make('created_at')
                     ->label(__('mail_log.fields.occurred_at'))
@@ -55,6 +65,13 @@ class MailLogsTable
                     ->tooltip(fn (TextColumn $column): ?string => $column->getState())
                     ->placeholder('—')
                     ->toggledHiddenByDefault(),
+                TextColumn::make('trace_id')
+                    ->label(__('mail_log.fields.trace_id'))
+                    ->fontFamily(FontFamily::Mono)
+                    ->copyable()
+                    ->limit(28)
+                    ->placeholder('—')
+                    ->toggledHiddenByDefault(),
                 TextColumn::make('job_id')
                     ->label(__('mail_log.fields.job_id'))
                     ->fontFamily(FontFamily::Mono)
@@ -74,6 +91,7 @@ class MailLogsTable
                 EventFilter::make(),
                 MailableFilter::make(),
                 FailuresFilter::make(),
+                OccurredAtFilter::make(),
             ])
             ->recordActions([
                 ViewAction::make()->iconButton(),

@@ -102,6 +102,29 @@ it('prunes only mail logs older than 30 days', function () {
         ->and(MailLog::find($recent->id))->not->toBeNull();
 });
 
+it('prunes every mail log regardless of age', function () {
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create());
+    makeMailLog(MailEvent::Sent, ['created_at' => now()->subDays(31)]);
+    makeMailLog(MailEvent::Sent, ['created_at' => now()]);
+
+    Livewire::test(ListMailLogs::class)->callAction('pruneAll');
+
+    expect(MailLog::count())->toBe(0);
+});
+
+// Date/time filtering
+
+it('can filter the log by occurred_at range', function () {
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create());
+    $old = makeMailLog(MailEvent::Sent, ['created_at' => now()->subDays(10)]);
+    $recent = makeMailLog(MailEvent::Sent, ['created_at' => now()->subDay()]);
+
+    Livewire::test(ListMailLogs::class)
+        ->filterTable('occurred_at', ['from' => now()->subDays(3)->toDateTimeString()])
+        ->assertCanSeeTableRecords([$recent])
+        ->assertCanNotSeeTableRecords([$old]);
+});
+
 // Recording pipeline
 
 it('records the transport lifecycle when a mail is actually sent', function () {
@@ -112,4 +135,29 @@ it('records the transport lifecycle when a mail is actually sent', function () {
 
     expect(MailLog::where('event', MailEvent::Sent)->where('mailable', BookingConfirmed::class)->exists())->toBeTrue()
         ->and(MailLog::where('event', MailEvent::Sent)->whereNotNull('message_id')->exists())->toBeTrue();
+});
+
+it('links every lifecycle row of one mail under a single trace', function () {
+    config(['mail.default' => 'array', 'queue.default' => 'sync']);
+    $reservation = Reservation::factory()->create();
+
+    Mail::to($reservation->customer->email)->send(new BookingConfirmed($reservation));
+
+    $traces = MailLog::whereNotNull('trace_id')->pluck('trace_id')->unique();
+
+    expect($traces)->toHaveCount(1)
+        ->and(MailLog::whereNull('trace_id')->count())->toBe(0)
+        ->and(MailLog::where('event', MailEvent::Sending)->value('trace_id'))
+        ->toBe(MailLog::where('event', MailEvent::Sent)->value('trace_id'));
+});
+
+it('gives separate mails separate traces', function () {
+    config(['mail.default' => 'array', 'queue.default' => 'sync']);
+    $first = Reservation::factory()->create();
+    $second = Reservation::factory()->create();
+
+    Mail::to($first->customer->email)->send(new BookingConfirmed($first));
+    Mail::to($second->customer->email)->send(new BookingConfirmed($second));
+
+    expect(MailLog::where('event', MailEvent::Sent)->pluck('trace_id')->unique())->toHaveCount(2);
 });

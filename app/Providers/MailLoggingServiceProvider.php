@@ -15,21 +15,16 @@ use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Queue\Events\JobQueued;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Symfony\Component\Mime\Email;
 use Throwable;
 
-/**
- * Records the full lifecycle of every outgoing mail into the mail_logs table so
- * admins can see, per message: when it was queued, what the worker did with it,
- * when the SMTP/Mailgun transport fired, and the Message-Id to cross-reference
- * against the Mailgun dashboard. Read-only surface lives in MailLogResource.
- *
- * This is pure observability — it never changes whether or how a mail is sent,
- * and any failure to write a log row is swallowed so it can't break delivery.
- * Toggle with MAIL_ACTIVITY_LOG=false.
- */
 class MailLoggingServiceProvider extends ServiceProvider
 {
+    private ?string $currentTrace = null;
+
+    private ?string $currentJobId = null;
+
     public function boot(): void
     {
         if (! env('MAIL_ACTIVITY_LOG', true)) {
@@ -56,6 +51,9 @@ class MailLoggingServiceProvider extends ServiceProvider
         // --- The queue worker lifecycle ---
         Event::listen(function (JobProcessing $event): void {
             if ($this->isMailJob($event->job)) {
+                $this->currentJobId = (string) $event->job->getJobId();
+                $this->currentTrace = (string) Str::uuid();
+                $this->linkQueuedRow();
                 $this->record(MailEvent::Processing, $this->jobContext($event->job));
             }
         });
@@ -63,6 +61,8 @@ class MailLoggingServiceProvider extends ServiceProvider
         Event::listen(function (JobProcessed $event): void {
             if ($this->isMailJob($event->job)) {
                 $this->record(MailEvent::Processed, $this->jobContext($event->job));
+                $this->currentTrace = null;
+                $this->currentJobId = null;
             }
         });
 
@@ -79,15 +79,22 @@ class MailLoggingServiceProvider extends ServiceProvider
                 $this->record(MailEvent::Failed, $this->jobContext($event->job) + [
                     'error' => $this->describe($event->exception),
                 ]);
+                $this->currentTrace = null;
+                $this->currentJobId = null;
             }
         });
 
         // --- The actual transport call (SMTP / Mailgun) ---
         Event::listen(function (MessageSending $event): void {
+            $trace = $this->currentTrace ?? (string) Str::uuid();
+            $event->message->getHeaders()->addTextHeader('X-Mail-Trace', $trace);
+
             $this->record(MailEvent::Sending, [
                 'mailable'  => $event->data['__laravel_mailable'] ?? null,
                 'recipient' => $this->addresses($event->message),
                 'subject'   => $event->message->getSubject(),
+                'job_id'    => $this->currentJobId,
+                'trace_id'  => $trace,
                 'context'   => ['mailer' => $event->data['__laravel_mailer'] ?? config('mail.default')],
             ]);
         });
@@ -98,6 +105,8 @@ class MailLoggingServiceProvider extends ServiceProvider
                 'recipient'  => $this->addresses($event->message),
                 'subject'    => $event->message->getSubject(),
                 'message_id' => $event->sent->getMessageId(),
+                'job_id'     => $this->currentJobId,
+                'trace_id'   => $this->currentTrace ?? $this->traceFromMessage($event->message),
             ]);
         });
     }
@@ -107,11 +116,35 @@ class MailLoggingServiceProvider extends ServiceProvider
         try {
             MailLog::create($attributes + [
                 'event'      => $event,
+                'trace_id'   => $this->currentTrace,
                 'created_at' => now(),
             ]);
         } catch (Throwable) {
             // Never let logging interfere with mail delivery
         }
+    }
+
+    private function linkQueuedRow(): void
+    {
+        if ($this->currentJobId === null || $this->currentJobId === '') {
+            return;
+        }
+
+        try {
+            MailLog::query()
+                ->where('job_id', $this->currentJobId)
+                ->whereNull('trace_id')
+                ->update(['trace_id' => $this->currentTrace]);
+        } catch (Throwable) {
+            // Linking is best-effort; never break mail delivery over it
+        }
+    }
+
+    private function traceFromMessage(Email $message): ?string
+    {
+        $header = $message->getHeaders()->get('X-Mail-Trace');
+
+        return $header ? ($header->getBodyAsString() ?: null) : null;
     }
 
     private function isMailJob(JobContract $job): bool

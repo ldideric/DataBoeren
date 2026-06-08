@@ -44,6 +44,11 @@ class MailLogInfolist
                             ->fontFamily(FontFamily::Mono)
                             ->copyable()
                             ->placeholder('—'),
+                        TextEntry::make('trace_id')
+                            ->label(__('mail_log.fields.trace_id'))
+                            ->fontFamily(FontFamily::Mono)
+                            ->copyable()
+                            ->placeholder('—'),
                         TextEntry::make('job_id')
                             ->label(__('mail_log.fields.job_id'))
                             ->fontFamily(FontFamily::Mono)
