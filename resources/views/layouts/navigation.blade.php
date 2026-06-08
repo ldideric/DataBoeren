@@ -14,9 +14,18 @@
             </div>
 
             <div class="flex shrink-0 items-center gap-3 justify-self-end text-sm">
-                <a href="{{ route('login') }}" class="px-3 py-1.5 border border-white rounded-md text-white whitespace-nowrap hover:bg-olivegreen-600 hover:border-olivegreen-800 transition-colors">
-                    Mijn boekingen
-                </a>
+                @if (! empty($showLogout))
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="px-3 py-1.5 border border-white rounded-md text-white whitespace-nowrap hover:bg-olivegreen-600 hover:border-olivegreen-800 transition-colors">
+                            Uitloggen
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ $myBookingsUrl ?? route('login') }}" class="px-3 py-1.5 border border-white rounded-md text-white whitespace-nowrap hover:bg-olivegreen-600 hover:border-olivegreen-800 transition-colors">
+                        Mijn boekingen
+                    </a>
+                @endif
             </div>
 
         </div>

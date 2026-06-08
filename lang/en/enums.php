@@ -30,6 +30,16 @@ return [
         'admin'    => 'Admin',
     ],
 
+    'mail_event' => [
+        'queued'     => 'Queued',
+        'processing' => 'Processing',
+        'sending'    => 'Sending',
+        'sent'       => 'Sent',
+        'processed'  => 'Processed',
+        'retrying'   => 'Retrying',
+        'failed'     => 'Failed',
+    ],
+
     'discount_type' => [
         'flat'    => 'Flat',
         'percent' => 'Percent',
