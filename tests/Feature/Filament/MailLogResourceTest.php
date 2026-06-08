@@ -32,20 +32,20 @@ function makeMailLog(MailEvent $event = MailEvent::Sent, array $attributes = [])
 // Access control
 
 it('lets an admin render the mail log list', function () {
-    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
 
     Livewire::test(ListMailLogs::class)->assertSuccessful();
 });
 
 it('shows recorded mail logs to an admin', function () {
-    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
     $logs = collect([makeMailLog(), makeMailLog(MailEvent::Failed)]);
 
     Livewire::test(ListMailLogs::class)->assertCanSeeTableRecords($logs);
 });
 
 it('lets an admin open a mail log entry', function () {
-    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
     $log = makeMailLog(MailEvent::Failed, ['error' => 'TransportException: boom']);
 
     Livewire::test(ViewMailLog::class, ['record' => $log->getRouteKey()])->assertSuccessful();
@@ -69,6 +69,25 @@ it('redirects unauthenticated users to login', function () {
     $this->get(MailLogResource::getUrl('index'))->assertRedirect('/admin/login');
 });
 
+it('hides the log from navigation for an admin who has not opted in', function () {
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => false]));
+
+    // Hidden from the sidebar, but still reachable by URL so toggling off never 403s.
+    expect(MailLogResource::shouldRegisterNavigation())->toBeFalse();
+    Livewire::test(ListMailLogs::class)->assertSuccessful();
+});
+
+it('reveals the log in navigation once the admin opts in via their profile', function () {
+    $admin = User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => false]);
+    $this->actingAs($admin);
+
+    expect(MailLogResource::shouldRegisterNavigation())->toBeFalse();
+
+    $admin->update(['show_mail_logs' => true]);
+
+    expect(MailLogResource::shouldRegisterNavigation())->toBeTrue();
+});
+
 // Read-only guarantees
 
 it('is view-only: no create ability and no create/edit pages', function () {
@@ -79,7 +98,7 @@ it('is view-only: no create ability and no create/edit pages', function () {
 // Filtering
 
 it('can filter the log down to failures', function () {
-    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
     $sent = makeMailLog(MailEvent::Sent);
     $failed = makeMailLog(MailEvent::Failed);
 
@@ -92,7 +111,7 @@ it('can filter the log down to failures', function () {
 // Prune action
 
 it('prunes only mail logs older than 30 days', function () {
-    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
     $old = makeMailLog(MailEvent::Sent, ['created_at' => now()->subDays(31)]);
     $recent = makeMailLog(MailEvent::Sent, ['created_at' => now()->subDays(2)]);
 
@@ -103,7 +122,7 @@ it('prunes only mail logs older than 30 days', function () {
 });
 
 it('prunes every mail log regardless of age', function () {
-    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
     makeMailLog(MailEvent::Sent, ['created_at' => now()->subDays(31)]);
     makeMailLog(MailEvent::Sent, ['created_at' => now()]);
 
@@ -115,7 +134,7 @@ it('prunes every mail log regardless of age', function () {
 // Date/time filtering
 
 it('can filter the log by occurred_at range', function () {
-    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
     $old = makeMailLog(MailEvent::Sent, ['created_at' => now()->subDays(10)]);
     $recent = makeMailLog(MailEvent::Sent, ['created_at' => now()->subDay()]);
 

@@ -5,7 +5,9 @@ namespace App\Filament\Pages\Auth;
 use Filament\Auth\Pages\EditProfile as BaseEditProfile;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 
 class EditProfile extends BaseEditProfile
 {
@@ -32,6 +34,11 @@ class EditProfile extends BaseEditProfile
                     ->default('nl'),
                 $this->getPasswordFormComponent(),
                 $this->getPasswordConfirmationFormComponent(),
+                Toggle::make('show_mail_logs')
+                    ->label(__('navigation.mail_log.toggle'))
+                    ->helperText(__('navigation.mail_log.toggle_hint'))
+                    ->inline(false)
+                    ->onIcon(Heroicon::Envelope),
             ]);
     }
 }
