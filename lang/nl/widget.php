@@ -2,10 +2,10 @@
 
 return [
     'financial' => [
-        'revenue_this_month' => 'Omzet deze maand',
-        'from_paid'          => 'Van betaalde betalingen',
-        'pending_payments'   => 'Openstaande betalingen',
-        'awaiting_payment'   => 'Wacht op betaling',
+        'revenue_this_month'   => 'Omzet deze maand',
+        'from_paid'            => 'Van betaalde betalingen',
+        'cash_to_collect'      => 'Te innen (contant)',
+        'cash_to_collect_desc' => 'Bij aankomst betalen, nog niet voldaan',
     ],
 
     'low_stock' => [

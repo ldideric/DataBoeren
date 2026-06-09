@@ -48,6 +48,14 @@ class ConfirmStripeCheckout
                     ->send((new PaymentReceipt($reservation, $payment))->afterCommit());
             }
 
+            // A pay-on-arrival booking may still carry a Pending cash payment;
+            // paying online supersedes it, so void it rather than leave it counting
+            // as cash owed. Idempotent: a re-entrant call finds nothing to void.
+            $reservation->payments()
+                ->whereKeyNot($payment->getKey())
+                ->where('status', PaymentStatus::Pending)
+                ->update(['status' => PaymentStatus::Cancelled]);
+
             // Flipping the status fires ReservationObserver::updated(), which sends
             // the BookingConfirmed mail. Guard so a second call stays a no-op.
             if ($reservation->status !== ReservationStatus::Confirmed) {

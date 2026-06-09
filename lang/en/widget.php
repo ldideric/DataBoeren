@@ -2,10 +2,10 @@
 
 return [
     'financial' => [
-        'revenue_this_month' => 'Revenue this month',
-        'from_paid'          => 'From paid payments',
-        'pending_payments'   => 'Pending payments',
-        'awaiting_payment'   => 'Awaiting payment',
+        'revenue_this_month'   => 'Revenue this month',
+        'from_paid'            => 'From paid payments',
+        'cash_to_collect'      => 'Cash to collect',
+        'cash_to_collect_desc' => 'Pay-on-arrival bookings not yet settled',
     ],
 
     'low_stock' => [

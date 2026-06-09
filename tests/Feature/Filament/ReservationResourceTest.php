@@ -554,6 +554,18 @@ it('cancels a reservation with a reason', function () {
     Mail::assertQueued(BookingCancelled::class, fn (BookingCancelled $mail) => $mail->reservation->is($reservation));
 });
 
+it('voids a pending payment when the reservation is cancelled', function () {
+    Mail::fake();
+
+    $reservation = Reservation::factory()->create(['status' => ReservationStatus::Confirmed]);
+    $payment = Payment::factory()->pending()->create(['reservation_id' => $reservation->id]);
+
+    Livewire::test(ViewReservation::class, ['record' => $reservation->getRouteKey()])
+        ->callAction('cancel', data: ['cancellation_reason' => 'No-show']);
+
+    expect($payment->refresh()->status)->toBe(PaymentStatus::Cancelled);
+});
+
 it('sends a login link to the customer', function () {
     Mail::fake();
 
