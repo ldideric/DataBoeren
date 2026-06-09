@@ -421,12 +421,22 @@ new class () extends Component {
 
                     <label class="flex items-center gap-2 cursor-pointer">
                         <div class="relative flex shrink-0 items-center">
-                            <input type="checkbox" wire:model="houseRules" value="1" required class="peer h-4 w-4 appearance-none rounded border-2 border-olivegreen-600 bg-tan-200 checked:border-olivegreen-500 checked:bg-olivegreen-500 focus:outline-none focus:ring-2 focus:ring-olivegreen-400 cursor-pointer transition">
+                            <input type="checkbox" wire:model="privacyStatement" value="1" required class="peer h-4 w-4 appearance-none rounded border-2 border-olivegreen-600 bg-tan-200 checked:border-olivegreen-500 checked:bg-olivegreen-500 focus:outline-none focus:ring-2 focus:ring-olivegreen-400 cursor-pointer transition">
                             <svg class="pointer-events-none absolute inset-0 hidden h-4 w-4 text-white peer-checked:block" viewBox="0 0 16 16" fill="currentColor">
                                 <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"/>
                             </svg>
                         </div>
                         <div>Ik ga akkoord met de <a href="{{ route('privacy') }}" target="_blank" class="font-semibold"><span class="underline hover:no-underline">privacyverklaring</span>*</a></div>
+                    </label>
+
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <div class="relative flex shrink-0 items-center">
+                            <input type="checkbox" wire:model="houseRules" value="1" required class="peer h-4 w-4 appearance-none rounded border-2 border-olivegreen-600 bg-tan-200 checked:border-olivegreen-500 checked:bg-olivegreen-500 focus:outline-none focus:ring-2 focus:ring-olivegreen-400 cursor-pointer transition">
+                            <svg class="pointer-events-none absolute inset-0 hidden h-4 w-4 text-white peer-checked:block" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"/>
+                            </svg>
+                        </div>
+                        <div>Ik ga akkoord met de <a href="{{ route('campingregels') }}" target="_blank" class="font-semibold"><span class="underline hover:no-underline">campingregels</span>*</a></div>
                     </label>
                 </div>
             </fieldset>
