@@ -219,6 +219,7 @@ new class () extends Component {
                                 people: @js($campsite->max_people),
                                 electricity: @js($campsite->has_electricity),
                                 notes: @js($campsite->notes ?: 'Geen extra informatie beschikbaar'),
+                                img: @js($campsite->img ?? asset('img/campsite_placeholder.jpg')),
                                 url: @js(route('bookings.create', [
                                     'campsite' => $campsite->id,
                                     'check_in' => $this->criteria->checkIn->format('Y-m-d'),
@@ -268,7 +269,7 @@ new class () extends Component {
 
             <div class="p-6">
                 <div class="aspect-3/2 rounded-lg overflow-hidden">
-                    <img src="/img/campsite_placeholder.jpg" alt="" class="h-full w-full object-cover">
+                    <img :src="c.img" alt="" class="h-full w-full object-cover">
                 </div>
                 <div class="mt-4 flex gap-5">
                     <ul class="space-y-2 text-sm text-black flex-1">

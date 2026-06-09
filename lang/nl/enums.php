@@ -30,6 +30,16 @@ return [
         'admin'    => 'Beheerder',
     ],
 
+    'mail_event' => [
+        'queued'     => 'In wachtrij',
+        'processing' => 'In verwerking',
+        'sending'    => 'Versturen',
+        'sent'       => 'Verzonden',
+        'processed'  => 'Afgerond',
+        'retrying'   => 'Opnieuw proberen',
+        'failed'     => 'Mislukt',
+    ],
+
     'discount_type' => [
         'flat'    => 'Vast bedrag',
         'percent' => 'Percentage',

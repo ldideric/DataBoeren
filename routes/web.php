@@ -5,6 +5,7 @@ use App\Http\Controllers\CampsiteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Middleware\RememberCustomer;
 use Illuminate\Support\Facades\Route;
 
 /* Main routes */
@@ -17,7 +18,7 @@ Route::get('/campsites', [CampsiteController::class, 'index'])->name('campsites.
 Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
 
 /* Customer self-service */
-Route::middleware('signed')->group(function () {
+Route::middleware(['signed', RememberCustomer::class])->group(function () {
     Route::get('/bookings/{user}', [BookingController::class, 'index'])->name('bookings.index');
     Route::delete('/bookings/{user}/reservations/{reservation}', [BookingController::class, 'destroy'])->name('bookings.destroy');
 

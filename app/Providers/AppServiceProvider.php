@@ -2,9 +2,14 @@
 
 namespace App\Providers;
 
+use App\Http\ViewComposers\NavigationComposer;
+use App\Listeners\ConfirmReservationOnStripePayment;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Cashier\Events\WebhookReceived;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +34,14 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->loadSubdirMigrations();
+
+        View::composer('layouts.navigation', NavigationComposer::class);
+
+        // Stripe is the source of truth for online payments: confirm the booking
+        // (and send its mail) from the webhook so a customer who never returns to
+        // the success page — or who paid with a delayed method like iDEAL — still
+        // gets confirmed. Cashier verifies the signature before this fires.
+        Event::listen(WebhookReceived::class, ConfirmReservationOnStripePayment::class);
     }
 
     protected function loadSubdirMigrations(): void
