@@ -30,10 +30,10 @@
                     <p class="mb-3">Onze kampeerplekken zijn autoluw. Auto's op de parkeerplaats. Met alle voertuigen en fietsen s.v.p rustig rijden en houd rekening met kampeerders en spelende kinderen!</p>
 
                     <h3 class="text-lg font-semibold">Kamperen in het najaar</h3>
-                    <p class="mb-3">Bij nat weer, in het najaar of in de winter kan je kampeermiddel op wielen vanwege zachte of natte veengrond worden geplaatst op rijplaten of een verharde grindplek. </p>
+                    <p class="mb-3">Bij nat weer, in het najaar of in de winter kan je kampeermiddel op wielen vanwege zachte of natte veengrond worden geplaatst op rijplaten of een verharde grindplek als die beschikbaar is.</p>
 
                     <h3 class="text-lg font-semibold">Seizoensplaatsen en leegstand</h3>
-                    <p class="mb-3">Seizoensplekken en leegstand van je kampeermiddel zijn bij ons niet toegestaan. We zorgen ervoor dat het terrein altijd levendig en goed benut wordt, zodat iedereen optimaal kan genieten van hun verblijf.</p>
+                    <p class="mb-3">Seizoensplekken en langdurige leegstand van je kampeermiddel zijn bij ons niet toegestaan. We zorgen ervoor dat het terrein altijd levendig en goed benut wordt, zodat iedereen optimaal kan genieten van hun verblijf (onder langdurige leegstand verstaan wij een plek die leegstaat voor meerdere opeenvolgende dagen).</p>
                 </div>
 
                 <div>
@@ -48,7 +48,7 @@
                         <li>Maximum van 4 bezoekers per verblijf.</li>
                         <li>(Verjaardags)feestjes zijn niet toegestaan.</li>
                     </ul>
-                    <p class="mt-1 mb-3">Het bezoekerstarief bedraagt €5 per persoon.</p>
+                    <p class="mt-1 mb-3">Het bezoekerstarief bedraagt €5 per persoon die de nacht spendeert.</p>
 
                     <h3 class="text-lg font-semibold">Aansprakelijkheid</h3>
                     <p class="mb-2">Je verblijf op kampeerterrein de Groene Weide is op eigen risico. Eventuele schade aan het terrein of de accommodaties, veroorzaakt door bezoekers, wordt bij hen in rekening gebracht. Wij zijn niet aansprakelijk voor letsel, schade, verlies, diefstal of beschadiging van persoonlijke eigendommen, inclusief geld. Wij raden aan een reisverzekering af te sluiten. De Groene Weide is niet aansprakelijk voor storingen en diensten of tekortkomingen van diensten geleverd of verstrekt door derden. </p>
@@ -60,10 +60,10 @@
                     <p class="mb-3">Je mag een vuurtje maken op de gezamenlijke vuurplaatsen of bij je eigen kampeerplek. Houd rekening met de rust van medekampeerders en zorg dat er geen overlast ontstaat. Alleen volwassenen mogen het vuur aansteken en moeten erbij blijven tot het volledig is gedoofd. Een vuurkorf kun je bij ons lenen. Daarnaast verkopen we zakken brandhout.</p>
 
                     <h3 class="text-lg font-semibold">Chemisch toilet</h3>
-                    <p class="mb-3">Er is een chemisch toilet loospunt achter de volière. Graag alleen deze plek gebruiken.</p>
+                    <p class="mb-3">Er is een chemisch toilet loospunt achter de parkeerplaats. Graag alleen deze plek gebruiken.</p>
 
                     <h3 class="text-lg font-semibold">Afwasruimte</h3>
-                    <p class="mb-3">In de stal vind je de afwasruimte. Er is een koelkast, vriezer en magnetron voor algemeen gebruik. Buiten kun je je afval inleveren bij het afvalstation.</p>
+                    <p class="mb-3">Bij het sanitair vind je de afwasruimte. Er is een koelkast, vriezer en magnetron voor algemeen gebruik. Buiten kun je je afval inleveren bij het afvalstation.</p>
 
                     <h3 class="text-lg font-semibold">Elektrische aansluiting</h3>
                     <p class="mb-3">De stroomsterkte op de kampeerplekken is 6 ampère.</p>
