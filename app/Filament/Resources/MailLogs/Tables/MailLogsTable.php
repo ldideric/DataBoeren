@@ -12,6 +12,7 @@ use Filament\Support\Enums\FontFamily;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class MailLogsTable
 {
@@ -24,6 +25,19 @@ class MailLogsTable
                 Group::make('trace_id')
                     ->label(__('mail_log.groups.mail'))
                     ->getTitleFromRecordUsing(fn (MailLog $record): string => $record->groupTitle())
+                    // Order threads by their oldest event. Filament groups in PHP, not SQL,
+                    // so the list query has no GROUP BY — a bare MIN() in ORDER BY is illegal.
+                    // Use a correlated subquery (inner table aliased so the trace_id
+                    // correlation binds to the outer row, not the subquery's own copy).
+                    ->orderQueryUsing(fn (Builder $query, string $direction): Builder => $query
+                        ->orderBy(
+                            MailLog::query()
+                                ->from('mail_logs as thread')
+                                ->selectRaw('min(thread.created_at)')
+                                ->whereColumn('thread.trace_id', 'mail_logs.trace_id'),
+                            $direction,
+                        )
+                        ->orderBy('trace_id'))
                     ->collapsible(),
             ])
             ->defaultGroup('trace_id')

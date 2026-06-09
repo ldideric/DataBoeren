@@ -144,6 +144,23 @@ it('can filter the log by occurred_at range', function () {
         ->assertCanNotSeeTableRecords([$old]);
 });
 
+// Grouping
+
+it('orders trace groups by their oldest event', function () {
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
+
+    // Group A's oldest event predates group B's — even though A also holds the newest row of all,
+    // so this only passes if groups sort by MIN(created_at), not by each row's own timestamp.
+    $aOld = makeMailLog(MailEvent::Sending, ['trace_id' => 'trace-a', 'created_at' => now()->subDays(10)]);
+    $aNew = makeMailLog(MailEvent::Sent, ['trace_id' => 'trace-a', 'created_at' => now()]);
+    $bOld = makeMailLog(MailEvent::Sending, ['trace_id' => 'trace-b', 'created_at' => now()->subDays(5)]);
+    $bNew = makeMailLog(MailEvent::Sent, ['trace_id' => 'trace-b', 'created_at' => now()->subDays(4)]);
+
+    // Group A ahead of B (older oldest-event), each group newest-row first within it.
+    Livewire::test(ListMailLogs::class)
+        ->assertCanSeeTableRecords([$aNew, $aOld, $bNew, $bOld], inOrder: true);
+});
+
 // Recording pipeline
 
 it('records the transport lifecycle when a mail is actually sent', function () {
