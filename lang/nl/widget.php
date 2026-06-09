@@ -21,11 +21,11 @@ return [
 
     'operational' => [
         'arrivals_today'        => 'Aankomsten vandaag',
-        'arrivals_today_desc'   => 'Bevestigde check-ins vandaag',
+        'arrivals_today_desc'   => 'Check-ins vandaag',
         'departures_today'      => 'Vertrekken vandaag',
-        'departures_today_desc' => 'Bevestigde check-outs vandaag',
+        'departures_today_desc' => 'Check-outs vandaag',
         'on_site'               => 'Momenteel op locatie',
-        'on_site_desc'          => 'Actieve bevestigde verblijven',
+        'on_site_desc'          => 'Actieve verblijven',
         'pending'               => 'Reserveringen in afwachting',
         'pending_desc'          => 'Wacht op bevestiging',
     ],
@@ -36,9 +36,11 @@ return [
 
     'today_arrivals' => [
         'heading'   => 'Aankomsten vandaag',
-        'guest'     => 'Gast',
-        'campsite'  => 'Kampeerplaats',
-        'guests'    => 'Gasten',
-        'check_out' => 'Uitchecken',
+        'guest'          => 'Gast',
+        'campsite'       => 'Kampeerplaats',
+        'guests'         => 'Gasten',
+        'check_out'      => 'Uitchecken',
+        'payment_method' => 'Betaling',
+        'no_payment'     => 'Geen',
     ],
 ];

@@ -21,11 +21,11 @@ return [
 
     'operational' => [
         'arrivals_today'        => 'Arrivals today',
-        'arrivals_today_desc'   => 'Confirmed check-ins today',
+        'arrivals_today_desc'   => 'Check-ins today',
         'departures_today'      => 'Departures today',
-        'departures_today_desc' => 'Confirmed check-outs today',
+        'departures_today_desc' => 'Check-outs today',
         'on_site'               => 'Currently on site',
-        'on_site_desc'          => 'Active confirmed stays',
+        'on_site_desc'          => 'Active stays',
         'pending'               => 'Pending reservations',
         'pending_desc'          => 'Awaiting confirmation',
     ],
@@ -36,9 +36,11 @@ return [
 
     'today_arrivals' => [
         'heading'   => "Today's arrivals",
-        'guest'     => 'Guest',
-        'campsite'  => 'Campsite',
-        'guests'    => 'Guests',
-        'check_out' => 'Check-out',
+        'guest'          => 'Guest',
+        'campsite'       => 'Campsite',
+        'guests'         => 'Guests',
+        'check_out'      => 'Check-out',
+        'payment_method' => 'Payment',
+        'no_payment'     => 'None',
     ],
 ];

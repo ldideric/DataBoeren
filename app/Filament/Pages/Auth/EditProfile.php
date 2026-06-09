@@ -9,6 +9,8 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 
+use \App\Models\MailLog;
+
 class EditProfile extends BaseEditProfile
 {
     public function form(Schema $schema): Schema
@@ -37,6 +39,7 @@ class EditProfile extends BaseEditProfile
                 Toggle::make('show_mail_logs')
                     ->label(__('navigation.mail_log.toggle'))
                     ->helperText(__('navigation.mail_log.toggle_hint'))
+                    ->visible(auth()->user()->can('viewAny', MailLog::class))
                     ->inline(false)
                     ->onIcon(Heroicon::Envelope),
             ]);

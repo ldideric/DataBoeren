@@ -7,10 +7,14 @@ use App\Filament\Resources\Campsites\CampsiteResource;
 use App\Filament\Resources\Coupons\CouponResource;
 use App\Filament\Resources\Customers\CustomerResource;
 use App\Filament\Resources\Employees\EmployeeResource;
+use App\Filament\Resources\Payments\PaymentResource;
+use App\Models\Payment;
 use App\Models\Reservation;
-use Filament\Schemas\Components\Section;
+use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\FontFamily;
 use Filament\Support\Enums\FontWeight;
 
 class ReservationInfolist
@@ -94,6 +98,41 @@ class ReservationInfolist
                             ->weight(FontWeight::Bold),
                     ])
                     ->columns(3),
+
+                Section::make(__('reservation.sections.payments'))
+                    ->schema([
+                        TextEntry::make('no_payments')
+                            ->hiddenLabel()
+                            ->state(__('reservation.payments.none'))
+                            ->visible(fn (Reservation $record): bool => $record->payments->isEmpty()),
+
+                        RepeatableEntry::make('payments')
+                            ->hiddenLabel()
+                            ->visible(fn (Reservation $record): bool => $record->payments->isNotEmpty())
+                            ->schema([
+                                TextEntry::make('amount')
+                                    ->label(__('reservation.payments.amount'))
+                                    ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.'))
+                                    ->url(fn (Payment $record) => PaymentResource::getUrl('view', ['record' => $record])),
+                                TextEntry::make('status')
+                                    ->label(__('common.status'))
+                                    ->badge(),
+                                TextEntry::make('method')
+                                    ->label(__('reservation.payments.method'))
+                                    ->badge(),
+                                TextEntry::make('paid_at')
+                                    ->label(__('reservation.payments.paid_at'))
+                                    ->dateTime('d/m/Y H:i')
+                                    ->placeholder('-'),
+                                TextEntry::make('stripe_session_id')
+                                    ->label(__('reservation.payments.stripe_session_id'))
+                                    ->copyable()
+                                    ->limit(20)
+                                    ->fontFamily(FontFamily::Mono)
+                                    ->placeholder('-'),
+                            ])
+                            ->columns(4),
+                    ]),
             ]);
     }
 }
