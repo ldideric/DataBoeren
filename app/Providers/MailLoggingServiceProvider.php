@@ -25,6 +25,10 @@ class MailLoggingServiceProvider extends ServiceProvider
 
     private ?string $currentJobId = null;
 
+    private ?string $currentRecipient = null;
+
+    private ?string $currentMailable = null;
+
     public function boot(): void
     {
         if (! env('MAIL_ACTIVITY_LOG', true)) {
@@ -61,8 +65,7 @@ class MailLoggingServiceProvider extends ServiceProvider
         Event::listen(function (JobProcessed $event): void {
             if ($this->isMailJob($event->job)) {
                 $this->record(MailEvent::Processed, $this->jobContext($event->job));
-                $this->currentTrace = null;
-                $this->currentJobId = null;
+                $this->resetThread();
             }
         });
 
@@ -79,8 +82,7 @@ class MailLoggingServiceProvider extends ServiceProvider
                 $this->record(MailEvent::Failed, $this->jobContext($event->job) + [
                     'error' => $this->describe($event->exception),
                 ]);
-                $this->currentTrace = null;
-                $this->currentJobId = null;
+                $this->resetThread();
             }
         });
 
@@ -89,9 +91,19 @@ class MailLoggingServiceProvider extends ServiceProvider
             $trace = $this->currentTrace ?? (string) Str::uuid();
             $event->message->getHeaders()->addTextHeader('X-Mail-Trace', $trace);
 
+            $recipient = $this->addresses($event->message);
+            $mailable = $event->data['__laravel_mailable'] ?? null;
+
+            // The queue-job rows (processing/queued) are written before the recipient is
+            // known, so backfill them now that it is — otherwise their group title differs
+            // from the transport rows and Filament splits one mail into several groups.
+            $this->currentRecipient = $recipient;
+            $this->currentMailable ??= $mailable;
+            $this->backfillThreadRecipient($trace);
+
             $this->record(MailEvent::Sending, [
-                'mailable'  => $event->data['__laravel_mailable'] ?? null,
-                'recipient' => $this->addresses($event->message),
+                'mailable'  => $mailable,
+                'recipient' => $recipient,
                 'subject'   => $event->message->getSubject(),
                 'job_id'    => $this->currentJobId,
                 'trace_id'  => $trace,
@@ -135,9 +147,46 @@ class MailLoggingServiceProvider extends ServiceProvider
                 ->where('job_id', $this->currentJobId)
                 ->whereNull('trace_id')
                 ->update(['trace_id' => $this->currentTrace]);
+
+            // Adopt the thread's recipient/mailable from the originating queued row.
+            // The job-lifecycle events (processing/processed/...) have no recipient of
+            // their own, so without this their group title differs from the transport
+            // rows and Filament splits one mail into several groups.
+            $queued = MailLog::query()
+                ->where('job_id', $this->currentJobId)
+                ->where('event', MailEvent::Queued)
+                ->latest('id')
+                ->first();
+
+            $this->currentRecipient = $queued?->recipient;
+            $this->currentMailable = $queued?->mailable;
         } catch (Throwable) {
             // Linking is best-effort; never break mail delivery over it
         }
+    }
+
+    private function backfillThreadRecipient(string $trace): void
+    {
+        if ($this->currentRecipient === null) {
+            return;
+        }
+
+        try {
+            MailLog::query()
+                ->where('trace_id', $trace)
+                ->whereNull('recipient')
+                ->update(['recipient' => $this->currentRecipient]);
+        } catch (Throwable) {
+            // Backfilling is best-effort; never break mail delivery over it
+        }
+    }
+
+    private function resetThread(): void
+    {
+        $this->currentTrace = null;
+        $this->currentJobId = null;
+        $this->currentRecipient = null;
+        $this->currentMailable = null;
     }
 
     private function traceFromMessage(Email $message): ?string
@@ -157,7 +206,8 @@ class MailLoggingServiceProvider extends ServiceProvider
     private function jobContext(JobContract $job): array
     {
         return [
-            'mailable'   => $this->mailableFromPayload($job),
+            'mailable'   => $this->mailableFromPayload($job) ?? $this->currentMailable,
+            'recipient'  => $this->currentRecipient,
             'connection' => $job->getConnectionName(),
             'queue'      => $job->getQueue(),
             'job_id'     => (string) $job->getJobId(),

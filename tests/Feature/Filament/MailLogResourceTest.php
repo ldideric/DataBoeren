@@ -187,6 +187,21 @@ it('links every lifecycle row of one mail under a single trace', function () {
         ->toBe(MailLog::where('event', MailEvent::Sent)->value('trace_id'));
 });
 
+it('gives every lifecycle row of a mail one shared group title', function () {
+    // The Filament table draws a new group header whenever the title changes between
+    // rows, so a single mail only stays one group if all its rows (including the
+    // recipient-less queue-job rows) resolve to the same title.
+    config(['mail.default' => 'array', 'queue.default' => 'sync']);
+    $reservation = Reservation::factory()->create();
+
+    Mail::to($reservation->customer->email)->send(new BookingConfirmed($reservation));
+
+    $titles = MailLog::all()->map->groupTitle()->unique();
+
+    expect($titles)->toHaveCount(1)
+        ->and($titles->first())->toContain($reservation->customer->email);
+});
+
 it('gives separate mails separate traces', function () {
     config(['mail.default' => 'array', 'queue.default' => 'sync']);
     $first = Reservation::factory()->create();
