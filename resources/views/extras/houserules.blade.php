@@ -56,10 +56,10 @@
                     <p class="mt-1 mb-3">Het bezoekerstarief bedraagt €5 per persoon.</p>
 
                     <h3 class="text-lg font-semibold">Aansprakelijkheid</h3>
-                    <p class="mb-2">Je verblijf op kampeerterrein de Groene Weide is op eigen risico. Eventuele schade aan het terrein of de accommodaties, veroorzaakt door bezoekers, wordt hij hen in rekening gebracht. Wij zijn niet aansprakelijk voor letsel, schade, verlies, diefstal of beschadiging van persoonlijke eigendommen, inclusief geld. Wij raden aan een reisverzekering af te sluiten. De Groene Weide is niet aansprakelijk voor storingen en diensten of tekortkomingen van diensten geleverd of verstrekt door derden. </p>
+                    <p class="mb-2">Je verblijf op kampeerterrein de Groene Weide is op eigen risico. Eventuele schade aan het terrein of de accommodaties, veroorzaakt door bezoekers, wordt bij hen in rekening gebracht. Wij zijn niet aansprakelijk voor letsel, schade, verlies, diefstal of beschadiging van persoonlijke eigendommen, inclusief geld. Wij raden aan een reisverzekering af te sluiten. De Groene Weide is niet aansprakelijk voor storingen en diensten of tekortkomingen van diensten geleverd of verstrekt door derden. </p>
 
                     <h3 class="text-lg font-semibold">Nachtrust</h3>
-                    <p class="mb-3">Op ons terrein geldt tussen 22:00 en 08:00 uur rusttijd. Houd rekening met je kampeerburen. Tijdens je verblijf zijn oartytenten, muziekboxen en feestverlichting niet toegestaan. </p>
+                    <p class="mb-3">Op ons terrein geldt tussen 22:00 en 08:00 uur rusttijd. Houd rekening met je kampeerburen. Tijdens je verblijf zijn partytenten, muziekboxen en feestverlichting niet toegestaan. </p>
 
                     <h3 class="text-lg font-semibold">Vuurtje stoken</h3>
                     <p class="mb-3">Je mag een vuurtje maken op de gezamenlijke vuurplaatsen of bij je eigen kampeerplek. Houd rekening met de rust van medekampeerders en zorg dat er geen overlast ontstaat. Alleen volwassenen mogen het vuur aansteken en moeten erbij blijven tot het volledig is gedoofd. Een vuurkorf kun je bij ons lenen. Daarnaast verkopen we zakken brandhout.</p>
@@ -74,10 +74,10 @@
                     <p class="mb-3">De stroomsterkte op de kampeerplekken is 6 ampère.</p>
 
                     <h3 class="text-lg font-semibold">Speeltuin</h3>
-                    <p class="mb-3">Volwassenen mogen niet op de trampoline, en er mogen maximaal drie personen tegelijk op. Vergeet niet je schoenen uit de doen. </p>
+                    <p class="mb-3">Volwassenen mogen niet op de trampoline, en er mogen maximaal drie personen tegelijk op. Vergeet niet je schoenen uit te doen. </p>
 
                     <h3 class="text-lg font-semibold">Boerencamping</h3>
-                    <p class="mb-3">Als boerencamping hebben we dieren op het terrein. Wees voorzichtig en lief voor onze dieren. Onze dieren zijn ingeënt tegen het Q-koorts. Ben je zwanger? We adviseren je om de kinderboerderij niet te bezoeken, aangezien dieren ziektekiemen kunnen dragen.</p>
+                    <p class="mb-3">Als boerencamping hebben we dieren op het terrein. Wees voorzichtig en lief voor onze dieren. Onze dieren zijn ingeënt tegen Q-koorts. Ben je zwanger? We adviseren je om de kinderboerderij niet te bezoeken, aangezien dieren ziektekiemen kunnen dragen.</p>
 
                     <h3 class="text-lg font-semibold">Zwemwater en kinderen</h3>
                     <p class="mb-3">Op het kampeerterrein is een plas water waarin gezwommen kan worden. We adviseren kinderen zonder zwemdiploma een zwemvestje te dragen. </p>
@@ -86,7 +86,7 @@
                     <p class="mb-3">Wifi is gratis beschikbaar in en rondom het receptiegebouw, niet op de rest van de camping.</p>
 
                     <h3 class="text-lg font-semibold">Huisdieren op de camping</h3>
-                    <p class="mb-3">Honden zijn toegestaan op ons terrein. Andere huisdieren niet. Overigens verzoeken wij u vriendelijk uw hond aan de lijn te houden en als uw hond voor te veel overlast zorgt houden wij altijd het recht uw toegang tot de camping in te nemen. </p>
+                    <p class="mb-3">Honden zijn toegestaan op ons terrein. Andere huisdieren niet. Overigens verzoeken wij u vriendelijk uw hond aan de lijn te houden en als uw hond voor te veel overlast zorgt behouden wij ons altijd het recht om u de toegang tot de camping te ontzeggen.</p>
 
                     <h3 class="text-lg font-semibold">Foto's en social media</h3>
                     <p class="mb-5"> Medewerkers en campinggasten kunnen tijdens uw verblijf foto's maken en delen op sociale media. Wilt u niet dat foto's van u, gemaakt door de Groene Weide, online komen? Geef dit dan schriftelijk door vóór uw verblijf. De Groene Weide is niet verantwoordelijk voor foto's gedeeld door gasten. Maak geen foto's van onze deelnemers van de dagbesteding. </p>
@@ -98,4 +98,4 @@
 
     </div>
 
-    @endsection
+@endsection
