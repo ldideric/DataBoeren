@@ -74,6 +74,7 @@ function bookingForm(Campsite $campsite, $checkIn, $checkOut, array $params = []
         ->set('email', 'jan@example.com')
         ->set('payMethod', 'in_person')
         ->set('adultConfirmation', true)
+        ->set('privacyStatement', true)
         ->set('houseRules', true);
 }
 
