@@ -25,10 +25,6 @@ class MailLogsTable
                 Group::make('trace_id')
                     ->label(__('mail_log.groups.mail'))
                     ->getTitleFromRecordUsing(fn (MailLog $record): string => $record->groupTitle())
-                    // Order threads by their oldest event. Filament groups in PHP, not SQL,
-                    // so the list query has no GROUP BY — a bare MIN() in ORDER BY is illegal.
-                    // Use a correlated subquery (inner table aliased so the trace_id
-                    // correlation binds to the outer row, not the subquery's own copy).
                     ->orderQueryUsing(fn (Builder $query, string $direction): Builder => $query
                         ->orderBy(
                             MailLog::query()
