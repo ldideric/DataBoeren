@@ -11,19 +11,14 @@
 
             <div class="mt-6 space-y-6 text-sm text-black">
 
-                <div>
-                    <h2 class="text-2xl font-semibold text-olivegreen-400 mb-2">Betalingen</h2>
-                    <h3 class="text-lg font-semibold">In- en uitchecken</h3>
-                    <p class="mb-3">Altijd melden in het receptiegebouw bij aankomst en vertrek. Mocht er niemand bij de receptie aanwezig zijn, dan kun je het telefoonnummer op het infobord bij de receptie bellen. </p>
-                    <ul class="mb-3 list-disc list-inside">
-                        <li>Kampeer- en tentplekken zijn beschikbaar vanaf 14:00, uitchecken vóór 12:00 uur.</li>
-                        <li>Inchecken kan tot uiterlijk 20:00 uur.</li>
-                        <li>Restbedrag betalen vóór 11:00 uur op de dag van vertrek.</li>
-                    </ul>
-
-                    <h3 class="text-lg font-semibold">Lazy checkout</h3>
-                    <p class="mb-3">Wil je later uitchecken? Vraag bij de receptie naar de mogelijkheid van een ‘Lazy Check-out’ tot 18.00 uur voor €5,- p.p. Een Lazy Check-out kunnen we pas op de dag zelf toezeggen, afhankelijk van de beschikbaarheid op het terrein.</p>
-                </div>
+                <h2 class="text-2xl font-semibold text-olivegreen-400 mb-2">Betalingen</h2>
+                <h3 class="text-lg font-semibold">In- en uitchecken</h3>
+                <p class="mb-3">Altijd melden in het receptiegebouw bij aankomst en vertrek. Mocht er niemand bij de receptie aanwezig zijn, dan kun je het telefoonnummer op het infobord bij de receptie bellen. </p>
+                <ul class="mb-3 list-disc list-inside">
+                    <li>Kampeer- en tentplekken zijn beschikbaar vanaf 14:00, uitchecken vóór 12:00 uur.</li>
+                    <li>Inchecken kan tot uiterlijk 20:00 uur.</li>
+                    <li>Restbedrag betalen vóór 11:00 uur op de dag van vertrek.</li>
+                </ul>
 
                 <div>
                     <h2 class="text-2xl font-semibold text-olivegreen-400 mb-2">Plaatsing kampeermiddelen</h2>
