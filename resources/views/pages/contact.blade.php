@@ -42,7 +42,7 @@
                 </h2>
 
                 <p class="text-black">
-                    Bezoek ons op: De Groenelaan, Schouwen-Duiveland,4301 AA, Nederland
+                    Bezoek ons op: De Groenelaan, Schouwen-Duiveland, 4301 AA, Nederland
                 </p>
             </div>
         </div>
