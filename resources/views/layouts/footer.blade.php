@@ -7,8 +7,8 @@
             </div>
 
              <div class="absolute left-1/2 -translate-x-1/2 hidden sm:flex gap-3 text-sm">
-                <a href="{{ route('home') }}" class="px-3 py-1.5 text-white hover:underline">Over ons</a>
-                <a href="{{ route('campsites.index') }}" class="px-3 py-1.5 text-white hover:underline">Contact</a>
+                <a href="{{ route('about') }}" class="px-3 py-1.5 text-white hover:underline">Over ons</a>
+                <a href="{{ route('contact') }}" class="px-3 py-1.5 text-white hover:underline">Contact</a>
                 <a href="{{ route('privacy') }}" class="px-3 py-1.5 text-white hover:underline">Privacystatement</a>
             </div>
 
