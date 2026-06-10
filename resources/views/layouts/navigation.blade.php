@@ -11,6 +11,9 @@
                     <a href="{{ route('home') }}" class="px-3 py-1.5 rounded-md text-white hover:bg-olivegreen-600 transition-colors">Home</a>
                     <a href="{{ route('campsites.index') }}" class="px-3 py-1.5 rounded-md text-white hover:bg-olivegreen-600 transition-colors">Kampeerplaatsen</a>
                     <a href="{{ route('privacy') }}" class="px-3 py-1.5 rounded-md text-white hover:bg-olivegreen-600 transition-colors">Privacystatement</a>
+                    <a href="{{ route('pages.about') }}" class="px-3 py-1.5 rounded-md text-white hover:bg-olivegreen-600 transition-colors">Over ons</a>
+                    <a href="{{ route('pages.activities') }}" class="px-3 py-1.5 rounded-md text-white hover:bg-olivegreen-600 transition-colors">Activiteiten</a>
+                    <a href="{{ route('pages.contact') }}" class="px-3 py-1.5 rounded-md text-white hover:bg-olivegreen-600 transition-colors">Contact</a>
                 </div>
             </div>
 

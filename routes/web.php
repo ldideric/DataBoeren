@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/campsites', [CampsiteController::class, 'index'])->name('campsites.index');
 Route::get('privacy', fn () => view('extras.privacy'))->name('privacy');
+Route::get('/activiteiten', fn () => view('pages.activities'))->name('activities');
+Route::get('/contact', fn () => view('pages.contact'))->name('contact');
+Route::get('/over-ons', fn () => view('pages.about'))->name('about');
 
 /* Access-link request */
 Route::get('/login', [AuthController::class, 'requestForm'])->name('login');
