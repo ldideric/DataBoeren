@@ -24,17 +24,21 @@ class PricesRelationManager extends RelationManager
         return $schema
             ->components([
                 Select::make('season_id')
+                    ->label(__('campsite.prices.season'))
                     ->relationship('season', 'name')
                     ->required(),
                 TextInput::make('nightly_rate')
+                    ->label(__('campsite.prices.nightly_rate'))
                     ->numeric()
                     ->suffix('ct')
                     ->required(),
                 TextInput::make('per_adult_rate')
+                    ->label(__('campsite.prices.per_adult_rate'))
                     ->numeric()
                     ->suffix('ct')
                     ->required(),
                 TextInput::make('per_child_rate')
+                    ->label(__('campsite.prices.per_child_rate'))
                     ->numeric()
                     ->suffix('ct')
                     ->required()
@@ -48,12 +52,16 @@ class PricesRelationManager extends RelationManager
             ->recordTitleAttribute('id')
             ->columns([
                 TextColumn::make('season.name')
+                    ->label(__('campsite.prices.season'))
                     ->url(fn ($record) => SeasonResource::getUrl('view', ['record' => $record->season_id])),
                 TextColumn::make('nightly_rate')
+                    ->label(__('campsite.prices.nightly_rate'))
                     ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
                 TextColumn::make('per_adult_rate')
+                    ->label(__('campsite.prices.per_adult_rate'))
                     ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
                 TextColumn::make('per_child_rate')
+                    ->label(__('campsite.prices.per_child_rate'))
                     ->formatStateUsing(fn ($state) => '€ ' . number_format($state / 100, 2, ',', '.')),
             ])
             ->filters([

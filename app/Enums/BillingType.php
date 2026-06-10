@@ -13,8 +13,8 @@ enum BillingType: string implements HasColor, HasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::OneTime  => 'One Time',
-            self::PerNight => 'Per Night',
+            self::OneTime  => __('enums.billing_type.one_time'),
+            self::PerNight => __('enums.billing_type.per_night'),
         };
     }
 

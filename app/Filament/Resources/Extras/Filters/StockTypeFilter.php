@@ -16,6 +16,8 @@ class StockTypeFilter extends SelectFilter
     {
         parent::setUp();
 
-        $this->options(StockType::class);
+        $this
+            ->label(__('extra.filters.stock_type'))
+            ->options(StockType::class);
     }
 }

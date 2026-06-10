@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CouponScope;
 use App\Enums\DiscountType;
+use App\Queries\CouponQuery;
 use Database\Factories\CouponFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -15,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
 
 /**
  * @property string $id
@@ -35,6 +35,8 @@ use Illuminate\Support\Str;
  * @property-read Extra|null $extra
  *
  * @property-read string $formatted_discount
+ *
+ * @method CouponQuery|static query()
  */
 #[Fillable(['title', 'code', 'scope', 'extra_id', 'discount_type', 'discount_value', 'expires_at', 'max_uses', 'uses_count'])]
 class Coupon extends Model
@@ -63,6 +65,15 @@ class Coupon extends Model
         return $this->belongsTo(Extra::class);
     }
 
+    public function isRedeemable(): bool
+    {
+        if ($this->expires_at !== null && $this->expires_at->lt(today())) {
+            return false;
+        }
+
+        return $this->max_uses === null || $this->uses_count < $this->max_uses;
+    }
+
     public function formattedDiscount(): Attribute
     {
         return Attribute::make(
@@ -75,8 +86,13 @@ class Coupon extends Model
                     ? $this->extra->name
                     : $this->scope->getLabel();
 
-                return Str::of($value)->append(" on {$target}");
+                return __('coupon.discount_on', ['value' => $value, 'target' => $target]);
             }
         );
+    }
+
+    public function newEloquentBuilder($query): CouponQuery
+    {
+        return new CouponQuery($query);
     }
 }

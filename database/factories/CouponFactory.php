@@ -55,7 +55,7 @@ class CouponFactory extends Factory
     {
         return $this->state([
             'discount_type' => DiscountType::Flat,
-            'discount_value' => fake()->randomFloat(2, 5, 30),
+            'discount_value' => fake()->numberBetween(5, 30) * 100,
         ]);
     }
 

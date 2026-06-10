@@ -16,6 +16,8 @@ class DiscountTypeFilter extends SelectFilter
     {
         parent::setUp();
 
-        $this->options(DiscountType::class);
+        $this
+            ->label(__('coupon.fields.discount_type'))
+            ->options(DiscountType::class);
     }
 }

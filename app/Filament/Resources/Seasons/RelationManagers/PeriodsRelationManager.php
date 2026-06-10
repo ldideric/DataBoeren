@@ -22,8 +22,10 @@ class PeriodsRelationManager extends RelationManager
         return $schema
             ->components([
                 DatePicker::make('starts_at')
+                    ->label(__('season.fields.starts_at'))
                     ->required(),
                 DatePicker::make('ends_at')
+                    ->label(__('season.fields.ends_at'))
                     ->after('starts_at')
                     ->required(),
             ]);
@@ -35,9 +37,11 @@ class PeriodsRelationManager extends RelationManager
             ->recordTitleAttribute('starts_at')
             ->columns([
                 TextColumn::make('starts_at')
+                    ->label(__('season.fields.starts_at'))
                     ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('ends_at')
+                    ->label(__('season.fields.ends_at'))
                     ->date('d/m/Y')
                     ->sortable(),
             ])

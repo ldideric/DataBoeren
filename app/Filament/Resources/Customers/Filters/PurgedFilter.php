@@ -16,7 +16,7 @@ class PurgedFilter extends TernaryFilter
         parent::setUp();
 
         $this
-            ->label('GDPR purged')
+            ->label(__('customer.filters.gdpr_purged'))
             ->nullable();
     }
 }

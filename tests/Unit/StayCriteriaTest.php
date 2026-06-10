@@ -16,7 +16,7 @@ it('is incomplete when any field is missing', function () {
         'datestart' => Carbon::tomorrow()->format('Y-m-d'),
         'dateend' => Carbon::tomorrow()->addDays(2)->format('Y-m-d'),
         'adults' => 2,
-        // children + vehicles omitted
+        // children omitted
     ]);
 
     expect($partial->isComplete())->toBeFalse();
@@ -28,7 +28,6 @@ it('is complete with valid future dates and all counts', function () {
         'dateend' => Carbon::tomorrow()->addDays(3)->format('Y-m-d'),
         'adults' => 2,
         'children' => 1,
-        'vehicles' => 1,
     ]);
 
     expect($criteria->isComplete())->toBeTrue()
@@ -41,7 +40,6 @@ it('rejects a check-in in the past', function () {
         'dateend' => Carbon::tomorrow()->format('Y-m-d'),
         'adults' => 1,
         'children' => 0,
-        'vehicles' => 0,
     ]);
 
     expect($criteria->hasValidDates())->toBeFalse();
@@ -55,22 +53,19 @@ it('rejects a check-out on or before check-in', function () {
         'dateend' => $sameDay,
         'adults' => 1,
         'children' => 0,
-        'vehicles' => 0,
     ]);
 
     expect($criteria->hasValidDates())->toBeFalse();
 });
 
-it('clamps adults to at least one and floors children and vehicles at zero', function () {
+it('clamps adults to at least one and floors children at zero', function () {
     $criteria = criteriaFrom([
         'datestart' => Carbon::tomorrow()->format('Y-m-d'),
         'dateend' => Carbon::tomorrow()->addDay()->format('Y-m-d'),
         'adults' => 0,
         'children' => -3,
-        'vehicles' => -1,
     ]);
 
     expect($criteria->adults)->toBe(1)
-        ->and($criteria->children)->toBe(0)
-        ->and($criteria->vehicles)->toBe(0);
+        ->and($criteria->children)->toBe(0);
 });

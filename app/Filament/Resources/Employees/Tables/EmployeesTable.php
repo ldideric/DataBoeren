@@ -21,12 +21,14 @@ class EmployeesTable
             ->columns([
                 TextColumn::make('first_name')
                     ->formatStateUsing(fn ($_, $record) => $record->first_name.' '.$record->last_name)
-                    ->label('Name')
+                    ->label(__('common.name'))
                     ->searchable(['first_name', 'last_name']),
                 TextColumn::make('email')
+                    ->label(__('common.email'))
                     ->copyable()
                     ->searchable(),
                 TextColumn::make('role')
+                    ->label(__('common.role'))
                     ->badge(),
             ])
             ->filters([

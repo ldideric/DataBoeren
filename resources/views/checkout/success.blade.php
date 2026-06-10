@@ -1,15 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mx-auto max-w-2xl px-6 py-8">
+    <div class="mx-auto w-full max-w-2xl px-6 py-8">
         <div class="rounded-2xl border border-tan-400 bg-tan-300 p-6 shadow-sm ring-1 ring-black/5 text-center">
-            <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-50 text-green-700 text-2xl">
-                ✓
-            </div>
-            <h1 class="text-xl font-bold text-olivegreen-400">Betaling voltooid</h1>
-            <p class="mt-2 text-sm text-black">
-                Bedankt voor uw betaling. Uw reservering is bevestigd.
-            </p>
+            @if ($confirmed ?? true)
+                <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-50 text-green-700 text-2xl">
+                    ✓
+                </div>
+                <h1 class="text-xl font-bold text-olivegreen-400">Betaling voltooid</h1>
+                <p class="mt-2 text-sm text-black">
+                    Bedankt voor uw betaling. Uw reservering is bevestigd.
+                </p>
+            @else
+                <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-50 text-amber-700 text-2xl">
+                    ⏳
+                </div>
+                <h1 class="text-xl font-bold text-olivegreen-400">Betaling in verwerking</h1>
+                <p class="mt-2 text-sm text-black">
+                    Bedankt! Uw betaling wordt verwerkt. Zodra deze is voltooid bevestigen we uw
+                    reservering en ontvangt u een e-mail. Dit kan bij sommige betaalmethodes
+                    (zoals iDEAL) enkele minuten duren.
+                </p>
+            @endif
 
             <div class="mt-4 rounded-lg border border-olivegreen-600 bg-olivegreen-300 p-4 text-left text-sm text-black">
                 <p><span class="font-medium">Standplaats:</span> {{ $reservation->campsite->name }}</p>

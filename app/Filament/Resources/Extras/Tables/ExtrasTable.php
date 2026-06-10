@@ -22,23 +22,30 @@ class ExtrasTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('common.name'))
                     ->searchable(),
                 TextColumn::make('description')
+                    ->label(__('extra.fields.description'))
                     ->limit(20)
-                    ->placeholder('None')
+                    ->placeholder(__('extra.placeholders.no_description'))
                     ->tooltip(fn ($record) => $record->description),
                 TextColumn::make('billing_type')
+                    ->label(__('extra.fields.billing_type'))
                     ->badge(),
                 TextColumn::make('price')
+                    ->label(__('extra.fields.price'))
                     ->formatStateUsing(fn ($state) => '€ '.number_format($state / 100, 2, ',', '.'))
                     ->sortable(),
                 TextColumn::make('stock_type')
+                    ->label(__('extra.fields.stock_type'))
                     ->badge(),
                 TextColumn::make('stock')
-                    ->placeholder('Unlimited')
+                    ->label(__('extra.fields.stock'))
+                    ->placeholder(__('extra.placeholders.unlimited'))
                     ->sortable(),
                 TextColumn::make('max_per_booking')
-                    ->placeholder('Unlimited')
+                    ->label(__('extra.fields.max_per_booking'))
+                    ->placeholder(__('extra.placeholders.unlimited'))
                     ->sortable(),
             ])
             ->filters([

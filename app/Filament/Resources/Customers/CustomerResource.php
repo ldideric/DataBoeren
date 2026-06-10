@@ -24,17 +24,23 @@ class CustomerResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $label = 'Customer';
-
-    protected static ?string $pluralLabel = 'Customers';
-
     protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedUser;
 
     protected static ?int $navigationSort = 1;
 
     public static function getNavigationGroup(): string|\UnitEnum|null
     {
-        return 'Customers';
+        return __('navigation.groups.customers');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('navigation.customer.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('navigation.customer.plural');
     }
 
     public static function form(Schema $schema): Schema

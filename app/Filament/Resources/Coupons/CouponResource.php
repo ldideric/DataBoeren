@@ -29,7 +29,17 @@ class CouponResource extends Resource
 
     public static function getNavigationGroup(): string|\UnitEnum|null
     {
-        return 'Customers';
+        return __('navigation.groups.customers');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('navigation.coupon.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('navigation.coupon.plural');
     }
 
     public static function form(Schema $schema): Schema
