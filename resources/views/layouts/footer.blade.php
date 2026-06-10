@@ -10,6 +10,7 @@
                 <a href="{{ route('about') }}" class="px-3 py-1.5 text-white hover:underline">Over ons</a>
                 <a href="{{ route('contact') }}" class="px-3 py-1.5 text-white hover:underline">Contact</a>
                 <a href="{{ route('privacy') }}" class="px-3 py-1.5 text-white hover:underline">Privacystatement</a>
+                <a href="{{ route('houserules') }}" class="px-3 py-1.5 text-white hover:underline">Campingregels</a>
             </div>
 
             <div class="text-right max-w-xs">
