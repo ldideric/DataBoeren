@@ -16,6 +16,8 @@ class SourceFilter extends SelectFilter
     {
         parent::setUp();
 
-        $this->options(ReservationSource::class);
+        $this
+            ->label(__('reservation.fields.source'))
+            ->options(ReservationSource::class);
     }
 }

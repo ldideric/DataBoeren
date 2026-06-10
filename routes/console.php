@@ -2,14 +2,10 @@
 
 use App\Console\Commands\PurgePaymentDataCommand;
 use App\Console\Commands\PurgePersonalDataCommand;
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use App\Console\Commands\SendArrivalReminders;
+use App\Console\Commands\SendAwaitingPaymentReminders;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schedule;
-
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
 
 Schedule::command(PurgePersonalDataCommand::class)
     ->name('purge:personal-data')
@@ -30,3 +26,23 @@ Schedule::command(PurgePaymentDataCommand::class)
     ->runInBackground()
     ->withoutOverlapping()
     ->onFailure(fn ($output) => Log::error('Purge payment-data job failed', ['output' => (string) $output]));
+
+Schedule::command(SendAwaitingPaymentReminders::class)
+    ->name('reservations:remind-awaiting-payment')
+    ->hourly()
+    ->onOneServer()
+    ->timezone('Europe/Amsterdam')
+    ->environments(['production', 'staging'])
+    ->runInBackground()
+    ->withoutOverlapping()
+    ->onFailure(fn ($output) => Log::error('Awaiting-payment reminder job failed', ['output' => (string) $output]));
+
+Schedule::command(SendArrivalReminders::class)
+    ->name('reservations:remind-arrival')
+    ->dailyAt('09:00')
+    ->onOneServer()
+    ->timezone('Europe/Amsterdam')
+    ->environments(['production', 'staging'])
+    ->runInBackground()
+    ->withoutOverlapping()
+    ->onFailure(fn ($output) => Log::error('Pre-arrival reminder job failed', ['output' => (string) $output]));

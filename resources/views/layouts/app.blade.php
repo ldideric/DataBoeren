@@ -6,11 +6,15 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
 
     <link rel="preload" as="image" href="/img/camping_background.jpg">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 <body class="font-sans antialiased text-black">
 <div class="relative flex flex-col min-h-screen bg-cover bg-center bg-fixed" style="background-image: url('/img/camping_background.jpg')">
@@ -31,5 +35,6 @@
     </main>
 
 </div>
+@livewireScripts
 </body>
 </html>

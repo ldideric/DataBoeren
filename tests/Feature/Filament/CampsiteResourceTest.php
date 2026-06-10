@@ -24,8 +24,8 @@ use Livewire\Livewire;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->admin = User::factory()->withRole(UserRole::Admin)->create();
-    $this->actingAs($this->admin);
+    $admin = User::factory()->withRole(UserRole::Admin)->create();
+    $this->actingAs($admin);
 });
 
 // List page
@@ -50,7 +50,6 @@ it('can render campsite table columns', function () {
         ->assertCanRenderTableColumn('type')
         ->assertCanRenderTableColumn('has_electricity')
         ->assertCanRenderTableColumn('max_people')
-        ->assertCanRenderTableColumn('max_vehicles')
         ->assertCanRenderTableColumn('notes');
 });
 
@@ -95,7 +94,6 @@ it('can create a campsite', function () {
             'type'            => CampsiteType::Paardenveld->value,
             'has_electricity' => true,
             'max_people'      => 4,
-            'max_vehicles'    => 1,
             'notes'           => 'Test notitie',
         ])
         ->call('create')
@@ -114,14 +112,12 @@ it('validates required fields on campsite create', function () {
             'name'         => null,
             'type'         => null,
             'max_people'   => null,
-            'max_vehicles' => null,
         ])
         ->call('create')
         ->assertHasFormErrors([
             'name'         => 'required',
             'type'         => 'required',
             'max_people'   => 'required',
-            'max_vehicles' => 'required',
         ]);
 });
 
@@ -147,14 +143,12 @@ it('can retrieve campsite data on the edit page', function () {
     $campsite = Campsite::factory()->create([
         'name'         => 'Plek 01',
         'max_people'   => 4,
-        'max_vehicles' => 1,
     ]);
 
     Livewire::test(EditCampsite::class, ['record' => $campsite->getRouteKey()])
         ->assertSchemaStateSet([
             'name'         => 'Plek 01',
             'max_people'   => 4,
-            'max_vehicles' => 1,
         ]);
 });
 

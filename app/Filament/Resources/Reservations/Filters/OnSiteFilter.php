@@ -18,7 +18,7 @@ class OnSiteFilter extends Filter
         parent::setUp();
 
         $this
-            ->label('Currently on site')
+            ->label(__('reservation.filters.on_site'))
             ->toggle()
             ->query(
                 fn (Builder $query) => $query

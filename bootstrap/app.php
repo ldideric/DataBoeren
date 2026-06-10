@@ -11,7 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Traefik terminates TLS and forwards to the app over plain HTTP on the
+        // internal overlay network. Trust its X-Forwarded-* headers so the request
+        // scheme is seen as HTTPS. Without this, signed-URL validation rebuilds the
+        // URL as http:// and every magic link fails with "Invalid signature".
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

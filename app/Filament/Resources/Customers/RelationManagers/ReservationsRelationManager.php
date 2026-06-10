@@ -24,18 +24,21 @@ class ReservationsRelationManager extends RelationManager
             ->recordUrl(fn ($record) => ReservationResource::getUrl('view', ['record' => $record]))
             ->columns([
                 TextColumn::make('campsite.name')
-                    ->label('Campsite'),
+                    ->label(__('customer.reservations.campsite')),
                 TextColumn::make('check_in')
+                    ->label(__('customer.reservations.check_in'))
                     ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('check_out')
+                    ->label(__('customer.reservations.check_out'))
                     ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('status')
+                    ->label(__('common.status'))
                     ->badge(),
                 TextColumn::make('orderSummary.total')
                     ->formatStateUsing(fn ($state) => $state !== null ? '€ ' . number_format($state / 100, 2, ',', '.') : '—')
-                    ->label('Total'),
+                    ->label(__('customer.reservations.total')),
             ])
             ->filters([
                 //

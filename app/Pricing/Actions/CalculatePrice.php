@@ -13,23 +13,8 @@ use App\Models\Season;
 use App\Models\SeasonPeriod;
 use RuntimeException;
 
-/**
- * Turns a reservation (+ chosen extras) into an OrderSummary: the frozen,
- * itemised invoice that becomes the amount owed. The returned model is NOT
- * saved — the caller persists it alongside the reservation_extras lines inside
- * one transaction.
- *
- * Pricing assumptions (documented in docs/pricing.md):
- *   - The whole stay is priced in the season that contains the check-in date.
- *   - Discounts apply in order: applied by each strategy.
- *
- * @todo Increment Coupon::uses_count once a coupon is attached in the booking flow.
- */
 class CalculatePrice
 {
-    /**
-     * @param  array<array{extra: Extra, quantity: int}>  $extraSelections
-     */
     public function calculate(Reservation $reservation, array $extraSelections = []): OrderSummary
     {
         $season = $this->seasonFor($reservation);
@@ -64,9 +49,6 @@ class CalculatePrice
         ]);
     }
 
-    /**
-     * @param  array<array{extra: Extra, quantity: int}>  $extraSelections
-     */
     private function calculateDiscounts(Reservation $reservation, int $accommodation, array $extraSelections, int $nights): array
     {
         $lastMinute = $this->lastMinuteDiscount($reservation, $accommodation);
@@ -101,10 +83,6 @@ class CalculatePrice
 
         return (int) round($baseAmount * $config['discount_percent'] / 100);
     }
-
-    /**
-     * @param  array<array{extra: Extra, quantity: int}>  $extraSelections
-     */
     private function couponDiscount(Reservation $reservation, int $baseAmount, array $extraSelections, int $nights): int
     {
         $coupon = $reservation->coupon;
@@ -113,16 +91,20 @@ class CalculatePrice
             return 0;
         }
 
+        $extrasTotal = fn (): int => collect($extraSelections)
+            ->sum(fn (array $line) => self::lineSubtotal($line['extra'], $line['quantity'], $nights));
+
         $base = match ($coupon->scope) {
+            CouponScope::Total => $baseAmount + $extrasTotal(),
             CouponScope::Accommodation => $baseAmount,
+            CouponScope::AllExtras => $extrasTotal(),
             CouponScope::Extra => collect($extraSelections)
                 ->filter(fn (array $line) => $line['extra']->id === $coupon->extra_id)
                 ->sum(fn (array $line) => self::lineSubtotal($line['extra'], $line['quantity'], $nights)),
         };
 
-        // discount_value is euros for a flat coupon (→ cents) but a percentage for a percent coupon.
         return match ($coupon->discount_type) {
-            DiscountType::Flat => min((int) round($coupon->discount_value * 100), $base),
+            DiscountType::Flat => min((int) round($coupon->discount_value), $base),
             DiscountType::Percent => (int) round($base * $coupon->discount_value / 100),
         };
     }

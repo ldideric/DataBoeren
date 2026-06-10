@@ -7,6 +7,7 @@ use App\Models\Campsite;
 use App\Models\Season;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+
 use RuntimeException;
 
 class CampsiteSeeder extends Seeder
@@ -29,8 +30,8 @@ class CampsiteSeeder extends Seeder
                 [
                     'has_electricity' => $record['has_electricity'],
                     'max_people' => $record['max_people'],
-                    'max_vehicles' => $record['max_vehicles'],
                     'notes' => $record['notes'],
+                    'img' => $this->getImgUrl(CampsiteType::from(Str::lower($record['type']))),
                 ],
             );
 
@@ -57,5 +58,18 @@ class CampsiteSeeder extends Seeder
         $path = database_path('src/campsites.json');
 
         return json_decode(file_get_contents($path), true, flags: JSON_THROW_ON_ERROR);
+    }
+
+    private function getImgUrl(CampsiteType $type): string
+    {
+        return match ($type) {
+            CampsiteType::Paardenveld => asset('img/camper.jpg'),
+            CampsiteType::Geitenveld => asset('img/geit.jpg'),
+            CampsiteType::Kippenveld => asset('img/kip.jpg'),
+            CampsiteType::Koeienveld => asset('img/koe2.jpg'),
+            CampsiteType::Konijnenveld => asset('img/konijn.jpeg'),
+            CampsiteType::Schapenveld => asset('img/schaap.jpg'),
+            CampsiteType::Varkensveld => asset('img/varken.jpg'),
+        };
     }
 }

@@ -17,6 +17,7 @@ class MagicLink extends Mailable implements ShouldQueue
 
     public function __construct(public User $user, public string $signedUrl)
     {
+        $this->locale('nl');
     }
 
     public function envelope(): Envelope

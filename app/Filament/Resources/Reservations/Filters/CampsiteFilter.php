@@ -16,6 +16,7 @@ class CampsiteFilter extends SelectFilter
         parent::setUp();
 
         $this
+            ->label(__('reservation.filters.campsite'))
             ->relationship('campsite', 'name')
             ->searchable()
             ->preload();

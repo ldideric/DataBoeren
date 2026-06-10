@@ -29,7 +29,17 @@ class ReservationResource extends Resource
 
     public static function getNavigationGroup(): string|\UnitEnum|null
     {
-        return 'Reservations';
+        return __('navigation.groups.reservations');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('navigation.reservation.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('navigation.reservation.plural');
     }
 
     public static function form(Schema $schema): Schema

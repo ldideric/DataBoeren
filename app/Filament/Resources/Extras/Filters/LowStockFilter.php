@@ -17,7 +17,7 @@ class LowStockFilter extends Filter
         parent::setUp();
 
         $this
-            ->label('Low stock (≤ 3)')
+            ->label(__('extra.filters.low_stock'))
             ->toggle()
             ->query(fn (Builder $query, array $data) => $query
                 ->when($data['isActive'] ?? false, fn ($q) => $q->whereNotNull('stock')->where('stock', '<=', 3)));

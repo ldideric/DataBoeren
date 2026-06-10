@@ -12,9 +12,12 @@ class MonthlyRevenueWidget extends ChartWidget
 {
     protected static ?int $sort = 3;
 
-    protected ?string $heading = 'Monthly revenue (last 6 months)';
-
     protected int | string | array $columnSpan = 1;
+
+    public function getHeading(): ?string
+    {
+        return __('widget.monthly_revenue.heading');
+    }
 
     public static function canView(): bool
     {
@@ -41,7 +44,7 @@ class MonthlyRevenueWidget extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Revenue (€)',
+                    'label' => __('widget.monthly_revenue.dataset'),
                     'data' => $revenues->values()->toArray(),
                     'backgroundColor' => '#f59e0b',
                 ],

@@ -16,6 +16,8 @@ class CampsiteTypeFilter extends SelectFilter
     {
         parent::setUp();
 
-        $this->options(CampsiteType::class);
+        $this
+            ->label(__('campsite.fields.type'))
+            ->options(CampsiteType::class);
     }
 }

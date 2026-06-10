@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Auth\Services\SignedUrlGenerator;
-use App\Enums\PaymentMethod;
-use App\Enums\PaymentStatus;
 use App\Enums\ReservationStatus;
-use App\Models\Payment;
 use App\Models\Reservation;
+use App\Payments\Actions\ConfirmStripeCheckout;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,7 +16,7 @@ class PaymentController extends Controller
 {
     public function show(Reservation $reservation, SignedUrlGenerator $urls): View|RedirectResponse
     {
-        $reservation->loadMissing('campsite', 'customer', 'orderSummary');
+        $reservation->loadMissing('campsite', 'customer', 'orderSummary', 'extras.extra');
 
         abort_if($reservation->orderSummary === null, 409, 'Deze reservering heeft geen prijsoverzicht.');
         abort_if($reservation->status === ReservationStatus::Cancelled, 409, 'Deze reservering is geannuleerd.');
@@ -53,38 +51,30 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function success(Request $request): View|RedirectResponse
+    public function success(Request $request, ConfirmStripeCheckout $confirm): View
     {
         $sessionId = $request->query('session_id');
         abort_if(! $sessionId, 400);
 
         $session = Cashier::stripe()->checkout->sessions->retrieve($sessionId);
 
-        if ($session->payment_status !== 'paid') {
-            return redirect()->route('payments.cancel', [
-                'reservation_id' => $session->client_reference_id,
-            ]);
-        }
-
         $reservation = Reservation::findOrFail($session->client_reference_id);
-        $reservation->loadMissing('campsite', 'orderSummary');
 
-        Payment::firstOrCreate(
-            ['stripe_session_id' => $sessionId],
-            [
-                'reservation_id' => $reservation->id,
-                'amount'         => $reservation->orderSummary->total,
-                'status'         => PaymentStatus::Paid,
-                'method'         => PaymentMethod::Stripe,
-                'paid_at'        => now(),
-            ]
-        );
-
-        if ($reservation->status !== ReservationStatus::Confirmed) {
-            $reservation->update(['status' => ReservationStatus::Confirmed]);
+        // Card/instant methods are already 'paid' the moment we land here, so
+        // confirm inline for instant feedback (idempotent — the webhook may have
+        // beaten us to it). Delayed methods such as iDEAL arrive 'unpaid' and are
+        // confirmed by the webhook once Stripe settles; we show a "processing"
+        // notice instead of treating the successful payment as cancelled.
+        if ($session->payment_status === 'paid') {
+            $confirm->handle($reservation, $sessionId, $session->amount_total);
         }
 
-        return view('checkout.success', compact('reservation'));
+        $reservation->refresh()->loadMissing('campsite', 'orderSummary');
+
+        return view('checkout.success', [
+            'reservation' => $reservation,
+            'confirmed'   => $reservation->status === ReservationStatus::Confirmed,
+        ]);
     }
 
     public function cancel(Request $request, SignedUrlGenerator $urls): View
