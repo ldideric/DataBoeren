@@ -14,6 +14,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 <body class="font-sans antialiased text-black">
 <div class="relative flex flex-col min-h-screen bg-cover bg-center bg-fixed" style="background-image: url('/img/camping_background.jpg')">
@@ -44,5 +45,6 @@
      @include('layouts.footer')
 
 </div>
+@livewireScripts
 </body>
 </html>

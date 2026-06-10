@@ -50,6 +50,9 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make('Staff')
                     ->label(fn () => __('navigation.groups.staff'))
                     ->collapsed(),
+                NavigationGroup::make('System')
+                    ->label(fn () => __('navigation.groups.system'))
+                    ->collapsed(),
             ])
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

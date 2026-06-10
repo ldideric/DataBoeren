@@ -74,6 +74,7 @@ function bookingForm(Campsite $campsite, $checkIn, $checkOut, array $params = []
         ->set('email', 'jan@example.com')
         ->set('payMethod', 'in_person')
         ->set('adultConfirmation', true)
+        ->set('privacyStatement', true)
         ->set('houseRules', true);
 }
 
@@ -336,6 +337,75 @@ it('lets a customer cancel their own reservation', function () {
     expect($reservation->status)->toBe(ReservationStatus::Cancelled)
         ->and($reservation->cancelled_at)->not->toBeNull()
         ->and($reservation->cancelled_by_user_id)->toBe($user->id);
+});
+
+// Once a customer has opened a valid signed link, they are remembered for the
+// visit, so the header link keeps working on public pages too — no second magic
+// link needed just to get back to the bookings page from elsewhere on the site.
+it('keeps the header bookings link working on public pages after a signed visit', function () {
+    $user = User::factory()->create();
+
+    $url = URL::temporarySignedRoute('bookings.index', now()->addHour(), ['user' => $user->id]);
+
+    $this->get($url)->assertOk();
+
+    $expected = app(\App\Auth\Services\SignedUrlGenerator::class)->bookings($user);
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('href="'.e($expected).'"', false);
+});
+
+// Before any signed visit there is no remembered customer, so the header link
+// falls back to the magic-link request (login) page.
+it('falls back the header bookings link to login for an unknown visitor', function () {
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('href="'.e(route('login')).'"', false);
+});
+
+// On the bookings page a remembered customer is shown a logout instead of a
+// link back to the page they are already on.
+it('shows a logout in the header on the signed bookings page', function () {
+    $user = User::factory()->create();
+
+    $url = URL::temporarySignedRoute('bookings.index', now()->addHour(), ['user' => $user->id]);
+
+    $this->get($url)
+        ->assertOk()
+        ->assertSee('Uitloggen')
+        ->assertSee('action="'.e(route('logout')).'"', false)
+        ->assertDontSee('>Mijn boekingen</a>', false);
+});
+
+// Logging out forgets the remembered customer, so the header reverts to the
+// magic-link request link afterwards.
+it('forgets the remembered customer on logout', function () {
+    $user = User::factory()->create();
+
+    $url = URL::temporarySignedRoute('bookings.index', now()->addHour(), ['user' => $user->id]);
+    $this->get($url)->assertOk();
+
+    $this->post(route('logout'))->assertRedirect(route('home'));
+
+    expect(session(\App\Http\Middleware\RememberCustomer::SESSION_KEY))->toBeNull();
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('href="'.e(route('login')).'"', false);
+});
+
+// The remembered customer must never leak into Laravel's auth guard, or the
+// shared User model would hand the visitor Filament's admin panel.
+it('does not authenticate the guard when remembering a customer', function () {
+    $user = User::factory()->create();
+
+    $url = URL::temporarySignedRoute('bookings.index', now()->addHour(), ['user' => $user->id]);
+
+    $this->get($url)->assertOk();
+
+    expect(auth()->check())->toBeFalse()
+        ->and(session(\App\Http\Middleware\RememberCustomer::SESSION_KEY))->toBe($user->id);
 });
 
 // An employee booking is created straight as Confirmed from the admin panel, so
