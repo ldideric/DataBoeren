@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\Route;
 /* Main routes */
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/campsites', [CampsiteController::class, 'index'])->name('campsites.index');
-Route::get('/map', fn () => view('map.index'))->name('map.index');
+Route::get('/map', function () {
+    $campsites = \App\Models\Campsite::all();
+    return view('campsites.map.index', compact('campsites'));
+})->name('map.index');
 Route::get('privacy', fn () => view('extras.privacy'))->name('privacy');
 
 /* Access-link request */

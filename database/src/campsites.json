@@ -5,6 +5,8 @@
     "has_electricity": false,
     "max_people": 1,
     "max_vehicles": 0,
+    "lat":1000,
+    "lng":1000,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -25,6 +27,8 @@
     "has_electricity": false,
     "max_people": 1,
     "max_vehicles": 0,
+    "lat":2000,
+    "lng":2000,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
