@@ -32,20 +32,20 @@ function makeMailLog(MailEvent $event = MailEvent::Sent, array $attributes = [])
 // Access control
 
 it('lets an admin render the mail log list', function () {
-    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
 
     Livewire::test(ListMailLogs::class)->assertSuccessful();
 });
 
 it('shows recorded mail logs to an admin', function () {
-    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
     $logs = collect([makeMailLog(), makeMailLog(MailEvent::Failed)]);
 
     Livewire::test(ListMailLogs::class)->assertCanSeeTableRecords($logs);
 });
 
 it('lets an admin open a mail log entry', function () {
-    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
     $log = makeMailLog(MailEvent::Failed, ['error' => 'TransportException: boom']);
 
     Livewire::test(ViewMailLog::class, ['record' => $log->getRouteKey()])->assertSuccessful();
@@ -69,6 +69,25 @@ it('redirects unauthenticated users to login', function () {
     $this->get(MailLogResource::getUrl('index'))->assertRedirect('/admin/login');
 });
 
+it('hides the log from navigation for an admin who has not opted in', function () {
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => false]));
+
+    // Hidden from the sidebar, but still reachable by URL so toggling off never 403s.
+    expect(MailLogResource::shouldRegisterNavigation())->toBeFalse();
+    Livewire::test(ListMailLogs::class)->assertSuccessful();
+});
+
+it('reveals the log in navigation once the admin opts in via their profile', function () {
+    $admin = User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => false]);
+    $this->actingAs($admin);
+
+    expect(MailLogResource::shouldRegisterNavigation())->toBeFalse();
+
+    $admin->update(['show_mail_logs' => true]);
+
+    expect(MailLogResource::shouldRegisterNavigation())->toBeTrue();
+});
+
 // Read-only guarantees
 
 it('is view-only: no create ability and no create/edit pages', function () {
@@ -79,7 +98,7 @@ it('is view-only: no create ability and no create/edit pages', function () {
 // Filtering
 
 it('can filter the log down to failures', function () {
-    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
     $sent = makeMailLog(MailEvent::Sent);
     $failed = makeMailLog(MailEvent::Failed);
 
@@ -92,7 +111,7 @@ it('can filter the log down to failures', function () {
 // Prune action
 
 it('prunes only mail logs older than 30 days', function () {
-    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create());
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
     $old = makeMailLog(MailEvent::Sent, ['created_at' => now()->subDays(31)]);
     $recent = makeMailLog(MailEvent::Sent, ['created_at' => now()->subDays(2)]);
 
@@ -100,6 +119,46 @@ it('prunes only mail logs older than 30 days', function () {
 
     expect(MailLog::find($old->id))->toBeNull()
         ->and(MailLog::find($recent->id))->not->toBeNull();
+});
+
+it('prunes every mail log regardless of age', function () {
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
+    makeMailLog(MailEvent::Sent, ['created_at' => now()->subDays(31)]);
+    makeMailLog(MailEvent::Sent, ['created_at' => now()]);
+
+    Livewire::test(ListMailLogs::class)->callAction('pruneAll');
+
+    expect(MailLog::count())->toBe(0);
+});
+
+// Date/time filtering
+
+it('can filter the log by occurred_at range', function () {
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
+    $old = makeMailLog(MailEvent::Sent, ['created_at' => now()->subDays(10)]);
+    $recent = makeMailLog(MailEvent::Sent, ['created_at' => now()->subDay()]);
+
+    Livewire::test(ListMailLogs::class)
+        ->filterTable('occurred_at', ['from' => now()->subDays(3)->toDateTimeString()])
+        ->assertCanSeeTableRecords([$recent])
+        ->assertCanNotSeeTableRecords([$old]);
+});
+
+// Grouping
+
+it('orders trace groups by their oldest event', function () {
+    $this->actingAs(User::factory()->withRole(UserRole::Admin)->create(['show_mail_logs' => true]));
+
+    // Group A's oldest event predates group B's — even though A also holds the newest row of all,
+    // so this only passes if groups sort by MIN(created_at), not by each row's own timestamp.
+    $aOld = makeMailLog(MailEvent::Sending, ['trace_id' => 'trace-a', 'created_at' => now()->subDays(10)]);
+    $aNew = makeMailLog(MailEvent::Sent, ['trace_id' => 'trace-a', 'created_at' => now()]);
+    $bOld = makeMailLog(MailEvent::Sending, ['trace_id' => 'trace-b', 'created_at' => now()->subDays(5)]);
+    $bNew = makeMailLog(MailEvent::Sent, ['trace_id' => 'trace-b', 'created_at' => now()->subDays(4)]);
+
+    // Group A ahead of B (older oldest-event), each group newest-row first within it.
+    Livewire::test(ListMailLogs::class)
+        ->assertCanSeeTableRecords([$aNew, $aOld, $bNew, $bOld], inOrder: true);
 });
 
 // Recording pipeline
@@ -112,4 +171,44 @@ it('records the transport lifecycle when a mail is actually sent', function () {
 
     expect(MailLog::where('event', MailEvent::Sent)->where('mailable', BookingConfirmed::class)->exists())->toBeTrue()
         ->and(MailLog::where('event', MailEvent::Sent)->whereNotNull('message_id')->exists())->toBeTrue();
+});
+
+it('links every lifecycle row of one mail under a single trace', function () {
+    config(['mail.default' => 'array', 'queue.default' => 'sync']);
+    $reservation = Reservation::factory()->create();
+
+    Mail::to($reservation->customer->email)->send(new BookingConfirmed($reservation));
+
+    $traces = MailLog::whereNotNull('trace_id')->pluck('trace_id')->unique();
+
+    expect($traces)->toHaveCount(1)
+        ->and(MailLog::whereNull('trace_id')->count())->toBe(0)
+        ->and(MailLog::where('event', MailEvent::Sending)->value('trace_id'))
+        ->toBe(MailLog::where('event', MailEvent::Sent)->value('trace_id'));
+});
+
+it('gives every lifecycle row of a mail one shared group title', function () {
+    // The Filament table draws a new group header whenever the title changes between
+    // rows, so a single mail only stays one group if all its rows (including the
+    // recipient-less queue-job rows) resolve to the same title.
+    config(['mail.default' => 'array', 'queue.default' => 'sync']);
+    $reservation = Reservation::factory()->create();
+
+    Mail::to($reservation->customer->email)->send(new BookingConfirmed($reservation));
+
+    $titles = MailLog::all()->map->groupTitle()->unique();
+
+    expect($titles)->toHaveCount(1)
+        ->and($titles->first())->toContain($reservation->customer->email);
+});
+
+it('gives separate mails separate traces', function () {
+    config(['mail.default' => 'array', 'queue.default' => 'sync']);
+    $first = Reservation::factory()->create();
+    $second = Reservation::factory()->create();
+
+    Mail::to($first->customer->email)->send(new BookingConfirmed($first));
+    Mail::to($second->customer->email)->send(new BookingConfirmed($second));
+
+    expect(MailLog::where('event', MailEvent::Sent)->pluck('trace_id')->unique())->toHaveCount(2);
 });

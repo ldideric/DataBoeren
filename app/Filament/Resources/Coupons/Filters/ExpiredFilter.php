@@ -18,6 +18,7 @@ class ExpiredFilter extends TernaryFilter
 
         $this
             ->label(__('coupon.filters.expiry_status'))
+            ->default(false)
             ->trueLabel(__('coupon.filters.expired'))
             ->falseLabel(__('coupon.filters.active'))
             ->queries(

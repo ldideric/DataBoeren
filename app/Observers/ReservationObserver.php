@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Enums\PaymentStatus;
 use App\Enums\ReservationSource;
 use App\Enums\ReservationStatus;
 use App\Mail\BookingCancelled;
@@ -32,6 +33,15 @@ class ReservationObserver
     {
         if (! $reservation->wasChanged('status')) {
             return;
+        }
+
+        // A cancelled booking can never collect its outstanding cash, so void any
+        // still-pending payment rather than leaving an orphan that keeps counting
+        // toward "cash to collect". Catches both the admin and public cancel paths.
+        if ($reservation->status === ReservationStatus::Cancelled) {
+            $reservation->payments()
+                ->where('status', PaymentStatus::Pending)
+                ->update(['status' => PaymentStatus::Cancelled]);
         }
 
         $this->sendStatusMail($reservation);

@@ -18,12 +18,30 @@ class ListMailLogs extends ListRecords
         return [
             Action::make('prune')
                 ->label(__('mail_log.actions.prune'))
-                ->icon(Heroicon::OutlinedTrash)
-                ->color('danger')
+                ->icon(Heroicon::OutlinedClock)
+                ->color('gray')
+                ->outlined()
                 ->requiresConfirmation()
+                ->modalIcon(Heroicon::OutlinedClock)
                 ->modalDescription(__('mail_log.actions.prune_confirm'))
                 ->action(function (): void {
                     $pruned = (new MailLog())->pruneAll();
+
+                    Notification::make()
+                        ->title(__('mail_log.actions.pruned', ['count' => $pruned]))
+                        ->success()
+                        ->send();
+                }),
+            Action::make('pruneAll')
+                ->label(__('mail_log.actions.prune_all'))
+                ->icon(Heroicon::OutlinedTrash)
+                ->color('danger')
+                ->requiresConfirmation()
+                ->modalIcon(Heroicon::OutlinedExclamationTriangle)
+                ->modalDescription(__('mail_log.actions.prune_all_confirm'))
+                ->modalSubmitActionLabel(__('mail_log.actions.prune_all_submit'))
+                ->action(function (): void {
+                    $pruned = MailLog::query()->delete();
 
                     Notification::make()
                         ->title(__('mail_log.actions.pruned', ['count' => $pruned]))

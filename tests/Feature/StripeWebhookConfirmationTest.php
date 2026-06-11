@@ -1,9 +1,12 @@
 <?php
 
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use App\Enums\ReservationStatus;
 use App\Mail\AwaitingPayment;
 use App\Mail\BookingConfirmed;
 use App\Mail\PaymentReceipt;
+use App\Models\Payment;
 use App\Models\Reservation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
@@ -60,6 +63,20 @@ it('is idempotent when the redirect and the webhook both confirm the same checko
     expect($reservation->payments()->where('stripe_session_id', 'cs_test_1')->count())->toBe(1);
     Mail::assertQueued(PaymentReceipt::class, 1);
     Mail::assertQueued(BookingConfirmed::class, 1);
+});
+
+it('voids a lingering pending cash payment when the booking is paid online instead', function () {
+    Mail::fake();
+    $reservation = Reservation::factory()->pending()->create();
+    $cash = Payment::factory()->pending()->create([
+        'reservation_id' => $reservation->id,
+        'method'         => PaymentMethod::Cash,
+    ]);
+
+    fireCheckoutWebhook($reservation);
+
+    expect($cash->refresh()->status)->toBe(PaymentStatus::Cancelled)
+        ->and($reservation->payments()->where('status', PaymentStatus::Pending)->count())->toBe(0);
 });
 
 it('ignores a delayed checkout that has not settled yet', function () {
