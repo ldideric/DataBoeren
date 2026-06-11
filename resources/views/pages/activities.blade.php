@@ -8,18 +8,18 @@
 
     <div class="border-2 border-tan-500 w-full max-w-3xl rounded-2xl bg-tan-300 p-10 text-center shadow-md">
 
-        <h1 class="text-5xl font-bold text-olivegreen-400 mb-6">
+        <h1 class="text-3xl font-bold text-olivegreen-400 mb-6">
             Activiteiten
         </h1>
 
-        <p class="text-xl text-black mb-8">
+        <p class="text-sm text-black mb-8">
             Ontdek de leuke activiteiten die we op en rondom onze camping aanbieden.
         </p>
 
         <div class="space-y-8 text-lg">
 
             <div>
-                <h2 class="text-2xl font-semibold text-olivegreen-400 mb-6"> 
+                <h2 class="text-sm font-semibold text-olivegreen-400 mb-6"> 
                     Wandelen en fietsen
                 </h2>
 
@@ -68,25 +68,41 @@
                     Boerderijactiviteiten
                 </h2>
                 <p class="text-black mb-6">
-                    Leer meer over het boerenleven met onze interactieve boerderijactiviteiten voor jong en oud.</p>
-                <p class="text-black mb-6">Kinderboerderij</p>
+                    Leer meer over het boerenleven. Maak kennis met de dieren op de boerderij en geniet van de heerlijke buitenlucht.</p>
+                <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
+                <p class="text-black mb-6">Breng een bezoek aan onze kinderboerderij. Kinderen kunnen hier kennismaken met verschillende dieren, ze bewonderen en aaien. Een leuke activiteit die zorgt voor leuke herinneringen tijdens het verblijf op de camping.
+                </p>
+                <img src="/img/kinderboerderij.png"
+                     onclick="openModel('/img/kinderboerderij.png')"
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition">
+                </div>
             </div>
 
             
             <div>
                 <h2 class="text-2xl font-semibold text-olivegreen-400 mb-4">
-                    Kinderspeelplaats
+                    Kinderspeeltuin
                 </h2>
+                <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
                 <p class="text-black mb-6">
-                    Onze kinderspeelplaats is perfect voor de kleintjes om te spelen en nieuwe vriendjes te maken.
+                    Onze kinderspeeltuin is geschikt voor de kleintjes om te spelen en andere kinderen te leren kennen. Er is voor ieder kind wat wils, of je nu houdt van springen of glijden het is er allemaal!
                 </p>
+                <img src="/img/kinderspeeltuin.png"
+                     onclick="openModal('/img/kinderspeeltuin.png')"
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition">
+                </div>
             </div>
 
             <div>
                 <h2 class="text-2xl font-semibold text-olivegreen-400 mb-4">
                     Zwemgelegenheid
                 </h2>
-                <p class="text-black mb-6">Zwemvijver</p>             
+                <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
+                    <p class="text-black mb-6">Neem op een warme dagen een duik in de zwemvijver. Het is een fijne plek om te ontspannen en te spelen in het water.</p>  
+                    <img src="/img/zwemvijver.png"   
+                         onclick="openModal('/img/zwemvijver')"
+                         class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition">        
+                </div>
             </div>
 
             <div>
@@ -94,11 +110,38 @@
                     Overige activiteiten
                 </h2>
 
-                <p class="text-black mb-6">Supermarkt 4 kilometer</p>
-                <p class="text-black mb-6">Markt 6 kilometer</p>
-                <p class="text-black mb-6">Zwembad 8 kilometer</p>
-                <p class="text-black mb-6">Dichtstbijzijnde dorp 3 kilometer</p>
-            </div>
+                <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
+                <p class="text-black mb-6">Supermarkt 4 kilometer.
+                    Voor dagelijkse boodschappen vind je op een korte afstand van de camping een supermarkt met een ruim assortiment aan producten.
+                </p>
+                <img src="/img/supermarkt.png"
+                     onclick="openModel('/img/supermarkt.png')"
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition">
+                </div>
+                <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
+                    <p class="text-black mb-6">Markt 6 kilometer.
+                        Bezoek de lokale markt en ontdek verse producten uit de streek en leuke kraampjes. 
+                    </p>
+                    <img src="/img/markt.png"
+                     onclick="openModal('/img/markt.png')"
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition">
+                </div>
+                <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
+                     <p class="text-black mb-6">Zwembad 8 kilometer
+                     Liever zwemmen in een zwembad? Op slechts enkele kilometers van de camping bevindt zich een zwembad waar jong en oud zich kan vermaken.
+                     </p>
+                     <img src="/img/zwembad.png"
+                          onclick="openModel('/img/zwembad.png')"
+                          class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition">
+                </div>
+                <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
+                    <p class="text-black mb-6">Dichtstbijzijnde dorp 3 kilometer
+                        Het nabijgelegen dorp biedt verschillende voorzieningen, zoals winkels, café's, restaurants en een mooie kerk.
+                    </p>
+                    <img src="/img/dorp.png"
+                     onclick="openModal('/img/dorp.png')"
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition">
+                </div>
 
         </div>
     </div>
@@ -143,3 +186,4 @@
 </script>
 
 @endsection
+
