@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Route;
 
 /* Main routes */
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('privacy', fn () => view('extras.privacy'))->name('privacy');
+Route::get('/privacy', fn () => view('extras.privacy'))->name('privacy');
+Route::get('/houserules', fn () => view('extras.houserules'))->name('houserules');
 
 /* Public booking routes */
 Route::get('/campsites', [CampsiteController::class, 'index'])->name('campsites.index');
