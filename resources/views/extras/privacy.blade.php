@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mx-auto max-w-4xl px-6 py-8">
+    <div class="mx-auto w-full max-w-4xl px-6 py-8">
         <div class="rounded-2xl border border-tan-400 bg-tan-300 p-8 shadow-sm ring-1 ring-black/5">
             <h1 class="text-3xl font-bold text-olivegreen-400">Onze privacyverklaring</h1>
             <p class="mt-4 text-sm text-black">Camping De Groene Weide, gevestigd aan De Groenelaan 67 4301 AA Schouwen-Duiveland Nederland, is verantwoordelijk voor de verwerking van persoonsgegevens zoals weergegeven in deze privacyverklaring.</p>

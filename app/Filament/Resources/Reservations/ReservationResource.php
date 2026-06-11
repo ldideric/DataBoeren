@@ -6,7 +6,6 @@ use App\Filament\Resources\Reservations\Pages\EditReservation;
 use App\Filament\Resources\Reservations\Pages\ListReservations;
 use App\Filament\Resources\Reservations\Pages\ViewReservation;
 use App\Filament\Resources\Reservations\RelationManagers\ExtrasRelationManager;
-use App\Filament\Resources\Reservations\RelationManagers\PaymentsRelationManager;
 use App\Filament\Resources\Reservations\Schemas\ReservationForm;
 use App\Filament\Resources\Reservations\Schemas\ReservationInfolist;
 use App\Filament\Resources\Reservations\Tables\ReservationsTable;
@@ -29,7 +28,17 @@ class ReservationResource extends Resource
 
     public static function getNavigationGroup(): string|\UnitEnum|null
     {
-        return 'Reservations';
+        return __('navigation.groups.reservations');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('navigation.reservation.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('navigation.reservation.plural');
     }
 
     public static function form(Schema $schema): Schema
@@ -51,7 +60,6 @@ class ReservationResource extends Resource
     {
         return [
             ExtrasRelationManager::class,
-            PaymentsRelationManager::class,
         ];
     }
 

@@ -16,6 +16,8 @@ class StatusFilter extends SelectFilter
     {
         parent::setUp();
 
-        $this->options(PaymentStatus::class);
+        $this
+            ->label(__('common.status'))
+            ->options(PaymentStatus::class);
     }
 }

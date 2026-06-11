@@ -16,6 +16,8 @@ class MethodFilter extends SelectFilter
     {
         parent::setUp();
 
-        $this->options(PaymentMethod::class);
+        $this
+            ->label(__('payment.filters.method'))
+            ->options(PaymentMethod::class);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\EditProfile;
+use App\Http\Middleware\SetPanelLocale;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -12,6 +13,8 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -38,10 +41,17 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->navigationGroups([
-                NavigationGroup::make('Reservations'),
-                NavigationGroup::make('Campsite'),
-                NavigationGroup::make('Customers'),
+                NavigationGroup::make('Reservations')
+                    ->label(fn () => __('navigation.groups.reservations')),
+                NavigationGroup::make('Campsite')
+                    ->label(fn () => __('navigation.groups.campsite')),
+                NavigationGroup::make('Customers')
+                    ->label(fn () => __('navigation.groups.customers')),
                 NavigationGroup::make('Staff')
+                    ->label(fn () => __('navigation.groups.staff'))
+                    ->collapsed(),
+                NavigationGroup::make('System')
+                    ->label(fn () => __('navigation.groups.system'))
                     ->collapsed(),
             ])
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -52,6 +62,10 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 //
             ])
+            ->renderHook(
+                PanelsRenderHook::USER_MENU_BEFORE,
+                fn (): string => Blade::render('@include(\'filament.language-switcher\')'),
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -62,6 +76,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                SetPanelLocale::class,
             ])
             ->authMiddleware([
                 Authenticate::class,

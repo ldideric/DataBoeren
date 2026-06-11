@@ -18,7 +18,6 @@ class CampsiteFactory extends Factory
             'type' => fake()->randomElement(CampsiteType::cases()),
             'has_electricity' => fake()->boolean(40),
             'max_people' => fake()->numberBetween(2, 8),
-            'max_vehicles' => fake()->numberBetween(1, 3),
             'notes' => fake()->optional(0.3)->sentence(),
         ];
     }

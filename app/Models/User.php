@@ -42,7 +42,7 @@ use Laravel\Cashier\Billable;
  *
  * @method UserQuery|static query()
  */
-#[Fillable(['first_name', 'last_name', 'email', 'phone', 'password', 'role'])]
+#[Fillable(['first_name', 'last_name', 'email', 'phone', 'password', 'role', 'locale', 'show_mail_logs'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
 {
@@ -61,6 +61,7 @@ class User extends Authenticatable implements FilamentUser, HasName, MustVerifyE
             'password' => 'hashed',
             'role' => UserRole::class,
             'purged_at' => 'datetime',
+            'show_mail_logs' => 'boolean',
         ];
     }
 

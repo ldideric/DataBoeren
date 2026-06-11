@@ -12,12 +12,15 @@ class SeasonInfolist
         return $schema
             ->components([
                 TextEntry::make('id')
-                    ->label('ID'),
-                TextEntry::make('name'),
+                    ->label(__('common.id')),
+                TextEntry::make('name')
+                    ->label(__('common.name')),
                 TextEntry::make('created_at')
+                    ->label(__('common.created_at'))
                     ->dateTime()
                     ->placeholder('-'),
                 TextEntry::make('updated_at')
+                    ->label(__('common.updated_at'))
                     ->dateTime()
                     ->placeholder('-'),
             ]);

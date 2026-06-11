@@ -3,7 +3,7 @@
 @section('title', 'Contact')
 
 @section('content')
-<div class="flex flex-1 items-center justify-center px-6 py-12">
+<div class="flex flex-1 items-center justify-center px-6 py-4">
 
     <div class="border-2 border-tan-500 w-full max-w-3xl rounded-2xl bg-tan-300 p-10 text-center shadow-md">
         <h1 class="text-5xl font-bold text-olivegreen-400 mb-6">
@@ -42,7 +42,7 @@
                 </h2>
 
                 <p class="text-black">
-                    Bezoek ons op: De Groenelaan, Schouwen-Duiveland,4301 AA, Nederland
+                    Bezoek ons op: De Groenelaan, Schouwen-Duiveland, 4301 AA, Nederland
                 </p>
             </div>
         </div>

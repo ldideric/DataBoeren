@@ -16,7 +16,7 @@ class HasCouponFilter extends TernaryFilter
         parent::setUp();
 
         $this
-            ->label('Has coupon')
+            ->label(__('reservation.filters.has_coupon'))
             ->nullable();
     }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex flex-1 items-center justify-center px-6 py-12">
+    <div class="flex flex-1 items-center justify-center px-6 py-4">
         <div class="border-2 border-tan-500 w-full max-w-lg rounded-2xl bg-tan-300 p-10 text-center shadow-md">
             @if (session('status'))
                 <div class="mb-4 rounded-md border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-800">

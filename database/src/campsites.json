@@ -4,7 +4,6 @@
     "type": "Varkensveld",
     "has_electricity": false,
     "max_people": 1,
-    "max_vehicles": 0,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -24,7 +23,6 @@
     "type": "Varkensveld",
     "has_electricity": false,
     "max_people": 1,
-    "max_vehicles": 0,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -44,7 +42,6 @@
     "type": "Varkensveld",
     "has_electricity": false,
     "max_people": 1,
-    "max_vehicles": 0,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -64,7 +61,6 @@
     "type": "Varkensveld",
     "has_electricity": false,
     "max_people": 1,
-    "max_vehicles": 0,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -84,7 +80,6 @@
     "type": "Varkensveld",
     "has_electricity": false,
     "max_people": 1,
-    "max_vehicles": 0,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -104,7 +99,6 @@
     "type": "Varkensveld",
     "has_electricity": false,
     "max_people": 2,
-    "max_vehicles": 0,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -124,7 +118,6 @@
     "type": "Varkensveld",
     "has_electricity": false,
     "max_people": 2,
-    "max_vehicles": 0,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -144,7 +137,6 @@
     "type": "Varkensveld",
     "has_electricity": false,
     "max_people": 2,
-    "max_vehicles": 0,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -164,7 +156,6 @@
     "type": "Varkensveld",
     "has_electricity": false,
     "max_people": 2,
-    "max_vehicles": 0,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -184,7 +175,6 @@
     "type": "Varkensveld",
     "has_electricity": false,
     "max_people": 2,
-    "max_vehicles": 0,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -204,7 +194,6 @@
     "type": "Paardenveld",
     "has_electricity": true,
     "max_people": 4,
-    "max_vehicles": 1,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -224,7 +213,6 @@
     "type": "Paardenveld",
     "has_electricity": true,
     "max_people": 4,
-    "max_vehicles": 1,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -244,7 +232,6 @@
     "type": "Paardenveld",
     "has_electricity": true,
     "max_people": 4,
-    "max_vehicles": 1,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -264,7 +251,6 @@
     "type": "Paardenveld",
     "has_electricity": true,
     "max_people": 4,
-    "max_vehicles": 1,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -284,7 +270,6 @@
     "type": "Paardenveld",
     "has_electricity": true,
     "max_people": 4,
-    "max_vehicles": 1,
     "notes": "Natuurlijk terrein met reliëf, budget plek",
     "pricing": {
       "hoog_seizoen": {
@@ -304,7 +289,6 @@
     "type": "Konijnenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -324,7 +308,6 @@
     "type": "Konijnenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -344,7 +327,6 @@
     "type": "Konijnenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -364,7 +346,6 @@
     "type": "Konijnenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -384,7 +365,6 @@
     "type": "Konijnenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -404,7 +384,6 @@
     "type": "Geitenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": "Naast het sanitair, in schaduw van sanitair gebouw overdag",
     "pricing": {
       "hoog_seizoen": {
@@ -424,7 +403,6 @@
     "type": "Geitenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -444,7 +422,6 @@
     "type": "Geitenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -464,7 +441,6 @@
     "type": "Geitenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -484,7 +460,6 @@
     "type": "Geitenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -504,7 +479,6 @@
     "type": "Koeienveld",
     "has_electricity": true,
     "max_people": 8,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -524,7 +498,6 @@
     "type": "Koeienveld",
     "has_electricity": true,
     "max_people": 8,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -544,7 +517,6 @@
     "type": "Koeienveld",
     "has_electricity": true,
     "max_people": 8,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -564,7 +536,6 @@
     "type": "Koeienveld",
     "has_electricity": true,
     "max_people": 8,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -584,7 +555,6 @@
     "type": "Koeienveld",
     "has_electricity": true,
     "max_people": 8,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -604,7 +574,6 @@
     "type": "Schapenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -624,7 +593,6 @@
     "type": "Schapenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -644,7 +612,6 @@
     "type": "Schapenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -664,7 +631,6 @@
     "type": "Schapenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -684,7 +650,6 @@
     "type": "Schapenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -704,7 +669,6 @@
     "type": "Kippenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -724,7 +688,6 @@
     "type": "Kippenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -744,7 +707,6 @@
     "type": "Kippenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -764,7 +726,6 @@
     "type": "Kippenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -784,7 +745,6 @@
     "type": "Kippenveld",
     "has_electricity": true,
     "max_people": 5,
-    "max_vehicles": 2,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {

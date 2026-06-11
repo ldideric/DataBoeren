@@ -17,7 +17,7 @@ class MissingPricesFilter extends Filter
         parent::setUp();
 
         $this
-            ->label('Missing campsite prices')
+            ->label(__('season.filters.missing_prices'))
             ->toggle()
             ->query(fn (Builder $query, array $data) => $query
                 ->when($data['isActive'] ?? false, fn ($q) => $q->whereDoesntHave('campsitePrices')));

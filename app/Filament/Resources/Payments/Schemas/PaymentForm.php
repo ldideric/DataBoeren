@@ -13,6 +13,7 @@ class PaymentForm
         return $schema
             ->components([
                 Select::make('status')
+                    ->label(__('common.status'))
                     ->options(PaymentStatus::class)
                     ->required(),
             ]);

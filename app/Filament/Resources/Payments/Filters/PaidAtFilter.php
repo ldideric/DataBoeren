@@ -19,13 +19,13 @@ class PaidAtFilter extends Filter
         parent::setUp();
 
         $this
-            ->label('Payment date')
+            ->label(__('payment.filters.payment_date'))
             ->columnSpanFull()
             ->schema([
                 Section::make()
                     ->schema([
-                        DatePicker::make('from')->label('From'),
-                        DatePicker::make('until')->label('Until'),
+                        DatePicker::make('from')->label(__('common.from')),
+                        DatePicker::make('until')->label(__('common.until')),
                     ])
                     ->columns(2),
             ])
@@ -36,8 +36,8 @@ class PaidAtFilter extends Filter
             )
             ->indicateUsing(
                 fn (array $data) => collect()
-                ->when($data['from'] ?? null, fn ($collection) => $collection->push('Paid from: '.$data['from']))
-                ->when($data['until'] ?? null, fn ($collection) => $collection->push('Paid until: '.$data['until']))
+                ->when($data['from'] ?? null, fn ($collection) => $collection->push(__('payment.filters.paid_from', ['date' => $data['from']])))
+                ->when($data['until'] ?? null, fn ($collection) => $collection->push(__('payment.filters.paid_until', ['date' => $data['until']])))
                 ->toArray()
             );
     }

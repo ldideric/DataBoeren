@@ -18,13 +18,12 @@ class FindAvailableCampsite
     public function handle(
         string $campsiteId,
         int $partySize,
-        int $vehicleCount,
         Carbon $checkIn,
         Carbon $checkOut,
     ): Campsite {
         return Campsite::query()
             ->whereKey($campsiteId)
-            ->whereFitsParty($partySize, $vehicleCount)
+            ->whereFitsParty($partySize)
             ->whereAvailableBetween($checkIn, $checkOut)
             ->lockForUpdate()
             ->first()

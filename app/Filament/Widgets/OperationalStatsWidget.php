@@ -30,8 +30,8 @@ class OperationalStatsWidget extends BaseWidget
         $pendingReservations = Reservation::where('status', ReservationStatus::Pending)->count();
 
         return [
-            Stat::make('Arrivals today', $todayArrivals)
-                ->description('Confirmed check-ins today')
+            Stat::make(__('widget.operational.arrivals_today'), $todayArrivals)
+                ->description(__('widget.operational.arrivals_today_desc'))
                 ->icon('heroicon-o-arrow-right-circle')
                 ->color('success')
                 ->url(ReservationResource::getUrl(parameters: [
@@ -41,8 +41,8 @@ class OperationalStatsWidget extends BaseWidget
                     ],
                 ])),
 
-            Stat::make('Departures today', $todayDepartures)
-                ->description('Confirmed check-outs today')
+            Stat::make(__('widget.operational.departures_today'), $todayDepartures)
+                ->description(__('widget.operational.departures_today_desc'))
                 ->icon('heroicon-o-arrow-left-circle')
                 ->color('warning')
                 ->url(ReservationResource::getUrl(parameters: [
@@ -52,16 +52,16 @@ class OperationalStatsWidget extends BaseWidget
                     ],
                 ])),
 
-            Stat::make('Currently on site', $currentlyOnSite)
-                ->description('Active confirmed stays')
+            Stat::make(__('widget.operational.on_site'), $currentlyOnSite)
+                ->description(__('widget.operational.on_site_desc'))
                 ->icon('heroicon-o-home')
                 ->color('info')
                 ->url(ReservationResource::getUrl(parameters: [
                     'filters' => ['on_site' => ['isActive' => true]],
                 ])),
 
-            Stat::make('Pending reservations', $pendingReservations)
-                ->description('Awaiting confirmation')
+            Stat::make(__('widget.operational.pending'), $pendingReservations)
+                ->description(__('widget.operational.pending_desc'))
                 ->icon('heroicon-o-clock')
                 ->color($pendingReservations > 0 ? 'warning' : 'gray')
                 ->url(ReservationResource::getUrl(parameters: [

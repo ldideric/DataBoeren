@@ -17,9 +17,9 @@ class UsageLimitFilter extends TernaryFilter
         parent::setUp();
 
         $this
-            ->label('Usage limit')
-            ->trueLabel('Has limit')
-            ->falseLabel('Unlimited')
+            ->label(__('coupon.filters.usage_limit'))
+            ->trueLabel(__('coupon.filters.has_limit'))
+            ->falseLabel(__('coupon.filters.unlimited'))
             ->queries(
                 true: fn (Builder $query) => $query->whereNotNull('max_uses'),
                 false: fn (Builder $query) => $query->whereNull('max_uses'),

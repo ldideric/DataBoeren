@@ -16,6 +16,8 @@ class BillingTypeFilter extends SelectFilter
     {
         parent::setUp();
 
-        $this->options(BillingType::class);
+        $this
+            ->label(__('extra.filters.billing_type'))
+            ->options(BillingType::class);
     }
 }

@@ -28,7 +28,17 @@ class SeasonResource extends Resource
 
     public static function getNavigationGroup(): string|\UnitEnum|null
     {
-        return 'Campsite';
+        return __('navigation.groups.campsite');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('navigation.season.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('navigation.season.plural');
     }
 
     public static function form(Schema $schema): Schema
