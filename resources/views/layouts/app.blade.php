@@ -30,9 +30,19 @@
         </header>
     @endif
 
+    @hasSection('footer')
+        <footer class="relative bg-white border-b border-gray-200">
+            <div class="max-w-4xl mx-auto py-4 px-6">
+                <h1 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">@yield('footer')</h1>
+            </div>
+        </footer>
+    @endif
+
     <main class="relative flex-1 flex flex-col">
         @yield('content')
     </main>
+
+     @include('layouts.footer')
 
 </div>
 @livewireScripts
