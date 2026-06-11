@@ -15,7 +15,6 @@ use App\Filament\Resources\Reservations\Pages\EditReservation;
 use App\Filament\Resources\Reservations\Pages\ListReservations;
 use App\Filament\Resources\Reservations\Pages\ViewReservation;
 use App\Filament\Resources\Reservations\RelationManagers\ExtrasRelationManager;
-use App\Filament\Resources\Reservations\RelationManagers\PaymentsRelationManager;
 use App\Filament\Resources\Reservations\ReservationResource;
 use App\Mail\AwaitingPayment;
 use App\Mail\BookingCancelled;
@@ -555,6 +554,18 @@ it('cancels a reservation with a reason', function () {
     Mail::assertQueued(BookingCancelled::class, fn (BookingCancelled $mail) => $mail->reservation->is($reservation));
 });
 
+it('voids a pending payment when the reservation is cancelled', function () {
+    Mail::fake();
+
+    $reservation = Reservation::factory()->create(['status' => ReservationStatus::Confirmed]);
+    $payment = Payment::factory()->pending()->create(['reservation_id' => $reservation->id]);
+
+    Livewire::test(ViewReservation::class, ['record' => $reservation->getRouteKey()])
+        ->callAction('cancel', data: ['cancellation_reason' => 'No-show']);
+
+    expect($payment->refresh()->status)->toBe(PaymentStatus::Cancelled);
+});
+
 it('sends a login link to the customer', function () {
     Mail::fake();
 
@@ -642,27 +653,26 @@ it('can create an extra from the reservation view page', function () {
     ]);
 });
 
-// Payments relation manager
+// Payments infolist section
 
-it('can render the payments relation manager', function () {
+it('shows payments inline on the view reservation page', function () {
     $reservation = Reservation::factory()->create();
+    Payment::factory()->create([
+        'reservation_id' => $reservation->id,
+        'amount'         => 12500,
+    ]);
 
-    Livewire::test(PaymentsRelationManager::class, [
-        'ownerRecord' => $reservation,
-        'pageClass'   => EditReservation::class,
-    ])
-        ->assertSuccessful();
+    Livewire::test(ViewReservation::class, ['record' => $reservation->getKey()])
+        ->assertSuccessful()
+        ->assertSee('€ 125,00');
 });
 
-it('can list payments in the payments relation manager', function () {
+it('shows an empty-state message when a reservation has no payments', function () {
     $reservation = Reservation::factory()->create();
-    $payments = Payment::factory()->count(2)->create(['reservation_id' => $reservation->id]);
 
-    Livewire::test(PaymentsRelationManager::class, [
-        'ownerRecord' => $reservation,
-        'pageClass'   => EditReservation::class,
-    ])
-        ->assertCanSeeTableRecords($payments);
+    Livewire::test(ViewReservation::class, ['record' => $reservation->getKey()])
+        ->assertSuccessful()
+        ->assertSee(__('reservation.payments.none'));
 });
 
 // Authorization

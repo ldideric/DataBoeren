@@ -15,10 +15,16 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class ExtrasRelationManager extends RelationManager
 {
     protected static string $relationship = 'extras';
+
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('reservation.extras.title');
+    }
 
     public function isReadOnly(): bool
     {
@@ -46,6 +52,8 @@ class ExtrasRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('id')
+            ->modelLabel(__('reservation.extras.model_label'))
+            ->pluralModelLabel(__('reservation.extras.plural_model_label'))
             ->recordUrl(fn ($record) =>  ExtraResource::getUrl('view', ['record' => $record->extra]))
             ->columns([
                 TextColumn::make('extra.name')

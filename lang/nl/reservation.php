@@ -20,6 +20,7 @@ return [
     'sections' => [
         'reservation'   => 'Reservering',
         'order_summary' => 'Besteloverzicht',
+        'payments'      => 'Betalingen',
     ],
 
     'order_summary' => [
@@ -73,10 +74,13 @@ return [
     ],
 
     'extras' => [
-        'extra'      => 'Extra',
-        'quantity'   => 'Aantal',
-        'unit_price' => 'Stukprijs',
-        'subtotal'   => 'Subtotaal',
+        'title'              => "Extra's",
+        'model_label'        => 'extra',
+        'plural_model_label' => "extra's",
+        'extra'              => 'Extra',
+        'quantity'           => 'Aantal',
+        'unit_price'         => 'Stukprijs',
+        'subtotal'           => 'Subtotaal',
     ],
 
     'payments' => [
@@ -84,5 +88,6 @@ return [
         'method'            => 'Methode',
         'paid_at'           => 'Betaald op',
         'stripe_session_id' => 'Stripe-sessie-ID',
+        'none'              => 'Nog geen betalingen geregistreerd',
     ],
 ];

@@ -27,7 +27,7 @@ class FinancialStatsWidget extends BaseWidget
             ->whereMonth('paid_at', now()->month)
             ->sum('amount');
 
-        $pendingPayments = Payment::where('status', PaymentStatus::Pending)->count();
+        $cashToCollect = Payment::where('status', PaymentStatus::Pending)->count();
 
         return [
             Stat::make(__('widget.financial.revenue_this_month'), '€ '.number_format($monthlyRevenueCents / 100, 2, ',', '.'))
@@ -44,10 +44,10 @@ class FinancialStatsWidget extends BaseWidget
                     ],
                 ])),
 
-            Stat::make(__('widget.financial.pending_payments'), $pendingPayments)
-                ->description(__('widget.financial.awaiting_payment'))
+            Stat::make(__('widget.financial.cash_to_collect'), $cashToCollect)
+                ->description(__('widget.financial.cash_to_collect_desc'))
                 ->icon('heroicon-o-credit-card')
-                ->color($pendingPayments > 0 ? 'danger' : 'gray')
+                ->color($cashToCollect > 0 ? 'warning' : 'gray')
                 ->url(PaymentResource::getUrl(parameters: [
                     'filters' => ['status' => ['value' => PaymentStatus::Pending->value]],
                 ])),
