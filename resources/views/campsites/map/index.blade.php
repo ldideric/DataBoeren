@@ -2,9 +2,15 @@
 @section('header', 'Plattegrond')
 @section('content')
     @php
-        $campsites = collect(json_decode(file_get_contents(database_path('src\campsites.json')), true))
-            ->filter(fn($c) => isset($c['lat'], $c['lng']))
-            ->values();
+    $dbCampsites = \App\Models\Campsite::all()
+        ->keyBy(fn($c) => $c->name . '|' . $c->type->value);
+
+    $campsites = collect(json_decode(file_get_contents(database_path('src\campsites.json')), true))
+        ->filter(fn($c) => isset($c['lat'], $c['lng']))
+        ->map(fn($c) => array_merge($c, [
+            'id' => $dbCampsites[$c['name'] . '|' . strtolower($c['type'])]->id ?? null
+        ]))
+        ->values();
     @endphp
     <div class="relative min-h-[calc(100vh-6.8rem)] m-0 overflow-hidden px-4">
         <div id="map" class="absolute left-3/4 top-0 bottom-0 w-1/2 max-w-full max h-full -translate-x-1/2 bg-gray-900"></div>
@@ -28,17 +34,17 @@
 
                 const marker = L.marker([site.lat, site.lng], { icon: ICON });
                 marker.on('click', () => {
-                    if (typeof openModal !== 'function') return;
-                    const el = document.createElement('div');
-                    el.dataset.name         = site.name             ?? '';
-                    el.dataset.campsiteType = site.type             ?? '';
-                    el.dataset.people       = site.max_people       ?? '';
-                    el.dataset.vehicles     = site.max_vehicles     ?? '';
-                    el.dataset.electricity  = site.has_electricity  ? 'true' : 'false';
-                    el.dataset.notes        = site.notes            ?? '';
-                    el.dataset.url          = site.url              ?? '';
-                    openModal(el);
-                });
+                if (typeof openModal !== 'function') return;
+                const el = document.createElement('div');
+                el.dataset.campsiteId   = site.id             ?? '';
+                el.dataset.name         = site.name           ?? '';
+                el.dataset.campsiteType = site.type           ?? '';
+                el.dataset.people       = site.max_people     ?? '';
+                el.dataset.vehicles     = site.max_vehicles   ?? '';
+                el.dataset.electricity  = site.has_electricity ? 'true' : 'false';
+                el.dataset.notes        = site.notes          ?? '';
+                openModal(el);
+            });
                 marker.addTo(groups[type]);
             });
 
