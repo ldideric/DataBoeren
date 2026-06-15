@@ -24,7 +24,7 @@
                 </h2>
 
                 <p class="text-black mb-6">
-                    Verken de prachtige natuur rondom de camping met onze wandel- en fietsroutes.
+                    Verken de prachtige natuur rondom de camping met onze wandel- en fietsroutes. Er zijn twee fietsroutes en drie wandelroutes. Klik op de desbetreffende route om de route te zien.
                 </p>
 
                 <p class="mb-6">
