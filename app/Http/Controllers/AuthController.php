@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Auth\Actions\SendBookingsLink;
+use App\Http\Middleware\RememberCustomer;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -33,5 +35,12 @@ class AuthController extends Controller
         $user && $sendBookingsLink->handle($user);
 
         return view('auth.link-sent');
+    }
+
+    public function logout(Request $request): RedirectResponse
+    {
+        $request->session()->forget(RememberCustomer::SESSION_KEY);
+
+        return redirect()->route('home');
     }
 }

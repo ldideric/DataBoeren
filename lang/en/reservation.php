@@ -20,6 +20,7 @@ return [
     'sections' => [
         'reservation'   => 'Reservation',
         'order_summary' => 'Order summary',
+        'payments'      => 'Payments',
     ],
 
     'order_summary' => [
@@ -73,10 +74,13 @@ return [
     ],
 
     'extras' => [
-        'extra'      => 'Extra',
-        'quantity'   => 'Quantity',
-        'unit_price' => 'Unit price',
-        'subtotal'   => 'Subtotal',
+        'title'              => 'Extras',
+        'model_label'        => 'extra',
+        'plural_model_label' => 'extras',
+        'extra'              => 'Extra',
+        'quantity'           => 'Quantity',
+        'unit_price'         => 'Unit price',
+        'subtotal'           => 'Subtotal',
     ],
 
     'payments' => [
@@ -84,5 +88,6 @@ return [
         'method'            => 'Method',
         'paid_at'           => 'Paid at',
         'stripe_session_id' => 'Stripe session ID',
+        'none'              => 'No payments recorded yet',
     ],
 ];

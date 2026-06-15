@@ -6,7 +6,6 @@ use App\Filament\Resources\Reservations\Pages\EditReservation;
 use App\Filament\Resources\Reservations\Pages\ListReservations;
 use App\Filament\Resources\Reservations\Pages\ViewReservation;
 use App\Filament\Resources\Reservations\RelationManagers\ExtrasRelationManager;
-use App\Filament\Resources\Reservations\RelationManagers\PaymentsRelationManager;
 use App\Filament\Resources\Reservations\Schemas\ReservationForm;
 use App\Filament\Resources\Reservations\Schemas\ReservationInfolist;
 use App\Filament\Resources\Reservations\Tables\ReservationsTable;
@@ -61,7 +60,6 @@ class ReservationResource extends Resource
     {
         return [
             ExtrasRelationManager::class,
-            PaymentsRelationManager::class,
         ];
     }
 

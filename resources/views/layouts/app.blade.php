@@ -14,6 +14,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 <body class="font-sans antialiased text-black">
 <div class="relative flex flex-col min-h-screen bg-cover bg-center bg-fixed" style="background-image: url('/img/camping_background.jpg')">
@@ -29,10 +30,21 @@
         </header>
     @endif
 
+    @hasSection('footer')
+        <footer class="relative bg-white border-b border-gray-200">
+            <div class="max-w-4xl mx-auto py-4 px-6">
+                <h1 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">@yield('footer')</h1>
+            </div>
+        </footer>
+    @endif
+
     <main class="relative flex-1 flex flex-col">
         @yield('content')
     </main>
 
+     @include('layouts.footer')
+
 </div>
+@livewireScripts
 </body>
 </html>

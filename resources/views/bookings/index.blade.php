@@ -19,7 +19,29 @@
 @endphp
 
 @section('content')
-    <div class="mx-auto w-full max-w-3xl px-6 py-8">
+    <div
+        class="mx-auto w-full max-w-3xl px-6 py-8"
+        x-data="{
+            open: false,
+            action: '',
+            email: @js($user->email),
+            typed: '',
+            error: false,
+            confirm(url) {
+                this.action = url;
+                this.typed = '';
+                this.error = false;
+                this.open = true;
+                this.$nextTick(() => this.$refs.email.focus());
+            },
+            submit(event) {
+                if (this.typed.trim().toLowerCase() !== this.email.trim().toLowerCase()) {
+                    event.preventDefault();
+                    this.error = true;
+                }
+            },
+        }"
+    >
 
         @if (session('status'))
             <div class="mb-6 rounded-md border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-800">
@@ -101,17 +123,24 @@
                             </div>
                         </div>
 
-                        @if ($reservation->extras->isNotEmpty())
-                            <div class="mt-4">
+                        @if ($reservation->extras->isNotEmpty() || ! $isCancelled)
+                            <div class="mt-4 rounded-lg border border-tan-500 bg-tan-200 px-4 py-3">
                                 <h3 class="text-sm font-semibold text-olivegreen-400">Extra's</h3>
-                                <ul class="mt-2 space-y-1 text-sm text-black">
-                                    @foreach ($reservation->extras as $line)
-                                        <li class="flex justify-between gap-3">
-                                            <span>{{ $line->quantity }}× {{ $line->extra->name }}</span>
-                                            <span class="font-medium">{{ $euro($line->subtotal) }}</span>
-                                        </li>
-                                    @endforeach
-                                </ul>
+                                @if ($reservation->extras->isNotEmpty())
+                                    <ul class="mt-2 space-y-1 text-sm text-black">
+                                        @foreach ($reservation->extras as $line)
+                                            <li class="flex justify-between gap-3">
+                                                <span>{{ $line->quantity }}× {{ $line->extra->name }}</span>
+                                                <span class="font-medium">{{ $euro($line->subtotal) }}</span>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                                @unless ($isCancelled)
+                                    <p class="mt-2 text-xs text-black/70">
+                                        Extra's toevoegen of wijzigen? Dat kan bij de receptie.
+                                    </p>
+                                @endunless
                             </div>
                         @endif
 
@@ -155,21 +184,13 @@
                                     </a>
                                 @endif
 
-                                <form
-                                    method="POST"
-                                    action="{{ $cancelUrls[$reservation->id] }}"
-                                    data-confirm="Weet u zeker dat u deze reservering wilt annuleren?"
-                                    class="flex-1"
+                                <button
+                                    type="button"
+                                    @click="confirm('{{ $cancelUrls[$reservation->id] }}')"
+                                    class="flex-1 rounded-lg border-2 border-red-300 bg-red-100 px-6 py-2 text-center text-sm font-semibold text-red-800 transition hover:bg-red-200"
                                 >
-                                    @csrf
-                                    @method('DELETE')
-                                    <button
-                                        type="submit"
-                                        class="w-full rounded-lg border-2 border-tan-500 bg-tan-200 px-3 py-2 text-center text-sm font-semibold text-black transition hover:bg-tan-300"
-                                    >
-                                        Annuleren
-                                    </button>
-                                </form>
+                                    Annuleren
+                                </button>
                             </div>
                         @endunless
 
@@ -177,6 +198,60 @@
                 @endforeach
             </div>
         @endif
+
+        <div
+            x-show="open"
+            x-cloak
+            @keydown.escape.window="open = false"
+            class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
+            <div class="absolute inset-0 bg-black/40" @click="open = false"></div>
+
+            <div class="relative w-full max-w-md rounded-2xl border border-tan-400 bg-tan-300 p-6 text-black shadow-xl ring-1 ring-black/5">
+                <h2 class="text-lg font-bold text-olivegreen-400">Reservering annuleren</h2>
+                <p class="mt-2 text-sm text-black">
+                    Weet u zeker dat u deze reservering wilt annuleren? Deze actie kan niet ongedaan worden gemaakt.
+                </p>
+
+                <form method="POST" :action="action" @submit="submit($event)">
+                    @csrf
+                    @method('DELETE')
+
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-black" for="cancel-email">
+                            Typ uw e-mailadres ter bevestiging
+                        </label>
+                        <input
+                            id="cancel-email"
+                            x-ref="email"
+                            x-model="typed"
+                            type="email"
+                            autocomplete="off"
+                            class="mt-1 w-full rounded-lg border border-olivegreen-500 bg-tan-200 px-3 py-2 text-sm focus:border-olivegreen-400 focus:outline-none focus:ring-2 focus:ring-olivegreen-400"
+                        >
+                        <p x-show="error" x-cloak class="mt-1 text-xs text-red-700">
+                            Dit e-mailadres komt niet overeen.
+                        </p>
+                    </div>
+
+                    <div class="mt-6 flex flex-col gap-2 sm:flex-row-reverse">
+                        <button
+                            type="submit"
+                            class="w-full rounded-lg border-2 border-red-300 bg-red-100 px-6 py-2 text-center text-sm font-semibold text-red-800 transition hover:bg-red-200"
+                        >
+                            Bevestigen
+                        </button>
+                        <button
+                            type="button"
+                            @click="open = false"
+                            class="w-full rounded-lg border-2 border-tan-500 bg-tan-200 px-6 py-2 text-center text-sm font-semibold text-black transition hover:bg-tan-300"
+                        >
+                            Terug
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
     </div>
 @endsection
