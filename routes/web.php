@@ -7,6 +7,7 @@ use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Middleware\RememberCustomer;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Cookie;
 
 /* Main routes */
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -36,5 +37,8 @@ Route::get('/checkout/cancel', [PaymentController::class, 'cancel'])->name('paym
 
 /* Locale switching */
 Route::get('/locale/{locale}', [LocaleController::class, 'switch'])->name('locale.switch');
+
+// /* Cookies */
+Route::post('/cookies/acknowledge', function() {Cookie::queue('functional_consent', 'true', 60*24*365); return back();})->name('cookies.acknowledge');
 
 require __DIR__.'/auth.php';
