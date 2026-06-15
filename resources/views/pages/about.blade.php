@@ -10,7 +10,7 @@
             Over ons
         </h1>
 
-        <p class="mt-4 text-sm text-black">
+        <p class="mt-4 text-sm text-black">   
             Welkom bij Camping De Groene Weide.
             Bij ons geniet je van het buitenleven: wakker worden met het geluid van fluitende vogels en een prachtig uitzicht over de weilanden.
             Beleef het boerderijleven van dichtbij. Of je nu de koeien wilt aaien of juist rustig wilt genieten van de natuur om je heen, bij ons kan het allemaal.
