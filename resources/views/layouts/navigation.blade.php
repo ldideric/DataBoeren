@@ -12,7 +12,6 @@
                 @php($onCampsites = request()->routeIs('campsites.*'))
                 <a href="{{ route('campsites.index') }}" @class(['px-3 py-1.5 rounded-md text-white whitespace-nowrap hover:bg-olivegreen-600 transition-colors', 'bg-olivegreen-600 font-semibold' => $onCampsites && request('view') !== 'map']) @if($onCampsites && request('view') !== 'map') aria-current="page" @endif>Kampeerplaatsen</a>
                 <a href="{{ route('campsites.index', ['view' => 'map']) }}" @class(['px-3 py-1.5 rounded-md text-white whitespace-nowrap hover:bg-olivegreen-600 transition-colors', 'bg-olivegreen-600 font-semibold' => $onCampsites && request('view') === 'map']) @if($onCampsites && request('view') === 'map') aria-current="page" @endif>Plattegrond</a>
-                <a href="{{ route('privacy') }}" @class(['px-3 py-1.5 rounded-md text-white whitespace-nowrap hover:bg-olivegreen-600 transition-colors', 'bg-olivegreen-600 font-semibold' => request()->routeIs('privacy')]) @if(request()->routeIs('privacy')) aria-current="page" @endif>Privacystatement</a>
                 <a href="{{ route('activities') }}" @class(['px-3 py-1.5 rounded-md text-white whitespace-nowrap hover:bg-olivegreen-600 transition-colors', 'bg-olivegreen-600 font-semibold' => request()->routeIs('pages.activities')]) @if(request()->routeIs('pages.activities')) aria-current="page" @endif>Activiteiten</a>
             </div>
 
