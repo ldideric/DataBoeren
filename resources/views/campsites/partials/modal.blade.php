@@ -56,10 +56,24 @@
     const bookBtn = document.getElementById('modal-book-btn');
     let currentCampsiteId = '';
 
+    function getToday() {
+        return new Date().toISOString().split('T')[0];
+    }
+
     function updateBookBtn() {
-        const checkIn  = document.getElementById('modal-checkin').value;
-        const checkOut = document.getElementById('modal-checkout').value;
-        if (checkIn && checkOut) {
+        const checkin  = document.getElementById('modal-checkin');
+        const checkout = document.getElementById('modal-checkout');
+
+        if (checkin.value) {
+            const minCheckout = new Date(checkin.value);
+            minCheckout.setDate(minCheckout.getDate() + 1);
+            checkout.min = minCheckout.toISOString().split('T')[0];
+            if (checkout.value && checkout.value <= checkin.value) {
+                checkout.value = '';
+            }
+        }
+
+        if (checkin.value && checkout.value) {
             bookBtn.classList.remove('border-tan-400', 'bg-tan-200', 'text-tan-500', 'cursor-not-allowed');
             bookBtn.classList.add('border-cerulean-400', 'bg-cerulean-300', 'hover:bg-cerulean-400', 'text-cerulean-900', 'cursor-pointer');
         } else {
@@ -77,8 +91,11 @@
         document.getElementById('modal-vehicles').textContent = '• Max voertuigen: ' + d.vehicles;
         document.getElementById('modal-electricity').textContent = '• Stroom: ' + (d.electricity === 'true' ? 'Ja' : 'Nee');
         document.getElementById('modal-notes').textContent = d.notes || 'Geen extra informatie beschikbaar';
-        document.getElementById('modal-checkin').value  = d.checkIn  ?? '';
-        document.getElementById('modal-checkout').value = d.checkOut ?? '';
+        const today = getToday();
+        document.getElementById('modal-checkin').min  = today;
+        document.getElementById('modal-checkout').min = today;
+        document.getElementById('modal-checkin').value  = '';
+        document.getElementById('modal-checkout').value = '';
         document.getElementById('modal-adults').value   = d.adults   ?? 1;
         document.getElementById('modal-children').value = d.children ?? 0;
         updateBookBtn();
@@ -105,10 +122,10 @@
         modal.classList.remove('flex');
     }
 
-    window.onclick = function(event) {
-        if (event.target == modal) {
+    modal.addEventListener('click', function(event) {
+        if (event.target === modal) {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
-    }
+    });
 </script>
