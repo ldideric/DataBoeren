@@ -16,7 +16,7 @@
             Heeft u vragen, wilt u meer informatie of bent u benieuwd naar de mogelijkheden? Neem dan gerust contact met ons op. Wij staan klaar om u verder te helpen.
         </p>
 
-        <div class="mt-6 space-y-6 text-sm text-black">
+        <div class="mt-6 space-y-6 text-sm text-black"> 
 
             <div>
                 <h2 class="mb-2 text-2xl font-semibold text-olivegreen-400">

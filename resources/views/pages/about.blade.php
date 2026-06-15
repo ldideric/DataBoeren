@@ -19,7 +19,7 @@
         <div class="mt-6 space-y-6 text-sm text-black">
 
             <div>
-                <h2 class="mb-2 text-2xl font-semibold text-olivegreen-400">
+                <h2 class="mb-2 text-2xl font-semibold text-olivegreen-400">   
                     Gastvrijheid
                 </h2>
 
