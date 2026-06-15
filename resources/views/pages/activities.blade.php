@@ -69,12 +69,12 @@
                 </h2>
                 <p class="text-sm text-black mb-6">
                     Leer meer over het boerenleven. Maak kennis met de dieren op de boerderij en geniet van de heerlijke buitenlucht.</p>
-                <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
+                <div class="grid grid-cols-[1fr_320px] gap-8 items-center border border-tan-500 rounded-lg p-4">
                 <p class="text-sm text-black mb-6">Breng een bezoek aan onze kinderboerderij. Kinderen kunnen hier kennismaken met verschillende dieren, ze bewonderen en aaien. Een leuke activiteit die zorgt voor leuke herinneringen tijdens het verblijf op de camping.
                 </p>
                 <img src="/img/kinderboerderij.png"
                      onclick="openModel('/img/kinderboerderij.png')"
-                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer">
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer border border-tan-500">
                 </div>
             </div>
 
@@ -83,13 +83,13 @@
                 <h2 class="text-2xl font-semibold text-olivegreen-400 mb-4">
                     Kinderspeeltuin
                 </h2>
-                <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
+                <div class="grid grid-cols-[1fr_320px] gap-8 items-center border border-tan-500 rounded-lg p-4">
                 <p class="text-sm text-black mb-6">
                     Onze kinderspeeltuin is geschikt voor de kleintjes om te spelen en andere kinderen te leren kennen. Er is voor ieder kind wat wils, of je nu houdt van springen of glijden het is er allemaal!
                 </p>
                 <img src="/img/kinderspeeltuin.png"
                      onclick="openModal('/img/kinderspeeltuin.png')"
-                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer">
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer border border-tan-500">
                 </div>
             </div>
 
@@ -97,11 +97,11 @@
                 <h2 class="text-2xl font-semibold text-olivegreen-400 mb-4">
                     Zwemgelegenheid
                 </h2>
-                <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
+                <div class="grid grid-cols-[1fr_320px] gap-8 items-center border border-tan-500 rounded-lg p-4">
                     <p class="text-sm text-black mb-6">Neem op een warme dagen een duik in de zwemvijver. Het is een fijne plek om te ontspannen en te spelen in het water.</p>  
                     <img src="/img/zwemvijver.png"   
                          onclick="openModal('/img/zwemvijver')"
-                         class="mx-auto w-80 rounded-lg shadow-md cursor-pointer">        
+                         class="mx-auto w-80 rounded-lg shadow-md cursor-pointer border border-tan-500">        
                 </div>
             </div>
 
@@ -110,33 +110,33 @@
                     Overige activiteiten
                 </h2>
 
-                <div class="grid grid-cols-[1fr_320px] gap-8 items-center"> 
+                <div class="grid grid-cols-[1fr_320px] gap-8 items-center border border-tan-500 rounded-lg p-4"> 
                 <p class="text-sm text-black mb-6"> Voor dagelijkse boodschappen vind je op 4 afstand van de camping een supermarkt met een ruim assortiment aan producten.
                 </p>
                 <img src="/img/supermarkt.png"
                      onclick="openModel('/img/supermarkt.png')"
-                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer mb-8"> 
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer border border-tan-500 mb-8"> 
                 </div>
-                <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
+                <div class="grid grid-cols-[1fr_320px] gap-8 items-center border border-tan-500 rounded-lg p-4">
                     <p class="text-sm text-black mb-6"> Bezoek de lokale markt op 6 kilometer van de camping en ontdek verse producten uit de streek en leuke kraampjes. 
                     </p>
                     <img src="/img/markt.png"
                      onclick="openModal('/img/markt.png')"
-                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer mb-8">
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer border border-tan-500 mb-8">
                 </div>
-                <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
+                <div class="grid grid-cols-[1fr_320px] gap-8 items-center border border-tan-500 rounded-lg p-4">
                      <p class="text-sm text-black mb-6"> Liever zwemmen in een zwembad? Op slechts 8 kilometers van de camping bevindt zich een zwembad waar jong en oud zich kan vermaken.
                      </p>
                      <img src="/img/zwembad.png"
                           onclick="openModel('/img/zwembad.png')"
-                          class="mx-auto w-80 rounded-lg shadow-md cursor-pointer mb-8">
+                          class="mx-auto w-80 rounded-lg shadow-md cursor-pointer border border-tan-500 mb-8">
                 </div>
-                <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
+                <div class="grid grid-cols-[1fr_320px] gap-8 items-center border border-tan-500 rounded-lg p-4">
                     <p class="text-sm text-black mb-6"> Het nabijgelegen dorp op 3 kilometer van de camping biedt verschillende voorzieningen, zoals winkels, café's, restaurants en een mooie kerk.
                     </p>
                     <img src="/img/dorp.png"
                      onclick="openModal('/img/dorp.png')"
-                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer mb-8">
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer border border-tan-500 mb-8">
                 </div>
 
         </div>
