@@ -4,7 +4,7 @@
     @php
     $dbCampsites = \App\Models\Campsite::all()
         ->keyBy(fn($c) => $c->name . '|' . $c->type->value);
-    $campsites = collect(json_decode(file_get_contents(database_path('src\campsites.json')), true))
+    $campsites = collect(json_decode(file_get_contents(database_path('src/campsites.json')), true))
         ->filter(fn($c) => isset($c['lat'], $c['lng']))
         ->map(fn($c) => array_merge($c, [
             'id' => $dbCampsites[$c['name'] . '|' . strtolower($c['type'])]->id ?? null
