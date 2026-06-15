@@ -486,6 +486,8 @@
     "has_electricity": true,
     "max_people": 8,
     "notes": null,
+    "lng": 3000,
+    "lat": 3000,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 27.5,
