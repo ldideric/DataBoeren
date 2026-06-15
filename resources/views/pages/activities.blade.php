@@ -24,40 +24,40 @@
                 </h2>
 
                 <p class="text-sm text-black mb-6">   
-                    Verken de prachtige natuur rondom de camping met onze wandel- en fietsroutes. Er zijn twee fietsroutes en drie wandelroutes. Klik op de desbetreffende route om de route te zien.
+                    Verken de prachtige natuur rondom de camping met onze wandel- en fietsroutes. Er zijn twee fietsroutes en drie wandelroutes.
                 </p>
 
                 <p class="mb-6">
                     <button onclick="openModal('/img/fietsroute1.png')"
-                        class="text-sm text-black underline">
+                        class="text-cerulean-400 underline hover:text-cerulean-500">
                         Fietsroute 1: 10 km
                     </button>
                 </p>
 
                 <p class="mb-6">
                     <button onclick="openModal('/img/fietsroute2.png')"
-                        class="text-sm text-black underline">
+                        class="text-cerulean-400 underline hover:text-cerulean-500">
                         Fietsroute 2: 20 km
                     </button>
                 </p>
                 
                 <p class="mb-6">
                     <button onclick="openModal('/img/wandelroute1.png')"
-                        class="text-sm text-black underline">
+                        class="text-cerulean-400 underline hover:text-cerulean-500">
                         Wandelroute 1: 4 km
                     </button>
                 </p>
 
                 <p class="mb-6">
                     <button onclick="openModal('/img/wandelroute2.png')"
-                        class="text-sm text-black underline">
+                        class="text-cerulean-400 underline hover:text-cerulean-500">
                         Wandelroute 2: 8 km 
                     </button>
                 </p>
 
                 <p class="mb-6">
                     <button onclick="openModal('/img/wandelroute3.png')"
-                        class="text-sm text-black underline">
+                        class="text-cerulean-400 underline hover:text-cerulean-500">
                         Wandelroute 3: 17 km 
                     </button>
                 </p>
@@ -74,7 +74,7 @@
                 </p>
                 <img src="/img/kinderboerderij.png"
                      onclick="openModel('/img/kinderboerderij.png')"
-                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition">
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer">
                 </div>
             </div>
 
@@ -89,7 +89,7 @@
                 </p>
                 <img src="/img/kinderspeeltuin.png"
                      onclick="openModal('/img/kinderspeeltuin.png')"
-                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition">
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer">
                 </div>
             </div>
 
@@ -101,7 +101,7 @@
                     <p class="text-sm text-black mb-6">Neem op een warme dagen een duik in de zwemvijver. Het is een fijne plek om te ontspannen en te spelen in het water.</p>  
                     <img src="/img/zwemvijver.png"   
                          onclick="openModal('/img/zwemvijver')"
-                         class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition">        
+                         class="mx-auto w-80 rounded-lg shadow-md cursor-pointer">        
                 </div>
             </div>
 
@@ -115,28 +115,28 @@
                 </p>
                 <img src="/img/supermarkt.png"
                      onclick="openModel('/img/supermarkt.png')"
-                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition"> 
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer mb-8"> 
                 </div>
                 <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
                     <p class="text-sm text-black mb-6"> Bezoek de lokale markt op 6 kilometer van de camping en ontdek verse producten uit de streek en leuke kraampjes. 
                     </p>
                     <img src="/img/markt.png"
                      onclick="openModal('/img/markt.png')"
-                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition">
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer mb-8">
                 </div>
                 <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
                      <p class="text-sm text-black mb-6"> Liever zwemmen in een zwembad? Op slechts 8 kilometers van de camping bevindt zich een zwembad waar jong en oud zich kan vermaken.
                      </p>
                      <img src="/img/zwembad.png"
                           onclick="openModel('/img/zwembad.png')"
-                          class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition">
+                          class="mx-auto w-80 rounded-lg shadow-md cursor-pointer mb-8">
                 </div>
                 <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
                     <p class="text-sm text-black mb-6"> Het nabijgelegen dorp op 3 kilometer van de camping biedt verschillende voorzieningen, zoals winkels, café's, restaurants en een mooie kerk.
                     </p>
                     <img src="/img/dorp.png"
                      onclick="openModal('/img/dorp.png')"
-                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition">
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer mb-8">
                 </div>
 
         </div>
