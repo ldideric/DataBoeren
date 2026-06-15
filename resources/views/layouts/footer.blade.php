@@ -1,6 +1,5 @@
 @include('cookies.cookie-modal')
 
-<x.cookie-modal>
 <nav class="relative bg-olivegreen-500 border-t border-olivegreen-600">
     <div class="max-w-7xl mx-auto px-6">
         <div class="relative flex justify-between items-center h-14">
@@ -9,7 +8,7 @@
                 <img src="{{ asset('logo.svg') }}" alt="De Groene Weide" class="h-8 w-8">
             </div>
 
-             <div class="absolute left-1/2 -translate-x-1/2 hidden sm:flex gap-3 text-sm">
+            <div class="absolute left-1/2 -translate-x-1/2 hidden sm:flex gap-3 text-sm">
                 <a href="{{ route('about') }}" class="px-3 py-1.5 text-white hover:underline">Over ons</a>
                 <a href="{{ route('contact') }}" class="px-3 py-1.5 text-white hover:underline">Contact</a>
                 <a href="{{ route('privacy') }}" class="px-3 py-1.5 text-white hover:underline">Privacystatement</a>
