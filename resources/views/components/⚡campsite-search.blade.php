@@ -422,8 +422,10 @@ new class () extends Component {
                         if (! c.img) return;
                         const url = c.img;
                         const preload = new Image();
-                        preload.onload = () => { if (c.img === url) src = url };
                         preload.src = url;
+                        preload.decode()
+                            .catch(() => {})
+                            .then(() => { if (c.img === url) src = url });
                      ">
                     <img
                         x-show="src"
