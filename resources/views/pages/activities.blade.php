@@ -106,16 +106,16 @@
             </div>
 
             <div>
-                <h2 class="text-2xl font-semibold text-olivegreen-400 mb-4">
+                <h2 class="text-2xl font-semibold text-olivegreen-400 mb-4"> 
                     Overige activiteiten
                 </h2>
 
-                <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
+                <div class="grid grid-cols-[1fr_320px] gap-8 items-center"> 
                 <p class="text-sm text-black mb-6"> Voor dagelijkse boodschappen vind je op 4 afstand van de camping een supermarkt met een ruim assortiment aan producten.
                 </p>
                 <img src="/img/supermarkt.png"
                      onclick="openModel('/img/supermarkt.png')"
-                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition">
+                     class="mx-auto w-80 rounded-lg shadow-md cursor-pointer hover:scale-105 transition"> 
                 </div>
                 <div class="grid grid-cols-[1fr_320px] gap-8 items-center">
                     <p class="text-sm text-black mb-6"> Bezoek de lokale markt op 6 kilometer van de camping en ontdek verse producten uit de streek en leuke kraampjes. 
