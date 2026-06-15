@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $recipient
  * @property string|null $subject
  * @property string|null $message_id
+ * @property string|null $trace_id
  * @property string|null $job_id
  * @property string|null $connection
  * @property string|null $queue
@@ -45,5 +46,12 @@ class MailLog extends Model
     public function mailableLabel(): string
     {
         return $this->mailable ? class_basename($this->mailable) : '—';
+    }
+
+    public function groupTitle(): string
+    {
+        $label = $this->mailableLabel();
+
+        return $this->recipient ? "{$label} → {$this->recipient}" : $label;
     }
 }

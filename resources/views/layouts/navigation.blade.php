@@ -12,6 +12,7 @@
                 <a href="{{ route('campsites.index') }}" @class(['px-3 py-1.5 rounded-md text-white whitespace-nowrap hover:bg-olivegreen-600 transition-colors', 'bg-olivegreen-600 font-semibold' => request()->routeIs('campsites.*')]) @if(request()->routeIs('campsites.*')) aria-current="page" @endif>Kampeerplaatsen</a>
                 <a href="{{ route('map.index') }}" class="px-3 py-1.5 rounded-md text-white hover:bg-olivegreen2 transition-colors">Plattegrond</a>
                 <a href="{{ route('privacy') }}" @class(['px-3 py-1.5 rounded-md text-white whitespace-nowrap hover:bg-olivegreen-600 transition-colors', 'bg-olivegreen-600 font-semibold' => request()->routeIs('privacy')]) @if(request()->routeIs('privacy')) aria-current="page" @endif>Privacystatement</a>
+                <a href="{{ route('activities') }}" @class(['px-3 py-1.5 rounded-md text-white whitespace-nowrap hover:bg-olivegreen-600 transition-colors', 'bg-olivegreen-600 font-semibold' => request()->routeIs('pages.activities')]) @if(request()->routeIs('pages.activities')) aria-current="page" @endif>Activiteiten</a>
             </div>
 
             <div class="flex shrink-0 items-center gap-3 justify-self-end text-sm">

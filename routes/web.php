@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Route;
 
 /* Main routes */
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('about', fn () => view('pages.about'))->name('about');
+Route::get('activities', fn () => view('pages.activities'))->name('activities');
+Route::get('contact', fn () => view('pages.contact'))->name('contact');
 Route::get('/privacy', fn () => view('extras.privacy'))->name('privacy');
 Route::get('/houserules', fn () => view('extras.houserules'))->name('houserules');
 Route::get('/map', function () {

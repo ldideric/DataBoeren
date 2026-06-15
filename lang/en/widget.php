@@ -2,10 +2,10 @@
 
 return [
     'financial' => [
-        'revenue_this_month' => 'Revenue this month',
-        'from_paid'          => 'From paid payments',
-        'pending_payments'   => 'Pending payments',
-        'awaiting_payment'   => 'Awaiting payment',
+        'revenue_this_month'   => 'Revenue this month',
+        'from_paid'            => 'From paid payments',
+        'cash_to_collect'      => 'Cash to collect',
+        'cash_to_collect_desc' => 'Pay-on-arrival bookings not yet settled',
     ],
 
     'low_stock' => [
@@ -21,11 +21,11 @@ return [
 
     'operational' => [
         'arrivals_today'        => 'Arrivals today',
-        'arrivals_today_desc'   => 'Confirmed check-ins today',
+        'arrivals_today_desc'   => 'Check-ins today',
         'departures_today'      => 'Departures today',
-        'departures_today_desc' => 'Confirmed check-outs today',
+        'departures_today_desc' => 'Check-outs today',
         'on_site'               => 'Currently on site',
-        'on_site_desc'          => 'Active confirmed stays',
+        'on_site_desc'          => 'Active stays',
         'pending'               => 'Pending reservations',
         'pending_desc'          => 'Awaiting confirmation',
     ],
@@ -36,9 +36,11 @@ return [
 
     'today_arrivals' => [
         'heading'   => "Today's arrivals",
-        'guest'     => 'Guest',
-        'campsite'  => 'Campsite',
-        'guests'    => 'Guests',
-        'check_out' => 'Check-out',
+        'guest'          => 'Guest',
+        'campsite'       => 'Campsite',
+        'guests'         => 'Guests',
+        'check_out'      => 'Check-out',
+        'payment_method' => 'Payment',
+        'no_payment'     => 'None',
     ],
 ];

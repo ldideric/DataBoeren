@@ -54,6 +54,11 @@ class MailLogResource extends Resource
         return false;
     }
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return (bool) (auth()->user()?->show_mail_logs) && parent::shouldRegisterNavigation();
+    }
+
     public static function infolist(Schema $schema): Schema
     {
         return MailLogInfolist::configure($schema);
