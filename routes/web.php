@@ -15,10 +15,7 @@ Route::get('activities', fn () => view('pages.activities'))->name('activities');
 Route::get('contact', fn () => view('pages.contact'))->name('contact');
 Route::get('/privacy', fn () => view('extras.privacy'))->name('privacy');
 Route::get('/houserules', fn () => view('extras.houserules'))->name('houserules');
-Route::get('/map', function () {
-    $campsites = \App\Models\Campsite::all();
-    return view('campsites.map.index', compact('campsites'));
-})->name('map.index');
+Route::get('/map', fn () => redirect()->route('campsites.index', ['view' => 'map']))->name('map.index');
 
 /* Public booking routes */
 Route::get('/campsites', [CampsiteController::class, 'index'])->name('campsites.index');
