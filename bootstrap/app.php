@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // scheme is seen as HTTPS. Without this, signed-URL validation rebuilds the
         // URL as http:// and every magic link fails with "Invalid signature".
         $middleware->trustProxies(at: '*');
+        $middleware->encryptCookies(except: ['functional_consent',]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

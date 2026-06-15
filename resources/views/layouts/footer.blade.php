@@ -1,3 +1,6 @@
+@include('cookies.cookie-modal')
+
+<x.cookie-modal>
 <nav class="relative bg-olivegreen-500 border-t border-olivegreen-600">
     <div class="max-w-7xl mx-auto px-6">
         <div class="relative flex justify-between items-center h-14">
