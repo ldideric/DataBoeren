@@ -5,9 +5,9 @@
     "has_electricity": false,
     "max_people": 1,
     "max_vehicles": 0,
-    "lat":1000,
-    "lng":1000,
     "notes": null,
+    "lat":2300,
+    "lng":630,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 18.0,
@@ -27,8 +27,6 @@
     "has_electricity": false,
     "max_people": 1,
     "max_vehicles": 0,
-    "lat":2000,
-    "lng":2000,
     "notes": null,
     "pricing": {
       "hoog_seizoen": {
@@ -201,6 +199,8 @@
     "has_electricity": true,
     "max_people": 4,
     "notes": null,
+    "lat":1400,
+    "lng":1200,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 30.0,
@@ -220,6 +220,8 @@
     "has_electricity": true,
     "max_people": 4,
     "notes": null,
+    "lat":1820,
+    "lng":1670,   
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 30.0,
@@ -239,6 +241,8 @@
     "has_electricity": true,
     "max_people": 4,
     "notes": null,
+    "lat":1820,
+    "lng":2040,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 30.0,
@@ -258,6 +262,8 @@
     "has_electricity": true,
     "max_people": 4,
     "notes": null,
+    "lat":1500,
+    "lng":2050,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 30.0,
@@ -277,6 +283,8 @@
     "has_electricity": true,
     "max_people": 4,
     "notes": "Natuurlijk terrein met reliëf, budget plek",
+    "lat":1800,
+    "lng":1300,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -296,6 +304,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":650,
+    "lng":3400,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -315,6 +325,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":650,
+    "lng":3800,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -334,6 +346,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":400,
+    "lng":3950,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -353,6 +367,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":150,
+    "lng":3800,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -372,6 +388,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":150,
+    "lng":3400,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -391,6 +409,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": "Naast het sanitair, in schaduw van sanitair gebouw overdag",
+    "lat":1400,
+    "lng":3250,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -410,6 +430,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":1600,
+    "lng":3700,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -429,6 +451,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":1350,
+    "lng":3950,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -448,6 +472,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":1000,
+    "lng":3900,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -467,6 +493,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":1000,
+    "lng":3600,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -486,8 +514,8 @@
     "has_electricity": true,
     "max_people": 8,
     "notes": null,
-    "lng": 3000,
-    "lat": 3000,
+    "lat":2450,
+    "lng":3400,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 27.5,
@@ -507,6 +535,8 @@
     "has_electricity": true,
     "max_people": 8,
     "notes": null,
+    "lat":2750,
+    "lng":3400,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 27.5,
@@ -526,6 +556,8 @@
     "has_electricity": true,
     "max_people": 8,
     "notes": null,
+    "lat":2700,
+    "lng":3950,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 27.5,
@@ -545,6 +577,8 @@
     "has_electricity": true,
     "max_people": 8,
     "notes": null,
+    "lat":2450,
+    "lng":3950,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 27.5,
@@ -564,6 +598,8 @@
     "has_electricity": true,
     "max_people": 8,
     "notes": null,
+    "lat":2150,
+    "lng":3950,  
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 27.5,
@@ -583,6 +619,9 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lng": 2400,
+    "lat": 2450,
+
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -602,6 +641,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":2800,
+    "lng":2400,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -621,6 +662,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":2950,
+    "lng":2700,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -640,6 +683,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":2800,
+    "lng":3000,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -659,6 +704,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":2500,
+    "lng":3000,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -678,6 +725,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":2500,
+    "lng":1150,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -697,6 +746,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":2800,
+    "lng":1150,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -716,6 +767,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":2950,
+    "lng":1450,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -735,6 +788,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":2850,
+    "lng":1950,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
@@ -754,6 +809,8 @@
     "has_electricity": true,
     "max_people": 5,
     "notes": null,
+    "lat":2600,
+    "lng":1950,
     "pricing": {
       "hoog_seizoen": {
         "nightly_rate": 25.0,
