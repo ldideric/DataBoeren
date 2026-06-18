@@ -32,7 +32,8 @@
                 <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-black">
                     Bij ons geniet je van het buitenleven: wakker worden met fluitende vogels en een prachtig
                     uitzicht over de weilanden. Of je nu de koeien wilt aaien of juist rustig wilt genieten
-                    van de natuur, bij ons kan het allemaal.
+                    van de natuur, bij ons kan het allemaal. Voor meer informatie over wat er allemaal te beleven valt, bekijk onze 
+                    <a href="{{ route('activities') }}" class="font-medium text-cerulean-600 underline hover:no-underline">activiteiten</a>.
                 </p>
             </div>
 
