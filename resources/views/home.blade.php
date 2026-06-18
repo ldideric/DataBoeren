@@ -1,67 +1,70 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex flex-wrap items-center justify-center px-6 py-4">
-        <div class="w-full md:w-1/2 p-2">
-            <img src="{{ asset('img/home_pagina_foto2.jpg') }}" alt="Camping afbeelding" class="w-full h-64 md:h-full object-cover rounded-lg border-3 border-tan-600"/>
-        </div>
-        
-    <div class="flex flex-1 items-center justify-center px-6 py-4">
-        <div class="border-2 border-tan-500 w-full max-w-lg rounded-2xl bg-tan-300 p-10 text-center shadow-md">
+    <section class="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center px-6 py-28 text-center">
+        <p class="text-sm font-semibold uppercase tracking-[0.25em] text-white/80 drop-shadow">Camping</p>
+        <h1 class="mt-4 text-5xl font-bold text-white drop-shadow-lg sm:text-6xl">De Groene Weide</h1>
+        <div class="mt-6 h-px w-16 bg-white/60"></div>
+        <p class="mt-6 max-w-lg text-lg leading-relaxed text-white drop-shadow-md">
+            Een gezellige camping midden in de natuur. Rust, ruimte en het boerderijleven van dichtbij.
+        </p>
+        <a href="{{ route('campsites.index') }}"
+           class="mt-9 rounded-full bg-white px-10 py-4 font-semibold text-olivegreen-700 shadow-lg transition hover:bg-tan-100">
+            Boek nu
+        </a>
+        <a href="{{ route('login') }}"
+           class="mt-4 text-sm font-semibold text-white/90 underline underline-offset-4 hover:no-underline">
+            Al geboekt? Bekijk uw boekingen
+        </a>
+    </section>
+
+    <div class="bg-tan-300">
+        <div class="mx-auto w-full max-w-5xl px-6 py-16">
+
             @if (session('status'))
-                <div class="mb-4 rounded-md border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-800">
+                <div class="mb-10 rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
                     <span class="font-semibold">✓</span> {{ session('status') }}
                 </div>
             @endif
 
-            <h1 class="text-4xl font-bold text-olivegreen-400">Camping De Groene Weide</h1>
-            <p class="mt-3 text-lg text-black">Welkom bij onze gezellige camping midden in de natuur.</p>
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-olivegreen-600">Over ons</h2>
+                <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+                    Bij ons geniet je van het buitenleven: wakker worden met fluitende vogels en een prachtig
+                    uitzicht over de weilanden. Of je nu de koeien wilt aaien of juist rustig wilt genieten
+                    van de natuur, bij ons kan het allemaal.
+                </p>
+            </div>
 
-            <a
-                href="{{ route('campsites.index') }}"
-                class="mt-8 block border-2 border-cerulean-400 w-full rounded-2xl bg-cerulean-300 px-6 py-4 text-xl font-semibold text-cerulean-900 transition hover:bg-cerulean-400"
-            >
-                Boek nu
-            </a>
+            <div class="mt-12 grid items-center gap-10 md:grid-cols-2">
+                <img src="{{ asset('img/home_pagina_foto2.jpg') }}"
+                     alt="Uitzicht over de weilanden van Camping De Groene Weide"
+                     class="aspect-4/3 w-full rounded-2xl object-cover shadow-xl" />
+                <div class="space-y-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-olivegreen-600">Gastvrijheid</h3>
+                        <p class="mt-2 leading-relaxed text-gray-600">
+                            We delen onze passie voor de natuur en de dieren graag met onze gasten.
+                            Een praatje hoort erbij, iedereen voelt zich hier welkom en thuis.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-olivegreen-600">Wat kunt u verwachten?</h3>
+                        <p class="mt-2 leading-relaxed text-gray-600">
+                            Ruime kampeerplaatsen met een mooi uitzicht, activiteiten op en rond de boerderij
+                            en een ontspannen sfeer voor jong en oud. Meer weten? Bekijk onze
+                            <a href="{{ route('houserules') }}" class="font-medium text-cerulean-600 underline hover:no-underline">campingregels</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-            <div class="mt-8 border-t border-tan-600 pt-5">
-                <p class="text-base text-black">Al geboekt? Vraag een link aan om uw boekingen te bekijken of te annuleren:</p>
-                <a
-                    href="{{ route('login') }}"
-                    class="mt-2 inline-block font-semibold text-olivegreen-400 underline hover:no-underline"
-                >
-                    Naar mijn boekingen
+            <div class="mt-14 text-center">
+                <a href="{{ route('campsites.index') }}"
+                   class="inline-block rounded-full bg-olivegreen-500 px-10 py-4 font-semibold text-white shadow-md transition hover:bg-olivegreen-600">
+                    Bekijk onze kampeerplaatsen
                 </a>
             </div>
         </div>
-    </div>
-    <div class="mx-auto w-full max-w-4xl px-6 py-8">
-
-        <div class="rounded-2xl border border-tan-400 bg-tan-300 p-8 shadow-sm ring-1 ring-black/5 sm:p-10">
-
-            <h1 class="text-center text-3xl font-bold text-olivegreen-400">Over ons</h1>
-            <p class="mx-auto mt-4 max-w-2xl text-center text-sm text-black">Welkom bij Camping De Groene Weide. Bij ons geniet je van het buitenleven: wakker worden met het geluid van fluitende vogels en een prachtig uitzicht over de weilanden. Beleef het boerderijleven van dichtbij. Of je nu de koeien wilt aaien of juist rustig wilt genieten van de natuur om je heen, bij ons kan het allemaal.</p>
-
-            <div class="mt-6 space-y-6 text-sm text-black">
-
-                <div>
-                    <h2 class="mb-2 border-l-4 border-olivegreen-400 pl-3 text-2xl font-semibold text-olivegreen-400">Gastvrijheid</h2>
-                    <p>Wij delen graag onze passie voor de natuur en de dieren met onze gasten. Gastvrijheid staat bij ons voorop. We maken graag een praatje en doen ons best om ervoor te zorgen dat iedereen zich welkom en thuis voelt.</p>
-                </div>
-
-                <div>
-                    <h2 class="mb-2 border-l-4 border-olivegreen-400 pl-3 text-2xl font-semibold text-olivegreen-400">Wat kunt u verwachten?</h2>
-                    <p>Ruime kampeerplaatsen met een prachtig uitzicht, activiteiten op en rondom de boerderij en een ontspannen sfeer voor jong en oud. Heeft u behoefte aan meer concrete informatie over de camping? Bekijk dan onze <a href="{{ route('houserules') }}" class="text-cerulean-400 underline hover:text-cerulean-500">campingregels</a>.</p>
-                </div>
-
-            </div>
-
-            <div class="mt-8 border-t border-tan-600 pt-6 text-center">
-                <p class="text-sm font-semibold text-olivegreen-400">Wij hopen u snel te mogen verwelkomen!</p>
-                <a href="{{ route('campsites.index') }}" class="mt-6 inline-block rounded-2xl border-2 border-cerulean-400 bg-cerulean-300 px-8 py-3 text-lg font-semibold text-cerulean-900 transition hover:bg-cerulean-400">Bekijk onze kampeerplaatsen</a>
-            </div>
-
-        </div>
-
     </div>
 @endsection
