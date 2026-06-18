@@ -31,6 +31,9 @@ new class () extends Component {
     public function updated(): void
     {
         $this->resetPage();
+
+        // Keep the map view in sync with the same filters as the list view.
+        $this->dispatch('map-markers-updated', markers: $this->mapMarkers);
     }
 
     public function paginationView(): string
@@ -70,14 +73,126 @@ new class () extends Component {
             ->orderBy('name')
             ->paginate(8);
     }
+
+    /**
+     * Every available campsite (no pagination) as a map marker, carrying the
+     * same detail payload the list modal uses plus its map coordinates.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    #[Computed]
+    public function mapMarkers(): array
+    {
+        $criteria = $this->criteria;
+
+        if (! $criteria->isComplete()) {
+            return [];
+        }
+
+        $types = collect($this->types)
+            ->filter(fn ($value) => CampsiteType::tryFrom($value) !== null)
+            ->values();
+
+        $coordinates = $this->coordinates();
+
+        return Campsite::query()
+            ->whereFitsParty($criteria->partySize())
+            ->whereAvailableBetween($criteria->checkIn, $criteria->checkOut)
+            ->whereBookableFor($criteria->checkIn)
+            ->when($types->isNotEmpty(), fn ($query) => $query->whereIn('type', $types))
+            ->orderBy('name')
+            ->get()
+            ->map(function (Campsite $campsite) use ($coordinates, $criteria) {
+                $coordinate = $coordinates[$campsite->name.'|'.$campsite->type->value] ?? null;
+
+                if (! $coordinate) {
+                    return null;
+                }
+
+                return [
+                    'lat' => $coordinate['lat'],
+                    'lng' => $coordinate['lng'],
+                    'name' => $campsite->name,
+                    'type' => $campsite->type->getHeadline(),
+                    'people' => $campsite->max_people,
+                    'electricity' => $campsite->has_electricity,
+                    'notes' => $campsite->notes ?: 'Geen extra informatie beschikbaar',
+                    'img' => $campsite->img ?? asset('img/campsite_placeholder.jpg'),
+                    'url' => route('bookings.create', [
+                        'campsite' => $campsite->id,
+                        'check_in' => $criteria->checkIn->format('Y-m-d'),
+                        'check_out' => $criteria->checkOut->format('Y-m-d'),
+                        'adults' => $criteria->adults,
+                        'children' => $criteria->children,
+                    ]),
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Static config (image + icon urls) for the Leaflet map.
+     *
+     * @return array<string, mixed>
+     */
+    #[Computed]
+    public function mapConfig(): array
+    {
+        return [
+            'image' => asset('img/camping_map.png'),
+            'icons' => [
+                'Varkensveld' => asset('img/icon_varken.png'),
+                'Paardenveld' => asset('img/icon_paard.png'),
+                'default' => asset('img/icon_default.png'),
+            ],
+        ];
+    }
+
+    /**
+     * Map coordinates keyed by "name|type", read from the campsites source file.
+     *
+     * @return array<string, array{lat: float, lng: float}>
+     */
+    private function coordinates(): array
+    {
+        return collect(json_decode(file_get_contents(database_path('src/campsites.json')), true))
+            ->filter(fn (array $campsite) => isset($campsite['lat'], $campsite['lng']))
+            ->mapWithKeys(fn (array $campsite) => [
+                $campsite['name'].'|'.strtolower($campsite['type']) => [
+                    'lat' => $campsite['lat'],
+                    'lng' => $campsite['lng'],
+                ],
+            ])
+            ->all();
+    }
 }; ?>
 
-<div class="mx-auto w-full max-w-6xl px-6 py-8" x-data="{ open: false, c: {} }">
+<div class="mx-auto w-full max-w-6xl px-6 py-8"
+     x-data="{ open: false, c: {}, view: @js(request('view') === 'map' ? 'map' : 'list') }"
+     @open-campsite.window="c = $event.detail; open = true">
     <div class="space-y-4 lg:grid lg:grid-cols-[20rem_minmax(0,1fr)] lg:gap-x-6 lg:gap-y-4 lg:space-y-0">
         {{-- Header row: title sits only above the results column, leaving the filter column untouched --}}
         <div class="hidden lg:block" aria-hidden="true"></div>
         <div class="rounded-2xl border border-tan-400 bg-tan-300 p-5 shadow-sm ring-1 ring-black/5">
-            <h2 class="text-2xl font-bold text-olivegreen-400">Camping Boekingspagina</h2>
+            <div class="flex flex-wrap items-start justify-between gap-3">
+                <h2 class="text-2xl font-bold text-olivegreen-400">Camping Boekingspagina</h2>
+                <div class="inline-flex shrink-0 overflow-hidden rounded-lg border border-tan-400" role="group" aria-label="Weergave">
+                    <button
+                        type="button"
+                        @click="view = 'list'"
+                        :class="view === 'list' ? 'bg-olivegreen-500 text-white' : 'bg-tan-200 text-black hover:bg-tan-400'"
+                        class="px-4 py-1.5 text-sm font-semibold transition"
+                    >Lijst</button>
+                    <button
+                        type="button"
+                        @click="view = 'map'; $nextTick(() => window.dispatchEvent(new Event('map-shown')))"
+                        :class="view === 'map' ? 'bg-olivegreen-500 text-white' : 'bg-tan-200 text-black hover:bg-tan-400'"
+                        class="px-4 py-1.5 text-sm font-semibold transition"
+                    >Kaart</button>
+                </div>
+            </div>
             @if (! $this->criteria->isComplete())
                 <p class="mt-1 text-sm text-black">Vul je verblijfsgegevens in om beschikbare plekken te zien.</p>
             @elseif ($this->campsites->isEmpty())
@@ -197,6 +312,8 @@ new class () extends Component {
         </aside>
 
         <main class="w-full">
+            {{-- LIST VIEW --}}
+            <div x-show="view === 'list'">
             @if (! $this->criteria->isComplete())
                 <div class="rounded-xl border border-tan-400 bg-tan-300 p-10 text-center shadow-sm ring-1 ring-black/5">
                     <p class="text-base font-medium text-olivegreen-400">Nog geen zoekopdracht</p>
@@ -248,6 +365,36 @@ new class () extends Component {
 
                 {{ $this->campsites->links() }}
             @endif
+            </div>
+
+            {{-- MAP VIEW --}}
+            <div x-show="view === 'map'" x-cloak>
+                <div class="relative overflow-hidden rounded-2xl border border-tan-400 bg-tan-300 p-2 shadow-sm ring-1 ring-black/5">
+                    <div
+                        wire:ignore
+                        x-data="campsiteMap(@js($this->mapMarkers), @js($this->mapConfig))"
+                        class="isolate h-[70vh] w-full overflow-hidden rounded-xl bg-olivegreen-900/10"
+                    >
+                        <div x-ref="map" class="h-full w-full"></div>
+                    </div>
+
+                    @if (! $this->criteria->isComplete())
+                        <div class="absolute inset-0 z-1000 flex items-center justify-center bg-black/40 p-6">
+                            <div class="rounded-xl border border-tan-400 bg-tan-300 p-8 text-center shadow-lg">
+                                <p class="text-base font-medium text-olivegreen-400">Nog geen zoekopdracht</p>
+                                <p class="mt-2 text-sm text-black">Vul links je gegevens in om beschikbare plekken op de kaart te zien.</p>
+                            </div>
+                        </div>
+                    @elseif (empty($this->mapMarkers))
+                        <div class="absolute inset-0 z-1000 flex items-center justify-center bg-black/40 p-6">
+                            <div class="rounded-xl border border-tan-400 bg-tan-300 p-8 text-center shadow-lg">
+                                <p class="text-base font-medium text-olivegreen-400">Geen beschikbare plekken voor deze gegevens</p>
+                                <p class="mt-2 text-sm text-black">Probeer andere data, een kleinere groep of een ander accommodatie type.</p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
         </main>
     </div>
 
@@ -268,8 +415,25 @@ new class () extends Component {
             </div>
 
             <div class="p-6">
-                <div class="aspect-3/2 rounded-lg overflow-hidden">
-                    <img :src="c.img" alt="" class="h-full w-full object-cover">
+                <div class="aspect-3/2 overflow-hidden rounded-lg bg-tan-200"
+                     x-data="{ src: '' }"
+                     x-effect="
+                        src = '';
+                        if (! c.img) return;
+                        const url = c.img;
+                        const preload = new Image();
+                        preload.src = url;
+                        preload.decode()
+                            .catch(() => {})
+                            .then(() => { if (c.img === url) src = url });
+                     ">
+                    <img
+                        x-show="src"
+                        :src="src"
+                        x-transition.opacity
+                        alt=""
+                        class="h-full w-full object-cover"
+                    >
                 </div>
                 <div class="mt-4 flex gap-5">
                     <ul class="space-y-2 text-sm text-black flex-1">
