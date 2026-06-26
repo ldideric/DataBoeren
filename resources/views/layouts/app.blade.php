@@ -17,7 +17,7 @@
     @livewireStyles
 </head>
 <body class="font-sans antialiased text-black">
-<div class="relative flex flex-col min-h-screen bg-cover bg-center bg-fixed" style="background-image: url('/img/camping_background.jpg')">
+<div class="relative flex flex-col min-h-screen bg-cover bg-center md:bg-fixed" style="background-image: url('/img/camping_background.jpg')">
     <div class="absolute inset-0 bg-black/30 pointer-events-none"></div>
 
     @include('layouts.navigation')
